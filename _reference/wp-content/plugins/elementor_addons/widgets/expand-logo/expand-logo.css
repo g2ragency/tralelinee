@@ -1,0 +1,51 @@
+.logo-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    padding: 4rem;
+    font-family: sans-serif;
+    font-size: 3rem;
+    color: white;
+    gap: 1rem;
+}
+
+.logo-block {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.separator {
+    font-weight: bold;
+    color: white;
+    user-select: none;
+    width: 1ch;
+    text-align: center;
+}
+
+.letter-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: auto;
+    overflow: hidden;
+}
+
+.letter {
+    font-weight: bold;
+    z-index: 1;
+}
+
+.rest {
+    position: absolute;
+    left: calc(100% + 0.2rem); /* nascosta dietro la linea destra */
+    opacity: 0;
+    white-space: nowrap;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.separator-right {
+    transition: transform 0.3s ease;
+}

@@ -1,0 +1,84 @@
+.expand-digit-widget {
+  display: flex;
+  position: relative;
+}
+
+.expand-digit-pin-wrap {
+  width: 100px;
+  /*flex-shrink: 0;*/
+}
+
+.expand-digit-sticky {
+  width: 100px;
+  color: var(--grey);
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+.expand-digit-content {
+  margin-left: 100px;
+  width: calc(100% - 100px);
+}
+
+
+.expand-digit-section {
+  min-height: 90vh;
+ padding: 6rem 2rem 0 2rem;
+}
+
+
+.digit-text, .sec-title {
+	font-size: 42px;
+}
+.digit-text {
+	padding-top: 8rem;
+}
+
+.light-theme .sec-title {
+	color: #DFDFDF;
+}
+
+.faq-tll {
+	background-color: transparent;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	cursor: pointer;
+}
+
+.faq-tll .accordion-item {
+	background-color: transparent;
+	border: unset;
+	border-bottom: 1px solid var(--grey) !important;
+	border-radius: 0;
+}
+.faq-tll .accordion-item:first-of-type {
+    border-top: 1px solid var(--grey); !important;
+
+}
+.faq-tll .accordion-body {
+	color: #696969;
+	padding-top: 0;
+	font-size: 18px;
+}
+
+.faq-tll .accordion-button {
+	background-color: transparent;
+	color: #696969;
+	font-size: 30px;
+	font-weight: 300;
+
+}
+
+.faq-tll .accordion-button:not(.collapsed), .faq-tll .accordion-button:focus  {
+	box-shadow: unset;
+}
+
+.faq-tll .accordion-button::after {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23696969' viewBox='0 0 16 16'%3E%3Cpath d='M8 1v14M1 8h14' stroke='%23696969' stroke-width='1'/%3E%3C/svg%3E");
+}
+
+.faq-tll .accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cline x1='2' y1='2' x2='14' y2='14' stroke='%23696969' stroke-width='1'/%3E%3Cline x1='14' y1='2' x2='2' y2='14' stroke='%23696969' stroke-width='1'/%3E%3C/svg%3E");
+}
+
