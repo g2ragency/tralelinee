@@ -48,21 +48,31 @@ Stato: prima passata completa. Manca solo l'analisi di `themes/` e `uploads/` (i
 | A9 | Logo morph (MorphSVGPlugin) | expand-logo/app.js | Da confermare all'arrivo di app.js — MorphSVG caricato ma logica nel tema |
 | A10 | Hero / sfumature / reveal testi | app.js | Da catalogare all'arrivo di `themes/` (app.js bloccato via download diretto: il server restituisce HTML) |
 
-## Figma (file QwGdZTf07cR2rAKowcAeYj)
+## Figma — file DEFINITIVO: `eEsO9qVT3E4FKjb0nIVkbk`
+
+(Il file QwGdZTf07cR2rAKowcAeYj era una versione precedente con struttura identica — non usarlo.)
 
 | Frame | Node | Dim | Note |
 |---|---|---|---|
-| HOMEPAGE (v1) | 1:6 | 1440×10172 | prima versione |
-| **HOMEPAGE (nuova)** | **1:74** | 1440×10339 | riferimento principale desktop (dark) |
-| HOMEPAGE BIANCA | 1:174 | 1440×10172 | tema chiaro |
-| Homepage - iPhone | 1:488 | 390×4472 | mobile completo |
-| Menu - iPhone | 1:559 | 390×844 | menu mobile aperto |
-| MENU | 1:239 | — | componente, 2 varianti |
-| ACCORDION METODO | 1:298 | — | 5 varianti |
-| ACCORDION CAPABILITIES | 1:248 | — | 2 varianti |
-| Capabilities | 1:390 | — | 7 varianti (nav 01-06) |
-| Pulsante | 1:385 | — | 2 varianti |
-| Component 7/8 | 1:348 | — | 6 varianti (nav/menu items) |
+| HOMEPAGE (vecchia) | 1230:2138 | 1440×10172 | layout tipo sito live |
+| **HOMEPAGE (DEFINITIVA)** | **1230:2206** | 1440×10339 | riferimento principale desktop (dark) — confermata dal cliente |
+| HOMEPAGE BIANCA | 1230:2305 | 1440×10172 | tema chiaro |
+| Homepage - iPhone | 1230:2619 | 390×4472 | mobile completo |
+| Menu - iPhone | 1230:2690 | 390×844 | menu mobile aperto |
+| MENU | 1230:2370 | — | componente, 2 varianti |
+| ACCORDION METODO | 1230:2429 | — | 5 varianti |
+| ACCORDION CAPABILITIES | 1230:2379 | — | 2 varianti |
+| Capabilities | 1230:2521 | — | 7 varianti (nav 01-06) |
+| Pulsante | 1230:2516 | — | 2 varianti |
+| Component 7 | 1230:2479 | — | 6 varianti (nav/menu items) |
+
+### Differenze HOMEPAGE definitiva (1230:2206) vs sito live
+- **Hero nuova**: "Il concetto di progresso è un meccanismo protettivo che ci difende dai terrori del futuro" (il live ha "The future is already here…")
+- **Menu inline nell'header** (Chi siamo / Metodo / Capabilities / Contatti come testi nell'header, logo più grande 210×50)
+- **Capabilities più ariose**: titoli sezione più grandi (49px vs 39px), spaziatura verticale ~860px per sezione (vs ~515px)
+- La sezione "GRUPPO CHI SIAMO" (scroll orizzontale) non è raggruppata nel frame ma il testo "…1/4" è presente → l'animazione orizzontale resta
+- Il frame CAPABILITES di sfondo è nascosto (hidden) — verificare se lo sfondo scuro della sezione resta
+- SFUMATURA SOPRA nascosta (hidden) nel frame definitivo
 
 ### Struttura sezioni homepage (ordine)
 1. **Header**: logo espandibile + menu (Chi siamo, Metodo, Capabilities, Contatti) + theme switcher
