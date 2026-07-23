@@ -91,13 +91,18 @@ Il sito carica molte librerie ma ne usa poche — parecchio codice è **morto**:
 | Pulsante | 1230:2516 | — | 2 varianti |
 | Component 7 | 1230:2479 | — | 6 varianti (nav/menu items) |
 
-### Differenze HOMEPAGE definitiva (1230:2206) vs sito live
-- **Hero nuova**: "Il concetto di progresso è un meccanismo protettivo che ci difende dai terrori del futuro" (il live ha "The future is already here…")
-- **Menu inline nell'header** (Chi siamo / Metodo / Capabilities / Contatti come testi nell'header, logo più grande 210×50)
-- **Capabilities più ariose**: titoli sezione più grandi (49px vs 39px), spaziatura verticale ~860px per sezione (vs ~515px)
-- La sezione "GRUPPO CHI SIAMO" (scroll orizzontale) non è raggruppata nel frame ma il testo "…1/4" è presente → l'animazione orizzontale resta
-- Il frame CAPABILITES di sfondo è nascosto (hidden) — verificare se lo sfondo scuro della sezione resta
-- SFUMATURA SOPRA nascosta (hidden) nel frame definitivo
+### Differenze HOMEPAGE definitiva (1230:2206) vs sito live — VERIFICATE VISIVAMENTE
+Confronto fatto renderizzando il sito (mirror locale + Chromium, dark/light/mobile) contro il Figma a piena risoluzione:
+
+- **Hero**: il live è GIÀ aggiornato con "Il concetto di progresso…" → live e Figma allineati
+- **CTA Contatti**: Figma dice **"Richiedi portfolio"**, live dice "Contattaci" → è l'entry point del nuovo flusso account/portfolio. Il form contatti diventa/affianca la richiesta di accesso al portfolio
+- **Capabilities più ariose** nel Figma: titoli più grandi (49px), più spazio verticale per sezione, icone "+" sulle righe accordion
+- Menu inline nell'header presente in entrambi (live: visibile sopra breakpoint xl)
+- Theme switcher live: in alto a destra, testo "Light"/"Dark", hover con cerchio — nel nuovo sito diventa **sticky in basso a destra** (richiesta cliente)
+- Composizione hero: grigio/bianco alternato sulle parole chiave, identico in entrambi
+
+### Verifica visiva effettuata (mirror locale)
+Il sito è stato renderizzato offline da `_reference/` (HTML + CSS + asset + font locali, CDN scaricate) con Chromium/Playwright su localhost: screenshot dark/light, tutte le sezioni, mobile 390px e menu mobile. Il mirror servirà anche come **riferimento per i confronti pixel-per-pixel** durante lo sviluppo (script in scratchpad: `mirror/` + `shot2.js`).
 
 ### Struttura sezioni homepage (ordine)
 1. **Header**: logo espandibile + menu (Chi siamo, Metodo, Capabilities, Contatti) + theme switcher
