@@ -1,6 +1,31 @@
 # Discovery — Inventario sito live + Figma
 
-Stato: prima passata completa. Manca solo l'analisi di `themes/` e `uploads/` (in attesa di push su `reference/wp-content`).
+Stato: **COMPLETA**. Analizzati: sito live, tema `themebase`, widget custom, uploads, Figma definitivo.
+
+## Verdetto sull'infrastruttura JS del sito live
+
+Il sito carica molte librerie ma ne usa poche — parecchio codice è **morto**:
+
+| Libreria | Stato reale | Nel nuovo sito React |
+|---|---|---|
+| GSAP + ScrollTrigger | ✅ usati (scroll orizzontale, digit sticky, logo hover) | ✅ GSAP + ScrollTrigger |
+| Lenis | ❌ caricato ma **mai inizializzato** (nessun `new Lenis()` nel codice) | ✅ Lenis vero — lo smooth scroll attuale è il plugin `mousewheel-smooth-scroll` |
+| `themebasejs/app.js` | ❌ **404 anche in produzione**: bug in functions.php (`get_template_directory_uri() . 'js/app.js'` senza slash → URL `themebasejs/app.js` inesistente) | — niente da replicare |
+| SplitType | ❌ caricato, mai usato | — |
+| MorphSVGPlugin | ❌ caricato dal widget expand-logo, ma il JS usa solo opacity/x | — |
+| Swiper 11 | ❌ caricato, il marquee partner è in CSS puro | — |
+| Bootstrap | usato per collapse accordion + offcanvas menu | sostituito da componenti nativi/Radix |
+| jQuery | caricato da WP, non usato dalle animazioni | — |
+
+→ A1 = plugin SmoothScroll (nel nuovo sito: Lenis). **A9 e A10 non esistono** (app.js morto, hero statica, nessun morph reale). Il catalogo vero e completo è A2–A8.
+
+## Asset e markup di riferimento (branch `reference/wp-content`)
+
+- Logo header: **testuale** (HTML `| T | L | L |` con span `.logo-reveal`, doppia versione dark/light) — niente immagine, si ricrea in JSX
+- Logo footer: `uploads/2025/07/logo-tll-xxl-scaled.png` (dark) + `logo-xxl-chiaro-scaled.png` (light) — nel Figma è vettoriale, meglio esportare SVG da Figma
+- Font Diatype Trial: `themes/themebase/inc/assets/fonts/ABCDiatype-{Light,Regular,Medium,Heavy,Bold}-Trial.woff`
+- Header: menu desktop inline sopra breakpoint xl, hamburger+offcanvas sotto; bottone theme-switcher testuale "Dark"/"Light"
+- Tema WP = fork di WP Bootstrap Starter; pagina montata in Elementor, nessuna entrance animation Elementor usata
 
 ## Sito live (tralelinee.com)
 
@@ -37,7 +62,7 @@ Stato: prima passata completa. Manca solo l'analisi di `themes/` e `uploads/` (i
 
 | # | Animazione | Sorgente | Meccanica esatta |
 |---|---|---|---|
-| A1 | Smooth scroll globale | app.js (da confermare) | Lenis, `window.lenis`, scrollTo con duration 1.5 |
+| A1 | Smooth scroll globale | plugin `mousewheel-smooth-scroll` | Inerzia sulla rotella; nel nuovo sito: Lenis (scrollTo con duration 1.5 come da main.js) |
 | A2 | Cursore custom | main.js | Dot 0.3rem che segue il mouse + ombra ad anello con lerp 0.1 (rAF); su hover di link/bottoni: cresce a 6rem, colore invertito rispetto al tema, opacity 0.7; nel footer e aree scure forzato bianco |
 | A3 | Chi Siamo — scroll orizzontale | widget `slides-horizontal` | Sezione pinnata, `gsap.to(x: -scrollLength)` scrub, end dinamico = larghezza contenuto; contatore fisso "n/4" aggiornato con `containerAnimation` trigger a `left center`; contatore visibile solo durante il pin |
 | A4 | Capabilities — digit sticky 01→06 | widget `expand-digit-accordian` | ScrollTrigger pin del numero gigante (start `top top+=100`, end `bottom center`, pinSpacing false); visibilità solo dentro la sezione; `numberText` cambia a ogni sezione (trigger `top`); nav interna con smooth scrollTo compensato dall'altezza sticky +30px |
@@ -45,8 +70,8 @@ Stato: prima passata completa. Manca solo l'analisi di `themes/` e `uploads/` (i
 | A6 | Metodo — accordion hover | widget `expand-accordion` | Su mouseover: `max-height` 0→scrollHeight, opacity 0→1, padding animato; linea verticale `scaleY` proporzionale ad altezza contenuto (base 58px) |
 | A7 | Logo header "T\|L\|L" espandibile | widget `expand-logo` + main.js | mouseenter: `rest` (RA/E/INEE) opacity 0→1 e x -10→0 (0.3s power2.out), separatore destro x+30; mouseleave inverso (power2.inOut); + `.logo-reveal` con width 0→auto 0.8s |
 | A8 | Marquee partner | widget `swiper-partners` | Nastro CSS infinito: loghi duplicati ×2, durata = larghezza/velocità (80 px/s desktop, 130 mobile), CSS custom properties `--marquee-distance`/`--marquee-duration` |
-| A9 | Logo morph (MorphSVGPlugin) | expand-logo/app.js | Da confermare all'arrivo di app.js — MorphSVG caricato ma logica nel tema |
-| A10 | Hero / sfumature / reveal testi | app.js | Da catalogare all'arrivo di `themes/` (app.js bloccato via download diretto: il server restituisce HTML) |
+| ~~A9~~ | ~~Logo morph~~ | — | Non esiste: MorphSVG caricato ma mai usato |
+| ~~A10~~ | ~~Hero/sfumature animate~~ | — | Non esiste: app.js è un 404, hero statica; le sfumature sono gradienti CSS statici |
 
 ## Figma — file DEFINITIVO: `eEsO9qVT3E4FKjb0nIVkbk`
 
@@ -100,7 +125,8 @@ Elementi "SFUMATURA SOPRA/SOTTO" nei frame: gradienti di transizione tra sezioni
 | Lenis | `<SmoothScrollProvider>` (lenis/react) |
 
 ## Da fare
-- [ ] Ricevere `themes/` e `uploads/` → analizzare `app.js` (A1, A9, A10) e censire asset
-- [ ] Screenshot/context di tutti i frame Figma per la checklist visiva di parità
-- [ ] Decisione font: licenza ABC Diatype o alternativa
-- [ ] Verificare la differenza tra i due frame HOMEPAGE (1:6 vs 1:74) — quale hero vale?
+- [x] ~~Ricevere `themes/` e `uploads/`~~ → analizzati, catalogo chiuso
+- [x] ~~Quale frame HOMEPAGE vale~~ → 1230:2206 (confermato dal cliente)
+- [ ] Screenshot/context di tutti i frame Figma per la checklist visiva di parità (in fase Fondamenta)
+- [ ] **Decisione font: licenza ABC Diatype o alternativa** (aperto — da discutere col cliente)
+- [ ] Conferma sfondo sezione Capabilities nel frame definitivo (CAPABILITES hidden nel Figma)
