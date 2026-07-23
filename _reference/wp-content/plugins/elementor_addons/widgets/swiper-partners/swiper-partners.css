@@ -1,0 +1,34 @@
+.partners-marquee {
+  overflow: hidden;
+  width: 100%;
+}
+
+.partners-marquee-track {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  /* durata e distanza verranno settate via JS */
+  animation: partners-marquee var(--marquee-duration, 20s) linear infinite;
+}
+
+.partners-marquee-slide {
+  flex-shrink: 0;
+  padding: 0 30px;
+  text-align: center;
+}
+
+.partners-marquee-slide img {
+  display: block;
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+}
+
+@keyframes partners-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-1 * var(--marquee-distance, 100%)));
+  }
+}
