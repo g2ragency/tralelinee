@@ -1,0 +1,85 @@
+/*
+Theme Name: Motto
+Theme URI: http://motto.webgeniuslab.net/
+Author: WebGeniusLab
+Author URI: http://webgeniuslab.net/
+Description: WebGeniusLab team presents absolutely fresh and powerful WordPress theme. It combines new technologies and functional design that helps to showcase your content in better way. This WordPress theme is developed with attention to details, so you can create effective presentation of a website easily. Enjoy building web pages with our product!
+Version: 1.0.1
+Requires at least: 5.7
+Requires PHP: 7.4
+License: GNU General Public License version 3.0
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: motto
+*/
+.wgl-accordion_title {
+    height: 130px !important;
+}
+
+.primary-nav > .menu > .menu-item > .sub-menu.wgl-mega-menu.wgl-mega-menu-position-center {
+	display: none !important;
+}
+
+body.page-id-4246 header, body.page-id-4246 footer, body.page-id-4246 .page-header{
+	display: none;
+}
+
+body.page-id-4246 #main{
+	padding: 0;
+}
+
+body.page-id-4246{
+	overflow-y: hidden;
+}
+
+body.page-id-4246 p{
+	margin-bottom: 0;
+}
+
+body.page-id-4246 a{
+	color: #DFDFDF !important;
+}
+
+@font-face {
+  font-family: "ABCDiatype-Light-Trial";
+  src: url("/wp-content/themes/motto/fonts/ABCDiatype-Light-Trial.woff")
+      format("woff2"),
+    url("GrandSland-B-Side.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ABCDiatype-Regular-Trial";
+  src: url("/wp-content/themes/motto/fonts/ABCDiatype-Regular-Trial.woff")
+      format("woff2"),
+    url("GrandSland-B-Side.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "ABCDiatype-Medium-Trial";
+  src: url("/wp-content/themes/motto/fonts/ABCDiatype-Medium-Trial.woff")
+      format("woff2"),
+    url("GrandSland-B-Side.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ABCDiatype-Heavy-Trial";
+  src: url("/wp-content/themes/motto/fonts/ABCDiatype-Heavy-Trial.woff")
+      format("woff2"),
+    url("GrandSland-B-Side.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+.abcd-regular, .abcd-regular p, .abcd-regular div{
+	font-family: "ABCDiatype-Regular-Trial" !important;
+}
