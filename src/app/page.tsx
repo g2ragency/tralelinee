@@ -6,6 +6,7 @@
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
 import { Metodo } from "@/components/sections/Metodo";
 import { Capabilities } from "@/components/sections/Capabilities";
+import { Contatti } from "@/components/sections/Contatti";
 
 export default function Home() {
   return (
@@ -30,22 +31,7 @@ export default function Home() {
       <Capabilities />
 
       {/* Contatti */}
-      <section id="contatti" className="px-6 py-24 xl:px-12">
-        <h2 className="font-mono text-sm uppercase tracking-widest">
-          Contatti
-        </h2>
-        <address className="mt-8 font-mono text-sm not-italic leading-relaxed">
-          Viale Parioli 39c - Roma
-          <br />
-          <a href="mailto:info@tralelinee.com" className="hoverable">
-            info@tralelinee.com
-          </a>
-          <br />
-          <a href="tel:+393324353480" className="hoverable">
-            +39 332 435 3480
-          </a>
-        </address>
-      </section>
+      <Contatti />
     </main>
   );
 }
