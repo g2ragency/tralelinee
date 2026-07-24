@@ -74,12 +74,12 @@ export function Header() {
         <span className="h-px w-6 bg-current" />
       </button>
 
-      {/* Overlay mobile a tutto schermo */}
-      {menuOpen && (
-        <nav
-          className="fixed inset-0 z-50 flex flex-col bg-background text-foreground xl:hidden"
-          aria-label="Menu mobile"
-        >
+      {/* Overlay mobile: sempre montato, scorre da destra */}
+      <nav
+        className={`fixed inset-0 z-50 flex flex-col bg-background text-foreground transition-transform duration-500 ease-out xl:hidden ${menuOpen ? "translate-x-0" : "pointer-events-none translate-x-full"}`}
+        aria-label="Menu mobile"
+        aria-hidden={!menuOpen}
+      >
           <div className="flex items-center justify-between px-5 py-5">
             <ExpandLogo />
             <button
@@ -115,8 +115,7 @@ export function Header() {
           <div className="mt-auto px-5 pb-8">
             <ThemePill />
           </div>
-        </nav>
-      )}
+      </nav>
     </header>
   );
 }
