@@ -87,15 +87,17 @@ function CapSection({ num, title, items }: Cap) {
   return (
     <div
       id={`cap-${num}`}
-      className="grid scroll-mt-[130px] grid-cols-1 gap-8 xl:grid-cols-[385px_1fr] xl:gap-0"
+      className="grid scroll-mt-[130px] grid-cols-1 xl:grid-cols-[385px_1fr]"
     >
-      <div>
-        <p className="w-fit text-3xl leading-[0.933] tracking-[-1.2px] xl:sticky xl:top-[100px] xl:text-[52px] xl:tracking-[-2.08px]">
+      {/* Digit sticky — solo desktop; su mobile il numero è inline nel titolo */}
+      <div className="hidden xl:block">
+        <p className="sticky top-[100px] w-fit text-[52px] leading-[0.933] tracking-[-2.08px]">
           {num}
         </p>
       </div>
       <div>
-        <h3 className="mb-6 text-3xl leading-[0.933] tracking-[-1.2px] xl:text-[52px] xl:tracking-[-2.08px]">
+        <h3 className="mb-4 text-[24px] leading-[0.933] tracking-[-0.96px] xl:mb-6 xl:text-[52px] xl:tracking-[-2.08px]">
+          <span className="xl:hidden">[{num}] </span>
           {title}
         </h3>
         <ul className="border-b border-grey/40">
@@ -109,7 +111,7 @@ function CapSection({ num, title, items }: Cap) {
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="hoverable flex w-full items-center justify-between gap-6 py-3 text-left"
                 >
-                  <span className="text-lg leading-[0.933] tracking-[-0.8px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
+                  <span className="text-[16px] leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
                     {item.t}
                   </span>
                   <svg
@@ -124,7 +126,9 @@ function CapSection({ num, title, items }: Cap) {
                   className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? "[grid-template-rows:1fr]" : "[grid-template-rows:0fr]"}`}
                 >
                   <div className="overflow-hidden">
-                    <p className="max-w-[720px] pb-5 text-base font-light leading-[1.1] tracking-[-0.4px] text-grey2 xl:text-[20px]">
+                    <p
+                      className={`max-w-[720px] pb-5 text-[15px] font-light leading-[1.1] tracking-[-0.4px] text-grey2 transition-opacity duration-300 xl:text-[20px] ${isOpen ? "opacity-100" : "opacity-0"}`}
+                    >
                       {item.d}
                     </p>
                   </div>
@@ -141,11 +145,11 @@ function CapSection({ num, title, items }: Cap) {
 export function Capabilities() {
   return (
     <section id="capabilities" className="px-6 py-24 xl:px-10 xl:py-40">
-      <div className="mb-24 max-w-[1265px]">
-        <p className="mb-6 text-[24px] font-medium leading-[0.933] tracking-[-0.96px]">
+      <div className="mb-16 max-w-[1265px] xl:mb-24">
+        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Servizi
         </p>
-        <p className="text-3xl leading-[1.02] tracking-[-1.2px] xl:text-[52px] xl:tracking-[-2.08px]">
+        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
           Chiamati dalla vocazione agli scenari del futuro, plasmiamo il
           dibattito pubblico costruendo nuovi mondi narrativi. Il nostro
           obiettivo è creare cornici culturali dove istituzioni, corporate e
@@ -168,7 +172,7 @@ export function Capabilities() {
         ))}
       </nav>
 
-      <div className="flex flex-col gap-40 xl:gap-[420px]">
+      <div className="flex flex-col gap-16 xl:gap-[420px]">
         {SECTIONS.map((section) => (
           <CapSection key={section.num} {...section} />
         ))}

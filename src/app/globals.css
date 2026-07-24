@@ -45,6 +45,22 @@ html {
   scroll-behavior: initial; /* lo smooth scroll è di Lenis */
 }
 
+/* Transizione item carosello Metodo (mobile) */
+@keyframes metodo-slide {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-metodo-slide {
+  animation: metodo-slide 0.35s ease-out;
+}
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);

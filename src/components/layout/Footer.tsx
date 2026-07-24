@@ -24,7 +24,7 @@ export function Footer() {
         <path d="M1087.17 236.228V60H1056V264H1190V236.228H1087.17Z" />
         <path d="M644.132 60H613V264H747V236.228H644.132V60Z" />
       </svg>
-      <div className="flex flex-col items-center justify-between gap-4 font-mono text-xs uppercase tracking-widest sm:flex-row">
+      <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-widest sm:text-xs">
         <p>©2025 Tra le linee All Rights Reserved</p>
         <Link href="/privacy-policy" className="hoverable">
           Privacy Policy
