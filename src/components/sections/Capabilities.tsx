@@ -1,15 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { forwardRef, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /*
-  A4/A5 — Capabilities: 6 sezioni numerate con digit sticky a sinistra e
-  accordion di sottovoci con icona "+" (un solo pannello aperto per sezione).
+  A4/A5 — Capabilities: UN solo numero gigante pinnato a sinistra (digit
+  sticky) che cambia testo 01→06 a ogni sezione mentre si scorre (come il
+  sito live: numberText aggiornato al trigger "top" di ogni sezione),
+  visibile solo dentro la sezione. Accordion di sottovoci con icona "+"
+  (un solo pannello aperto per sezione).
   Titoli/sottovoci verbatim dal Figma definitivo (1230:2206), descrizioni
   degli accordion dal sito live (assenti nel Figma).
-  ponytail: digit pinnato con CSS sticky invece di ScrollTrigger — stessa resa
-  (visibile solo dentro la sezione, cambia numero a ogni sezione); passare a
-  GSAP solo se serve il timing esatto "end: bottom center".
 */
 type Item = { t: string; d: string };
 type Cap = { num: string; title: string; items: Item[] };
@@ -81,20 +85,14 @@ const SECTIONS: Cap[] = [
   },
 ];
 
-function CapSection({ num, title, items }: Cap) {
+const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
+  { num, title, items },
+  ref,
+) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div
-      id={`cap-${num}`}
-      className="grid scroll-mt-[130px] grid-cols-1 xl:grid-cols-[385px_1fr]"
-    >
-      {/* Digit sticky — solo desktop; su mobile il numero è inline nel titolo */}
-      <div className="hidden xl:block">
-        <p className="sticky top-[100px] w-fit text-[52px] leading-[0.933] tracking-[-2.08px]">
-          {num}
-        </p>
-      </div>
+    <div id={`cap-${num}`} ref={ref} className="scroll-mt-[130px]">
       <div>
         <h3 className="mb-4 text-[24px] leading-[0.933] tracking-[-0.96px] xl:mb-6 xl:text-[52px] xl:tracking-[-2.08px]">
           <span className="xl:hidden">[{num}] </span>
@@ -140,9 +138,34 @@ function CapSection({ num, title, items }: Cap) {
       </div>
     </div>
   );
-}
+});
 
 export function Capabilities() {
+  const digitRef = useRef<HTMLParagraphElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useLayoutEffect(() => {
+    const digit = digitRef.current;
+    if (!digit) return;
+
+    const ctx = gsap.context(() => {
+      // UN solo numero: ogni sezione, quando la sua cima passa il centro
+      // dello schermo, aggiorna il testo del digit (01→06 e ritorno).
+      sectionRefs.current.forEach((el, i) => {
+        if (!el) return;
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => (digit.textContent = SECTIONS[i].num),
+          onEnterBack: () => (digit.textContent = SECTIONS[i].num),
+        });
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section id="capabilities" className="px-6 py-24 xl:px-10 xl:py-40">
       <div className="mb-16 max-w-[1265px] xl:mb-24">
@@ -172,10 +195,29 @@ export function Capabilities() {
         ))}
       </nav>
 
-      <div className="flex flex-col gap-16 xl:gap-[420px]">
-        {SECTIONS.map((section) => (
-          <CapSection key={section.num} {...section} />
-        ))}
+      {/* Desktop: digit unico pinnato a sinistra + colonna sezioni a destra.
+          Il numero è sticky per l'intera pila e il suo testo cambia 01→06. */}
+      <div className="xl:grid xl:grid-cols-[385px_1fr]">
+        <div className="hidden xl:block">
+          <p
+            ref={digitRef}
+            aria-hidden
+            className="sticky top-[100px] w-fit text-[52px] leading-[0.933] tracking-[-2.08px]"
+          >
+            01
+          </p>
+        </div>
+        <div className="flex flex-col gap-16 xl:gap-[420px]">
+          {SECTIONS.map((section, i) => (
+            <CapSection
+              key={section.num}
+              ref={(el) => {
+                sectionRefs.current[i] = el;
+              }}
+              {...section}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
