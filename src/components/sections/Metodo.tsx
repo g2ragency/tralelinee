@@ -107,7 +107,10 @@ export function Metodo() {
   const item = ITEMS[index];
 
   return (
-    <section id="metodo" className="px-6 py-24 xl:px-10 xl:py-40">
+    <section
+      id="metodo"
+      className="mx-auto max-w-[1440px] px-6 py-24 xl:px-10 xl:py-40"
+    >
       <div className="mb-10 flex items-center justify-between xl:mb-20">
         <p className="text-[16px] tracking-[-0.64px] xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Metodo

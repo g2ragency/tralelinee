@@ -14,7 +14,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="hoverable fixed bottom-6 right-6 z-50 border border-current px-5 py-2 font-mono text-sm uppercase tracking-widest transition-colors duration-300"
+      className="hoverable fixed bottom-6 right-6 z-30 hidden border border-current px-5 py-2 font-mono text-sm uppercase tracking-widest transition-colors duration-300 xl:block"
       aria-label="Cambia tema"
     >
       {theme === "dark" ? "Light" : "Dark"}

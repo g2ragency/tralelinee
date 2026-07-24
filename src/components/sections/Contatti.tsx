@@ -6,7 +6,10 @@
 */
 export function Contatti() {
   return (
-    <section id="contatti" className="px-6 py-24 xl:px-10 xl:py-40">
+    <section
+      id="contatti"
+      className="mx-auto max-w-[1440px] px-6 py-24 xl:px-10 xl:py-40"
+    >
       <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
         Contatti
       </p>

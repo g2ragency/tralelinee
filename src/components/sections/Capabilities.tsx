@@ -167,7 +167,10 @@ export function Capabilities() {
   }, []);
 
   return (
-    <section id="capabilities" className="px-6 py-24 xl:px-10 xl:py-40">
+    <section
+      id="capabilities"
+      className="mx-auto max-w-[1440px] px-6 py-24 xl:px-10 xl:py-40"
+    >
       <div className="mb-16 max-w-[1265px] xl:mb-24">
         <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Servizi
