@@ -4,6 +4,7 @@
   arrivano nella fase "Clone sito pubblico" (vedi DISCOVERY.md).
 */
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
+import { Metodo } from "@/components/sections/Metodo";
 
 export default function Home() {
   return (
@@ -22,9 +23,7 @@ export default function Home() {
       <ChiSiamo />
 
       {/* Metodo — accordion hover (A6) */}
-      <section id="metodo" className="min-h-svh px-6 py-24 xl:px-12">
-        <h2 className="font-mono text-sm uppercase tracking-widest">Metodo</h2>
-      </section>
+      <Metodo />
 
       {/* Capabilities — digit sticky 01→06 (A4/A5) */}
       <section id="capabilities" className="min-h-svh px-6 py-24 xl:px-12">
