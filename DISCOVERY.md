@@ -114,7 +114,64 @@ Il sito è stato renderizzato offline da `_reference/` (HTML + CSS + asset + fon
 7. **Footer**: logo gigante SVG "T | L | L", ©2025, Privacy Policy
 
 ### Sfumature
-Elementi "SFUMATURA SOPRA/SOTTO" nei frame: gradienti di transizione tra sezioni (probabilmente animati — da confermare con app.js).
+Elementi "SFUMATURA SOPRA/SOTTO" nei frame: gradienti CSS **statici** di transizione tra sezioni (non animati — app.js è morto).
+
+## Dettaglio fine animazioni — CONFERMATO VISIVAMENTE frame-per-frame
+
+Simulazione mouse + cattura frame intermedi sul mirror locale (script `shot3.js`). Valori esatti per la replica React:
+
+### Cursore custom (A2) — due elementi a velocità diverse
+- **Dot**: `#cursor`, 0.3rem, `border-radius:50%`, `position:fixed`, `transform:translate(-50%,-50%)`, `z-index:100`. Segue il mouse **istantaneo** (aggiornato ogni `mousemove`).
+- **Ring**: `#cursor-shadow`, 4.5rem, bordo `1px solid`. Insegue con **lerp 0.1** dentro `requestAnimationFrame` → ritardo elastico morbido. Transition `opacity 0.1s`.
+- **Hover su `a, button, .popup-btn, .popup-btn2, .hoverable`**: il dot cresce a **6rem**, `background-color` = colore *opposto* al tema (dark→bianco, light→nero), `opacity 0.7`; il ring va a `opacity 0`. Transition `width/height/background-color/opacity 0.2s ease`. Al mouseleave torna 0.3rem e ricalcola il colore del tema.
+- **Colore base**: dark → bianco `#FFF`; light → nero `#000`.
+- **Aree che forzano il cursore a bianco**: `footer`, `.bluebg-sec`, `#popup-content`, `.popup-content`.
+- **Mobile ≤768px**: cursore custom `display:none`, cursore di sistema normale.
+
+### Cambio tema (feature "cambio colore") — CONFERMATO: crossfade, non switch secco
+- Sul `body`: `transition: background-color 0.3s, color 0.3s` → **crossfade di 300ms** (catturato il frame a metà con sfondo grigio intermedio nero↔off-white).
+- Toggle classe `dark-theme`/`light-theme` sul body; persistenza `localStorage.theme`; default `dark-theme`.
+- Contestualmente: testo bottone Light↔Dark, swap dei due set di logo (`.logo-light`/`.logo-dark`), inversione colore cursore.
+- Bottone switcher: ha un proprio hover con cerchio pieno (dark/light) dietro il testo, `transition: all 0.3s`.
+- **Nel nuovo sito**: identico ma bottone **sticky in basso a destra** (richiesta cliente) invece che in header. Implementazione consigliata: CSS variables `--bg-color`/`--text-color` su `:root[data-theme]`, transition 300ms, `next-themes` o provider custom + cookie/localStorage per evitare flash.
+
+### Logo espandibile (A7) — confermato
+Hover su ogni `.hoverable`: la lettera iniziale rivela il resto (`T`→`RA`, `L`→`E`, `L`→`INEE`) con `.logo-reveal` che va da `width:0` a `width:auto`, `opacity 0→1`, GSAP 0.8s power2.out (mouseleave: 0.6s power2.in).
+
+## Inventario contenuti (copy 1:1) — fonte: Figma definitivo + testi tema
+
+> Al momento del build, prelevare il testo **verbatim** dai text node del Figma 1230:2206 (o dal live). Sintesi:
+
+**Header / menu**: Chi siamo · Metodo · Capabilities · Contatti — logo `| T | L | L |`
+
+**Hero**: «Il concetto di progresso è un meccanismo protettivo che ci difende dai terrori del futuro» (parole chiave in bianco, resto in grigio)
+
+**Chi Siamo** (4 slide, scroll orizzontale, contatore n/4):
+1. Tra le linee è un'agenzia di comunicazione cross mediale e interdisciplinare specializzata nell'elaborazione e gestione di sistemi di influenza integrati.
+2. Progettiamo significati, costruiamo senso e visione per chi vuole affermare il proprio posizionamento profondo e coerente.
+3. Pensiamo narrazioni e produciamo immagini influenzando narrazioni pubbliche e private attraverso meccanismi di elaborazione e diffusione di frame target.
+4. Applichiamo lo speculative design alla comunicazione classica per creare strumenti innovativi ed efficaci, editoriali, relazionali e istituzionali.
+
+**Metodo** (accordion hover, intro + 4 voci):
+- Intro: «Costruiamo narrazioni che generano immaginari… / Integriamo gli strumenti dello speculative design…»
+- Anticipazione Strategica — Immaginare scenari futuri per aiutare clienti, istituzioni o brand a posizionarsi prima che accadano i cambiamenti
+- Issue Shaping — Costruisci mondi futuri e fai in modo che il tuo cliente plasmi il dibattito
+- Creazione di nuovi frame culturali — Nuovi modi di pensare problemi consolidati (lavoro, benessere, identità) creando un "campo semantico" dove il cliente è già leader
+- Stimolazione delle policy
+
+**Servizi/Capabilities** (intro + 6 sezioni numerate con digit sticky; ogni voce ha accordion "+"):
+- Intro: «Chiamati dalla vocazione agli scenari del futuro, plasmiamo il dibattito pubblico costruendo nuovi mondi narrativi…»
+- **01 Futures Strategy Unit**: Trend Intelligence & Media Monitoring · Speculative Brand Positioning · Future Audience Mapping · Competitor Analysis · Brand Identity
+- **02 Pr & Future Media Relations**: Narrative PR & Speculative Relations · Media Relations Aumentate · Crisis Prevention · Press Office · Influencer Narrative Collaborations
+- **03 Speculative Storytelling LAB**: Content & Digital Strategy · Social Media Casting · Content Marketing · SEO & Cultural Framing · Interactive Experiences
+- **04 Influence Design Studio**: Visual Communication & Design Fiction · Brand Identity Evolution · Artefatti Speculativi · Advertising Concepts Disruptive · Future UX/UI Design
+- **05 Alternative Events & Experience Design**: Workshop · Hybrid Reality Events · Brand Fiction Installations · Speculative Product Launches
+- **06 Futures Policy LAB**: Futures Regulatory Scanner · Policy Workshops · Regulatory Future Narratives · Impact Assessment Speculativo
+
+**Contatti**: «Per istituzioni, imprese e organizzazioni che desiderano esplorare nuovi scenari, rafforzare il proprio posizionamento o attivare strategie di influenza culturale e comunicativa. Contattaci per avviare un dialogo e valutare insieme percorsi di collaborazione.» — CTA **«Richiedi portfolio»** (entry point flusso account/portfolio)
+- Indirizzo: Viale Parioli 39c - Roma · Email: info@tralelinee.com · Cellulare: +39 332 435 3480
+
+**Footer**: logo gigante `| T | L | L |` (vettoriale) · ©2025 Tra le linee All Rights Reserved · Privacy Policy
 
 ## Mappatura React (bozza)
 
