@@ -8,7 +8,7 @@ import Link from "next/link";
 */
 export function Footer() {
   return (
-    <footer className="mx-auto flex max-w-[1440px] flex-col gap-10 px-6 py-16 xl:px-10">
+    <footer className="flex flex-col gap-10 px-6 py-16 xl:px-10">
       <svg
         viewBox="0 0 1360 328"
         fill="currentColor"

@@ -46,7 +46,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 mx-auto flex max-w-[1440px] items-center justify-between px-6 py-5 xl:px-10">
+    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-5 xl:px-10">
       <ExpandLogo />
 
       {/* Menu desktop */}
