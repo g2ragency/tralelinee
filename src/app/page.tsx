@@ -5,6 +5,7 @@
 */
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
 import { Metodo } from "@/components/sections/Metodo";
+import { Capabilities } from "@/components/sections/Capabilities";
 
 export default function Home() {
   return (
@@ -26,11 +27,7 @@ export default function Home() {
       <Metodo />
 
       {/* Capabilities — digit sticky 01→06 (A4/A5) */}
-      <section id="capabilities" className="min-h-svh px-6 py-24 xl:px-12">
-        <h2 className="font-mono text-sm uppercase tracking-widest">
-          Capabilities
-        </h2>
-      </section>
+      <Capabilities />
 
       {/* Contatti */}
       <section id="contatti" className="px-6 py-24 xl:px-12">
