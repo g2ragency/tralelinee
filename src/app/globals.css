@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/*
+  Design token dal Figma definitivo (eEsO9qVT3E4FKjb0nIVkbk) e dal CSS del tema WP.
+  NB: il "bianco" del sito è #DFDFDF, non bianco puro.
+*/
+:root {
+  --black: #000000;
+  --white: #dfdfdf;
+  --grey: #696969;
+
+  /* ABC Diatype: file "Trial" non licenziati — placeholder in attesa della
+     decisione sulla licenza (vedi HANDOFF.md, Decisioni APERTE). */
+  --font-diatype: "ABC Diatype", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Tema: solo palette, dark di default, light via [data-theme="light"] */
+:root,
+:root[data-theme="dark"] {
+  --bg-color: var(--black);
+  --text-color: var(--white);
+  --cursor-color: #ffffff;
+}
+
+:root[data-theme="light"] {
+  --bg-color: var(--white);
+  --text-color: var(--black);
+  --cursor-color: #000000;
+}
+
+@theme inline {
+  /* black/white ridefiniti di proposito sulla palette del sito */
+  --color-black: var(--black);
+  --color-white: var(--white);
+  --color-grey: var(--grey);
+  --color-background: var(--bg-color);
+  --color-foreground: var(--text-color);
+  --font-sans: var(--font-diatype);
+  --font-mono: var(--font-dm-mono), monospace;
+}
+
+html {
+  scroll-behavior: initial; /* lo smooth scroll è di Lenis */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-diatype);
+  /* Cambio tema = crossfade 300ms (come il sito live) */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ===== Cursore custom (A2) ===== */
+#cursor,
+#cursor-shadow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+#cursor {
+  width: 0.3rem;
+  height: 0.3rem;
+  background-color: var(--cursor-color);
+  transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+#cursor.is-hover {
+  width: 6rem;
+  height: 6rem;
+  opacity: 0.7;
+}
+
+#cursor-shadow {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid var(--cursor-color);
+  transition: opacity 0.1s;
+}
+
+#cursor-shadow.is-hover {
+  opacity: 0;
+}
+
+/* Aree che forzano il cursore a bianco */
+[data-cursor-white="true"] #cursor {
+  background-color: #ffffff;
+}
+
+[data-cursor-white="true"] #cursor-shadow {
+  border-color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  #cursor,
+  #cursor-shadow {
+    display: none;
+  }
+}
