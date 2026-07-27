@@ -10,9 +10,8 @@
   --grey: #696969;
   --grey2: #868686; /* testi secondari (descrizioni accordion, slide chi-siamo) */
 
-  /* ABC Diatype: file "Trial" non licenziati — placeholder in attesa della
-     decisione sulla licenza (vedi HANDOFF.md, Decisioni APERTE). */
-  --font-diatype: "ABC Diatype", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* --font-diatype è impostata da next/font/local in layout.tsx
+     (ABC Diatype Trial — licenza da regolarizzare, vedi HANDOFF.md). */
 }
 
 /* Tema: solo palette, dark di default, light via [data-theme="light"] */
