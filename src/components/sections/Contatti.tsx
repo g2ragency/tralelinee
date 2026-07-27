@@ -11,7 +11,7 @@ export function Contatti() {
       <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
         Contatti
       </p>
-      <p className="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:max-w-none xl:text-[52px] xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
+      <p className="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:max-w-none xl:text-[52px] xl:font-medium xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
         Per istituzioni, imprese e organizzazioni che desiderano esplorare
         nuovi scenari, rafforzare il proprio posizionamento o attivare
         strategie di influenza culturale e comunicativa. Contattaci per

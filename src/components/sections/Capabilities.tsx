@@ -173,7 +173,7 @@ export function Capabilities() {
         <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Servizi
         </p>
-        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
+        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:font-medium xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
           Chiamati dalla vocazione agli scenari del futuro, plasmiamo il
           dibattito pubblico costruendo nuovi mondi narrativi. Il nostro
           obiettivo è creare cornici culturali dove istituzioni, corporate e

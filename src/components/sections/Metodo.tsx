@@ -134,7 +134,7 @@ export function Metodo() {
         {INTRO.map((p) => (
           <p
             key={p.slice(0, 20)}
-            className="mt-[52px] text-[52px] leading-none tracking-[-2.08px] first:mt-0"
+            className="mt-[52px] text-[52px] font-medium leading-none tracking-[-2.08px] first:mt-0"
           >
             {p}
           </p>
