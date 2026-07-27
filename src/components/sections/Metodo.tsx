@@ -24,7 +24,8 @@ const ITEMS = [
     desc: "Nuovi modi di pensare problemi consolidati (es. lavoro, benessere, identità) e creare un “campo semantico” dove il cliente è già leader",
   },
   {
-    title: "Stimolazione delle policy",
+    // Live aggiornato dopo il Figma: "Attivazione", non "Stimolazione"
+    title: "Attivazione delle policy",
     desc: "Elaborare concept utili a influenzare chi scrive norme e regolamenti.",
   },
 ];
@@ -127,12 +128,12 @@ export function Metodo() {
         </div>
       </div>
 
-      {/* ponytail: stile intro non presente nel Figma definitivo — allineato al pattern delle altre sezioni */}
-      <div className="mb-20 hidden max-w-[1265px] xl:block">
+      {/* Intro come sul live: 52px Light #dfdfdf, leading 1, tutta larghezza */}
+      <div className="mb-24 hidden xl:block">
         {INTRO.map((p) => (
           <p
             key={p.slice(0, 20)}
-            className="mt-4 text-[30px] font-light leading-[1.1] tracking-[-1.2px] text-grey2"
+            className="mt-[52px] text-[52px] leading-none tracking-[-2.08px] first:mt-0"
           >
             {p}
           </p>

@@ -10,10 +10,10 @@ import { Contatti } from "@/components/sections/Contatti";
 
 export default function Home() {
   return (
-    <main className="pt-24">
-      {/* Hero — spans grigio/bianco come nel Figma 1230:2212 */}
-      <section className="flex min-h-svh items-center px-6 xl:px-10">
-        <h1 className="max-w-5xl text-[40px] leading-none tracking-[-1.6px] text-grey xl:text-[86px] xl:tracking-[-3.44px]">
+    <main>
+      {/* Hero — come il live: testo in basso, 90px Light, evidenziazioni Regular */}
+      <section className="flex min-h-svh items-center px-6 pb-10 xl:items-end xl:px-10">
+        <h1 className="max-w-[1100px] text-[40px] leading-none tracking-[-1.6px] text-grey xl:text-[90px] xl:tracking-[-4px]">
           Il concetto di{" "}
           <span className="font-normal text-foreground">
             progresso è un meccanismo protettivo
