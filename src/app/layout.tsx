@@ -19,18 +19,20 @@ const dmMono = DM_Mono({
 });
 
 /*
-  ABC Diatype — file "Trial" presi dal tema WP del sito live (stessi che
-  tralelinee.com serve oggi in produzione). ⚠️ Licenza da regolarizzare
-  (HANDOFF §Decisioni APERTE): quando arriva, basta sostituire i woff.
+  ABC Diatype — woff2 dalla famiglia completa fornita dal cliente.
+  Solo i 5 pesi in uso: next/font fa il preload di ogni faccia dichiarata,
+  quindi Thin/Black/Ultra e i corsivi non vanno aggiunti finché non servono.
+  ⚠️ Licenza da regolarizzare (HANDOFF §Decisioni APERTE): quando arriva,
+  basta sostituire i file in src/fonts/.
 */
 const diatype = localFont({
   variable: "--font-diatype",
   src: [
-    { path: "../fonts/ABCDiatype-Light-Trial.woff", weight: "300" },
-    { path: "../fonts/ABCDiatype-Regular-Trial.woff", weight: "400" },
-    { path: "../fonts/ABCDiatype-Medium-Trial.woff", weight: "500" },
-    { path: "../fonts/ABCDiatype-Bold-Trial.woff", weight: "700" },
-    { path: "../fonts/ABCDiatype-Heavy-Trial.woff", weight: "800" },
+    { path: "../fonts/ABCDiatype-Light-Trial.woff2", weight: "300" },
+    { path: "../fonts/ABCDiatype-Regular-Trial.woff2", weight: "400" },
+    { path: "../fonts/ABCDiatype-Medium-Trial.woff2", weight: "500" },
+    { path: "../fonts/ABCDiatype-Bold-Trial.woff2", weight: "700" },
+    { path: "../fonts/ABCDiatype-Heavy-Trial.woff2", weight: "800" },
   ],
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
