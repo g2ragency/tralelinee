@@ -94,7 +94,8 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
   return (
     <div id={`cap-${num}`} ref={ref} className="scroll-mt-[130px]">
       <div>
-        <h3 className="mb-4 text-[24px] leading-[0.933] tracking-[-0.96px] xl:mb-6 xl:text-[52px] xl:tracking-[-2.08px]">
+        {/* Figma Component 2 (1230:2228): Diatype Regular 52px, ls -2.08 */}
+        <h3 className="mb-4 text-[24px] font-normal leading-[0.933] tracking-[-0.96px] xl:mb-6 xl:text-[52px] xl:tracking-[-2.08px]">
           <span className="xl:hidden">[{num}] </span>
           {title}
         </h3>
@@ -109,7 +110,8 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="hoverable flex w-full items-center justify-between gap-6 py-3 text-left"
                 >
-                  <span className="text-[16px] leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
+                  {/* Figma 1230:2229-2233: Regular 30px, ls -1.2, GRIGIO1 */}
+                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
                     {item.t}
                   </span>
                   <svg
@@ -203,7 +205,7 @@ export function Capabilities() {
           <p
             ref={digitRef}
             aria-hidden
-            className="sticky top-[100px] w-fit text-[52px] leading-[0.933] tracking-[-2.08px]"
+            className="sticky top-[100px] w-fit text-[52px] font-normal leading-[0.933] tracking-[-2.08px]"
           >
             01
           </p>
