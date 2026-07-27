@@ -9,6 +9,9 @@
   --white: #dfdfdf;
   --grey: #696969;
   --grey2: #868686; /* testi secondari (descrizioni accordion, slide chi-siamo) */
+  /* Label di sezione (Metodo/Servizi/Contatti): Figma variabile GRIGIO1.
+     ⚠️ Il sito live rende questi label #696969 — da confermare quale vale. */
+  --grigio1: #333333;
 
   /* --font-diatype è impostata da next/font/local in layout.tsx
      (ABC Diatype Trial — licenza da regolarizzare, vedi HANDOFF.md). */
@@ -34,6 +37,7 @@
   --color-white: var(--white);
   --color-grey: var(--grey);
   --color-grey2: var(--grey2);
+  --color-grigio1: var(--grigio1);
   --color-background: var(--bg-color);
   --color-foreground: var(--text-color);
   --font-sans: var(--font-diatype);
