@@ -170,7 +170,7 @@ export function Capabilities() {
     <section id="capabilities" className="px-6 py-24 xl:px-10 xl:py-40">
       <div className="mb-16 max-w-[1265px] xl:mb-24">
         {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-grigio1 xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
+        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-grey xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Servizi
         </p>
         <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
