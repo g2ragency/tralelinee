@@ -5,10 +5,15 @@ import Link from "next/link";
   Frame 9 di 1230:2206, fill currentColor per seguire il tema), copyright
   e Privacy Policy. Nel Figma light il footer si inverte come il resto
   della pagina: niente colori forzati.
+
+  Spaziature dal Figma 1230:2206: 509px tra indirizzo e logo (349 qui + 160
+  di padding della sezione Contatti), 34px tra logo e copyright. Il pb è più
+  generoso del Figma (21px) per non far finire il bottone tema sticky sopra
+  "Privacy Policy".
 */
 export function Footer() {
   return (
-    <footer className="flex flex-col gap-10 px-6 py-16 xl:px-10">
+    <footer className="flex flex-col gap-10 px-6 pb-16 pt-16 xl:gap-[34px] xl:px-10 xl:pb-20 xl:pt-[349px]">
       <svg
         viewBox="0 0 1360 328"
         fill="currentColor"
@@ -24,7 +29,8 @@ export function Footer() {
         <path d="M1087.17 236.228V60H1056V264H1190V236.228H1087.17Z" />
         <path d="M644.132 60H613V264H747V236.228H644.132V60Z" />
       </svg>
-      <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-widest sm:text-xs">
+      {/* Diatype Medium 14px, lh 93.3%, ls -4% (Figma 1230:2279/2280) */}
+      <div className="flex items-center justify-between gap-4 text-[14px] font-medium leading-[0.933] tracking-[-0.56px]">
         <p>©2025 Tra le linee All Rights Reserved</p>
         <Link href="/privacy-policy" className="hoverable">
           Privacy Policy

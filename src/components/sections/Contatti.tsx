@@ -22,7 +22,7 @@ export function Contatti() {
       >
         Richiedi portfolio
       </a>
-      <address className="mt-20 flex text-[16px] not-italic leading-snug tracking-[-0.64px] xl:mt-24 xl:justify-end xl:text-right xl:text-[24px] xl:leading-none xl:tracking-[-0.96px]">
+      <address className="mt-20 flex text-[16px] not-italic leading-snug tracking-[-0.64px] xl:mt-[319px] xl:justify-end xl:text-right xl:text-[24px] xl:leading-none xl:tracking-[-0.96px]">
         <div>
           <p className="font-medium text-grey">Indirizzo</p>
           <p>Viale Parioli 39c - Roma</p>
