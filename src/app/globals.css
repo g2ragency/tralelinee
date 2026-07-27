@@ -21,12 +21,15 @@
   --bg-color: var(--black);
   --text-color: var(--white);
   --cursor-color: #ffffff;
+  /* Label di sezione: GRIGIO1 pieno sul dark, al 50% sul light */
+  --label-color: var(--grey);
 }
 
 :root[data-theme="light"] {
   --bg-color: var(--white);
   --text-color: var(--black);
   --cursor-color: #000000;
+  --label-color: color-mix(in srgb, var(--grey) 50%, transparent);
 }
 
 @theme inline {
@@ -35,6 +38,7 @@
   --color-white: var(--white);
   --color-grey: var(--grey);
   --color-grey2: var(--grey2);
+  --color-label: var(--label-color);
   --color-background: var(--bg-color);
   --color-foreground: var(--text-color);
   --font-sans: var(--font-diatype);

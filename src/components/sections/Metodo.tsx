@@ -111,7 +111,7 @@ export function Metodo() {
     <section id="metodo" className="px-6 py-24 xl:px-10 xl:py-40">
       <div className="mb-10 flex items-center justify-between xl:mb-20">
         {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-        <p className="text-[16px] tracking-[-0.64px] text-grey xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
+        <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
           Metodo
         </p>
         {/* Frecce carosello — solo mobile */}
