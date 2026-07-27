@@ -16,30 +16,32 @@ gsap.registerPlugin(ScrollTrigger);
 */
 const SLIDES: ReactNode[] = [
   <>
-    Tra le linee{" "}
+    <span className="font-normal">Tra le linee</span>{" "}
     <span className="text-grey">
       è un&rsquo;agenzia di comunicazione cross mediale e interdisciplinare
       specializzata nell&rsquo;
     </span>
-    elaborazione <span className="text-grey">e gestione di </span>sistemi di
-    influenza integrati.
+    <span className="font-normal">elaborazione</span>{" "}
+    <span className="text-grey">e gestione di </span>
+    <span className="font-normal">sistemi di influenza integrati.</span>
   </>,
   <span key="2" className="text-grey2">
-    <span className="text-foreground">Progettiamo significati</span>, costruiamo
-    senso e visione per chi vuole affermare il proprio posizionamento profondo e
-    coerente.
+    <span className="font-normal text-foreground">Progettiamo significati</span>
+    , costruiamo senso e visione per chi vuole affermare il proprio
+    posizionamento profondo e coerente.
   </span>,
   <span key="3" className="text-grey2">
     Pensiamo narrazioni e produciamo immagini influenzando narrazioni pubbliche
     e private attraverso{" "}
-    <span className="text-foreground">
+    <span className="font-normal text-foreground">
       meccanismi di elaborazione e diffusione
     </span>{" "}
     di frame target.
   </span>,
   <span key="4" className="text-grey2">
-    Applichiamo lo <span className="text-foreground">speculative design</span>{" "}
-    alla comunicazione classica per creare strumenti innovativi ed efficaci,
+    Applichiamo lo{" "}
+    <span className="font-normal text-foreground">speculative design</span> alla
+    comunicazione classica per creare strumenti innovativi ed efficaci,
     editoriali, relazionali e istituzionali.
   </span>,
 ];

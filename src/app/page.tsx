@@ -15,9 +15,10 @@ export default function Home() {
       <section className="flex min-h-svh items-center px-6 xl:px-10">
         <h1 className="max-w-5xl text-[40px] leading-none tracking-[-1.6px] text-grey xl:text-[86px] xl:tracking-[-3.44px]">
           Il concetto di{" "}
-          <span className="text-foreground">progresso </span>è un{" "}
-          <span className="text-foreground">meccanismo protettivo</span> che ci
-          difende dai terrori del futuro
+          <span className="font-normal text-foreground">
+            progresso è un meccanismo protettivo
+          </span>{" "}
+          che ci difende dai terrori del futuro
         </h1>
       </section>
 

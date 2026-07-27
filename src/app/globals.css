@@ -64,6 +64,9 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--font-diatype);
+  /* Come il sito live: il peso base di TUTTO è Light (300);
+     le parole evidenziate passano a Regular (400, cfr. .w-regular). */
+  font-weight: 300;
   /* Cambio tema = crossfade 300ms (come il sito live) */
   transition: background-color 0.3s, color 0.3s;
 }
