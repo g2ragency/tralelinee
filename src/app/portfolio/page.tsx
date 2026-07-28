@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getProfile } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/server";
@@ -59,14 +60,24 @@ export default async function PortfolioPage() {
             I nostri lavori
           </h1>
         </div>
-        <form action={logout}>
-          <button
-            type="submit"
-            className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
-          >
-            Esci
-          </button>
-        </form>
+        <div className="flex items-center gap-3">
+          {profile.role === "super_admin" && (
+            <Link
+              href="/admin"
+              className="hoverable border border-grey px-5 py-3 text-[18px] tracking-[-0.72px]"
+            >
+              Gestione accessi
+            </Link>
+          )}
+          <form action={logout}>
+            <button
+              type="submit"
+              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
+            >
+              Esci
+            </button>
+          </form>
+        </div>
       </div>
 
       {!sezioni?.length ? (
