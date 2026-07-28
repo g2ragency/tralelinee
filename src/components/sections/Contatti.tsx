@@ -19,7 +19,7 @@ export function Contatti() {
         avviare un dialogo e valutare insieme percorsi di collaborazione.
       </p>
       <a
-        href="#contatti"
+        href="/registrati"
         className="hoverable mt-10 inline-flex items-center justify-center border border-foreground px-5 py-3 text-[16px] font-normal leading-[0.933] tracking-[-0.64px] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:tracking-[-0.96px]"
       >
         Richiedi portfolio
