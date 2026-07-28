@@ -13,12 +13,13 @@ export default function Home() {
     <main>
       {/* Hero — come il live: testo in basso, 90px Light, evidenziazioni Regular */}
       <section className="flex min-h-svh items-center px-6 pb-10 xl:items-end xl:px-10">
-        <h1 className="max-w-[1100px] text-[40px] leading-none tracking-[-1.6px] text-grey xl:text-[90px] xl:tracking-[-4px]">
+        {/* Figma 1237:471 — Regular 86px, ls -4% (-3.44px), lh 1.
+            Enfasi col colore: grigio #696969 / bianco #DFDFDF */}
+        <h1 className="max-w-[1100px] text-[40px] leading-none tracking-[-1.6px] text-grey xl:text-[86px] xl:tracking-[-3.44px]">
           Il concetto di{" "}
-          <span className="font-normal text-foreground">
-            progresso è un meccanismo protettivo
-          </span>{" "}
-          che ci difende dai terrori del futuro
+          <span className="text-foreground">progresso </span>
+          è un <span className="text-foreground">meccanismo protettivo</span>
+          {" "}che ci difende dai terrori del futuro
         </h1>
       </section>
 

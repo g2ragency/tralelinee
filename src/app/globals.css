@@ -69,9 +69,10 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: var(--font-diatype);
-  /* Come il sito live: il peso base di TUTTO è Light (300);
-     le parole evidenziate passano a Regular (400, cfr. .w-regular). */
-  font-weight: 300;
+  /* Base del design = Regular 400 (Figma: H1 "style Regular, weight 400").
+     L'enfasi si fa col COLORE (#DFDFDF vs #696969), non col peso; i pesi
+     diversi sono eccezioni dichiarate sul singolo elemento. */
+  font-weight: 400;
   /* Cambio tema = crossfade 300ms (come il sito live) */
   transition: background-color 0.3s, color 0.3s;
 }

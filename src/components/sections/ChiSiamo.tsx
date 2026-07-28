@@ -15,15 +15,15 @@ gsap.registerPlugin(ScrollTrigger);
   slide 2-4 dai text node 1230:2146/2148/2150).
 */
 const SLIDES: ReactNode[] = [
+  /* Figma 1237:551 — Regular 400, enfasi col colore (bianco/grigio) */
   <>
-    <span className="font-normal">Tra le linee</span>{" "}
+    Tra le linee{" "}
     <span className="text-grey">
       è un&rsquo;agenzia di comunicazione cross mediale e interdisciplinare
       specializzata nell&rsquo;
     </span>
-    <span className="font-normal">elaborazione</span>{" "}
-    <span className="text-grey">e gestione di </span>
-    <span className="font-normal">sistemi di influenza integrati.</span>
+    elaborazione <span className="text-grey">e gestione di </span>
+    sistemi di influenza integrati.
   </>,
   <span key="2" className="text-grey2">
     <span className="font-normal text-foreground">Progettiamo significati</span>
