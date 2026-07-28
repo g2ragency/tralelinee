@@ -110,8 +110,8 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="hoverable flex w-full items-center justify-between gap-6 py-3 text-left"
                 >
-                  {/* Sottovoci: Regular 18px, lh 93.3%, ls -4%, GRIGIO1 */}
-                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[18px] xl:tracking-[-0.72px]">
+                  {/* Voci padre: Regular 30px, lh 93.3%, ls -4%, GRIGIO1 */}
+                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
                     {item.t}
                   </span>
                   <svg
@@ -127,7 +127,8 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                 >
                   <div className="overflow-hidden">
                     <p
-                      className={`max-w-[720px] pb-5 text-[15px] font-light leading-[1.1] tracking-[-0.4px] text-grey2 transition-opacity duration-300 xl:text-[20px] ${isOpen ? "opacity-100" : "opacity-0"}`}
+                      /* Descrizione che si apre: Regular 18px, ls -4% */
+                      className={`max-w-[720px] pb-5 text-[15px] font-normal leading-[1.02] tracking-[-0.6px] text-grey2 transition-opacity duration-300 xl:text-[18px] xl:tracking-[-0.72px] ${isOpen ? "opacity-100" : "opacity-0"}`}
                     >
                       {item.d}
                     </p>
@@ -193,7 +194,7 @@ export function Capabilities() {
             <span className="block text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px]">
               [{num}]
             </span>
-            <span className="mt-2 block max-w-[220px] text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px] text-grey">
+            <span className="mt-2 block max-w-[220px] text-[14px] font-medium leading-[0.933] tracking-[-0.56px] text-grey">
               {title}
             </span>
           </a>
