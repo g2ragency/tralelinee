@@ -56,7 +56,12 @@ export async function proxy(request: NextRequest) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
     login.searchParams.set("next", pathname);
-    return NextResponse.redirect(login);
+    const redirectResponse = NextResponse.redirect(login);
+    // I cookie messi da getUser() vanno riportati sulla nuova risposta:
+    // il refresh token ruota, e perdere quello nuovo sloggherebbe l'utente
+    // al giro successivo (rimbalzo infinito verso il login).
+    response.cookies.getAll().forEach((c) => redirectResponse.cookies.set(c));
+    return redirectResponse;
   }
 
   return response;

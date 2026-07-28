@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getProfile } from "@/lib/auth";
+import { getProfile, getUser } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/server";
 
@@ -12,8 +12,36 @@ export const metadata = { title: "Portfolio — Tra le linee" };
   approvato che arrivasse fin qui riceverebbe zero righe dal database.
 */
 export default async function PortfolioPage() {
+  // Distinzione importante: "non loggato" e "profilo non leggibile" sono due
+  // casi diversi. Trattarli entrambi con un redirect al login creava un
+  // rimbalzo infinito quando la sessione c'era ma la riga profiles no.
+  const user = await getUser();
+  if (!user) redirect("/login?next=/portfolio");
+
   const profile = await getProfile();
-  if (!profile) redirect("/login?next=/portfolio");
+  if (!profile) {
+    return (
+      <main className="flex min-h-svh items-center px-6 py-32 xl:px-10">
+        <div className="max-w-[720px]">
+          <h1 className="text-[40px] leading-[1.02] tracking-[-1.6px]">
+            Profilo non trovato
+          </h1>
+          <p className="mt-6 text-[18px] leading-[1.02] tracking-[-0.72px] text-grey">
+            Sei autenticato come {user.email}, ma non riusciamo a leggere il tuo
+            profilo. Segnalacelo: è un problema di configurazione, non tuo.
+          </p>
+          <form action={logout} className="mt-10">
+            <button
+              type="submit"
+              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
+            >
+              Esci
+            </button>
+          </form>
+        </div>
+      </main>
+    );
+  }
 
   if (!profile.approved) {
     return (

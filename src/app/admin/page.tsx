@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { getProfile } from "@/lib/auth";
+import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { logout } from "@/app/auth/actions";
 import { setApproved, addToWhitelist, removeFromWhitelist } from "./actions";
@@ -16,8 +16,14 @@ type Riga = {
 };
 
 export default async function AdminPage() {
+  // Se la sessione manca si va al login; se manca il profilo si va al
+  // portfolio, che spiega il problema. Mai rimbalzare al login con una
+  // sessione valida: si crea un ciclo.
+  const user = await getUser();
+  if (!user) redirect("/login?next=/admin");
+
   const me = await getProfile();
-  if (!me) redirect("/login?next=/admin");
+  if (!me) redirect("/portfolio");
   // Un utente normale non deve nemmeno vedere l'esistenza dell'area.
   if (me.role !== "super_admin") redirect("/portfolio");
 
