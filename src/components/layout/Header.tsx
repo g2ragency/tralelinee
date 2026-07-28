@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ExpandLogo } from "./ExpandLogo";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { createClient } from "@/lib/supabase/client";
 
 /*
   Header: logo espandibile + menu inline sopra il breakpoint xl,
@@ -34,8 +36,30 @@ function ThemePill() {
   );
 }
 
+/*
+  Stato di sessione letto lato client: così il layout resta statico e la
+  homepage non diventa dinamica solo per mostrare un link.
+  `null` = ancora sconosciuto, per non far lampeggiare la voce sbagliata.
+*/
+function useLoggato() {
+  const [loggato, setLoggato] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    if (!supabase) return; // Supabase non configurato: nessun link di accesso
+    supabase.auth.getUser().then(({ data }) => setLoggato(!!data.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      setLoggato(!!session?.user),
+    );
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  return loggato;
+}
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const loggato = useLoggato();
 
   // Blocca lo scroll del body quando il menu è aperto
   useEffect(() => {
@@ -60,6 +84,17 @@ export function Header() {
               </a>
             </li>
           ))}
+          {/* Accesso: mostrato solo a stato noto, per non lampeggiare */}
+          {loggato !== null && (
+            <li className="border-l border-grey/40 pl-[30px]">
+              <Link
+                href={loggato ? "/portfolio" : "/login"}
+                className="hoverable"
+              >
+                {loggato ? "Area riservata" : "Accedi"}
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
@@ -111,6 +146,17 @@ export function Header() {
                 </a>
               </li>
             ))}
+            {loggato !== null && (
+              <li className="border-t border-grey/40 last:border-b">
+                <Link
+                  href={loggato ? "/portfolio" : "/login"}
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 text-[36px] font-light leading-[61px] tracking-[-1.44px]"
+                >
+                  {loggato ? "Area riservata" : "Accedi"}
+                </Link>
+              </li>
+            )}
           </ul>
 
           <div className="mt-auto px-5 pb-8">
