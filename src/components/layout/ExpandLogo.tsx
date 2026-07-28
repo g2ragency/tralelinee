@@ -68,12 +68,12 @@ export function ExpandLogo() {
     <Link
       href="/"
       ref={rootRef}
-      className="hoverable flex items-baseline text-2xl font-medium tracking-tight"
+      className="hoverable flex items-baseline text-2xl font-medium tracking-tight xl:text-[38px]"
       aria-label="Tra le linee — home"
     >
       {PARTS.map(([initial, rest], i) => (
         <span key={i} className="flex items-baseline">
-          <span className="px-1">|</span>
+          <span className="px-1 xl:px-[14px]">|</span>
           <span>{initial}</span>
           <span
             className="logo-reveal inline-block overflow-hidden whitespace-nowrap"
@@ -84,7 +84,7 @@ export function ExpandLogo() {
           </span>
         </span>
       ))}
-      <span className="px-1">|</span>
+      <span className="px-1 xl:px-[14px]">|</span>
     </Link>
   );
 }

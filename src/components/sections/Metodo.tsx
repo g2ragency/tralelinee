@@ -58,7 +58,8 @@ function Row({ title, desc }: { title: string; desc: string }) {
         aria-hidden
         className="absolute inset-y-0 left-0 w-[5px] bg-foreground"
       />
-      <h3 className="text-[52px] font-light leading-[0.933] tracking-[-2.08px]">
+      {/* Regular 52px, lh 93.3%, ls -4% */}
+      <h3 className="text-[52px] font-normal leading-[0.933] tracking-[-2.08px]">
         {title}
       </h3>
       <div
@@ -111,7 +112,8 @@ export function Metodo() {
     <section id="metodo" className="px-6 py-24 xl:px-10 xl:py-40">
       <div className="mb-10 flex items-center justify-between xl:mb-20">
         {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-        <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
+        {/* Label: Medium 24px, lh 93.3%, ls -3% */}
+        <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
           Metodo
         </p>
         {/* Frecce carosello — solo mobile */}
@@ -129,12 +131,12 @@ export function Metodo() {
         </div>
       </div>
 
-      {/* Intro come sul live: 52px Light #dfdfdf, leading 1, tutta larghezza */}
+      {/* Intro: Regular 52px, lh 102%, ls -4% */}
       <div className="mb-24 hidden xl:block">
         {INTRO.map((p) => (
           <p
             key={p.slice(0, 20)}
-            className="mt-[52px] text-[52px] font-medium leading-none tracking-[-2.08px] first:mt-0"
+            className="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
           >
             {p}
           </p>

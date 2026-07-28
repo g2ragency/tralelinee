@@ -51,8 +51,8 @@ export function Header() {
 
       {/* Menu desktop */}
       <nav className="hidden xl:block" aria-label="Principale">
-        {/* Come il live: Diatype Bold 14px, niente mono/uppercase */}
-        <ul className="flex items-center gap-10 text-[14px] font-bold">
+        {/* Voci menu: Diatype Medium 19px, gap 30px */}
+        <ul className="flex items-center gap-[30px] text-[19px] font-medium">
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="hoverable">

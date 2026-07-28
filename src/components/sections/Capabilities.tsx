@@ -110,8 +110,8 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   onClick={() => setOpen(isOpen ? null : i)}
                   className="hoverable flex w-full items-center justify-between gap-6 py-3 text-left"
                 >
-                  {/* Figma 1230:2229-2233: Regular 30px, ls -1.2, GRIGIO1 */}
-                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
+                  {/* Sottovoci: Regular 18px, lh 93.3%, ls -4%, GRIGIO1 */}
+                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[18px] xl:tracking-[-0.72px]">
                     {item.t}
                   </span>
                   <svg
@@ -171,11 +171,12 @@ export function Capabilities() {
   return (
     <section id="capabilities" className="px-6 py-24 xl:px-10 xl:py-40">
       <div className="mb-16 max-w-[1265px] xl:mb-24">
-        {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
+        {/* Label: Medium 24px, lh 93.3%, ls -3% */}
+        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
           Servizi
         </p>
-        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:font-medium xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
+        {/* Intro: Regular 52px, lh 102%, ls -4% */}
+        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
           Chiamati dalla vocazione agli scenari del futuro, plasmiamo il
           dibattito pubblico costruendo nuovi mondi narrativi. Il nostro
           obiettivo è creare cornici culturali dove istituzioni, corporate e
@@ -186,12 +187,13 @@ export function Capabilities() {
 
       {/* Nav interna [01]-[06] con smooth scroll alle sezioni */}
       <nav aria-label="Capabilities" className="mb-32 hidden grid-cols-6 gap-6 xl:grid">
+        {/* Nav interna: Heavy 14px, lh 93.3%, ls -4%; nome in GRIGIO1 */}
         {SECTIONS.map(({ num, title }) => (
           <a key={num} href={`#cap-${num}`} className="hoverable block">
-            <span className="block text-[14px] font-bold tracking-[-0.56px]">
+            <span className="block text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px]">
               [{num}]
             </span>
-            <span className="mt-2 block max-w-[220px] text-[14px] font-medium leading-[0.933] tracking-[-0.56px] text-grey">
+            <span className="mt-2 block max-w-[220px] text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px] text-grey">
               {title}
             </span>
           </a>
@@ -205,7 +207,7 @@ export function Capabilities() {
           <p
             ref={digitRef}
             aria-hidden
-            className="sticky top-[100px] w-fit text-[52px] font-normal leading-[0.933] tracking-[-2.08px]"
+            className="sticky top-[100px] w-fit text-[52px] font-medium leading-[0.933] tracking-[-2.08px] text-grey"
           >
             01
           </p>

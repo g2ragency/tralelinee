@@ -25,12 +25,12 @@ const SLIDES: ReactNode[] = [
     elaborazione <span className="text-grey">e gestione di </span>
     sistemi di influenza integrati.
   </>,
-  <span key="2" className="text-grey2">
+  <span key="2" className="text-grey">
     <span className="font-normal text-foreground">Progettiamo significati</span>
     , costruiamo senso e visione per chi vuole affermare il proprio
     posizionamento profondo e coerente.
   </span>,
-  <span key="3" className="text-grey2">
+  <span key="3" className="text-grey">
     Pensiamo narrazioni e produciamo immagini influenzando narrazioni pubbliche
     e private attraverso{" "}
     <span className="font-normal text-foreground">
@@ -38,7 +38,7 @@ const SLIDES: ReactNode[] = [
     </span>{" "}
     di frame target.
   </span>,
-  <span key="4" className="text-grey2">
+  <span key="4" className="text-grey">
     Applichiamo lo{" "}
     <span className="font-normal text-foreground">speculative design</span> alla
     comunicazione classica per creare strumenti innovativi ed efficaci,

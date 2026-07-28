@@ -7,11 +7,12 @@
 export function Contatti() {
   return (
     <section id="contatti" className="px-6 py-24 xl:px-10 xl:py-40">
-      {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-      <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.96px]">
+      {/* Label: Medium 24px, lh 93.3%, ls -3% */}
+      <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
         Contatti
       </p>
-      <p className="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:max-w-none xl:text-[52px] xl:font-medium xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
+      {/* Testo: Regular 52px, lh 102%, ls -4% */}
+      <p className="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:max-w-none xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
         Per istituzioni, imprese e organizzazioni che desiderano esplorare
         nuovi scenari, rafforzare il proprio posizionamento o attivare
         strategie di influenza culturale e comunicativa. Contattaci per
@@ -25,15 +26,15 @@ export function Contatti() {
       </a>
       <address className="mt-20 flex text-[16px] not-italic leading-snug tracking-[-0.64px] xl:mt-[319px] xl:justify-end xl:text-right xl:text-[24px] xl:leading-none xl:tracking-[-0.96px]">
         <div>
-          <p className="font-medium text-grey">Indirizzo</p>
+          <p className="text-grey">Indirizzo</p>
           <p>Viale Parioli 39c - Roma</p>
-          <p className="font-medium text-grey">Email</p>
+          <p className="text-grey">Email</p>
           <p>
             <a href="mailto:info@tralelinee.com" className="hoverable">
               info@tralelinee.com
             </a>
           </p>
-          <p className="font-medium text-grey">Cellulare</p>
+          <p className="text-grey">Cellulare</p>
           <p>
             <a href="tel:+393324353480" className="hoverable">
               +39 332 435 3480
