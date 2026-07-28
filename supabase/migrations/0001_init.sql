@@ -103,6 +103,15 @@ create trigger portfolio_sections_touch
   for each row execute function public.touch_updated_at();
 
 -- ===========================================================================
+-- GRANT (necessari oltre alle RLS: vedi 0002_grants.sql)
+-- ===========================================================================
+
+grant usage on schema public to authenticated;
+grant select, update, delete on public.profiles to authenticated;
+grant select, insert, update, delete on public.approved_emails to authenticated;
+grant select, insert, update, delete on public.portfolio_sections to authenticated;
+
+-- ===========================================================================
 -- RLS
 -- ===========================================================================
 
