@@ -5,6 +5,8 @@ import { getSchema, type FieldSpec } from "@/lib/sections/schema";
 import { updateSection } from "@/app/admin/progetti/actions";
 import { FileUpload } from "./FileUpload";
 import { MultiFileUpload } from "./MultiFileUpload";
+import { RichText } from "./RichText";
+import { Repeater } from "./Repeater";
 
 /*
   Form generico di una sezione: si costruisce dai `fields` dello schema, così
@@ -67,6 +69,44 @@ export function SectionForm({
       <input type="hidden" name="kind" value={kind} />
 
       {schema.fields.filter(visibile).map((f) => {
+        if (f.type === "repeater") {
+          const iniziali = Array.isArray(content[f.name])
+            ? (content[f.name] as unknown[])
+                .filter((v): v is Record<string, unknown> => !!v && typeof v === "object")
+                .map((v) =>
+                  Object.fromEntries(
+                    Object.entries(v).map(([k, val]) => [
+                      k,
+                      typeof val === "string" ? val : String(val ?? ""),
+                    ]),
+                  ),
+                )
+            : [];
+          return (
+            <Repeater
+              key={f.name}
+              name={f.name}
+              label={f.label}
+              itemLabel={f.itemLabel}
+              fields={f.fields}
+              projectId={projectId}
+              defaultItems={iniziali}
+            />
+          );
+        }
+
+        if (f.type === "richtext") {
+          return (
+            <RichText
+              key={f.name}
+              name={f.name}
+              defaultValue={valori[f.name]}
+              label={f.label}
+              hint={f.hint}
+            />
+          );
+        }
+
         if (f.type === "images") {
           const iniziali = Array.isArray(content[f.name])
             ? (content[f.name] as unknown[]).filter(

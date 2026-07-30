@@ -26,6 +26,12 @@ export type FieldSpec = {
   | { type: "url" }
   | { type: "number" }
   | { type: "select"; options: { value: string; label: string }[] }
+  /*
+    Elenco ripetibile di gruppi di campi (es. le voci di un accordion, i box
+    di una griglia). Viaggia nel form come JSON e finisce nel jsonb come array
+    di oggetti. Un solo livello: niente repeater dentro repeater.
+  */
+  | { type: "repeater"; itemLabel: string; fields: FieldSpec[] }
 );
 
 export type SectionContent = Record<string, unknown>;
@@ -47,6 +53,28 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "textarea",
         hint: "Righe vuote per separare i paragrafi.",
         required: true,
+      },
+    ],
+  },
+
+  voci: {
+    label: "Testo con voci laterali",
+    hint: "Voci selezionabili a sinistra, ognuna col proprio testo a destra.",
+    fields: [
+      {
+        name: "voci",
+        label: "Voci",
+        type: "repeater",
+        itemLabel: "Voce",
+        fields: [
+          { name: "titolo", label: "Titolo", type: "text", required: true },
+          {
+            name: "testo",
+            label: "Testo",
+            type: "richtext",
+            hint: "Il grassetto serve per gli attacchi tipo «Nessuna Brand Equity:».",
+          },
+        ],
       },
     ],
   },
@@ -123,16 +151,7 @@ export function sectionOptions() {
 export function arrayFields(kind: string): string[] {
   return (
     getSchema(kind)
-      ?.fields.filter((f) => f.type === "images")
-      .map((f) => f.name) ?? []
-  );
-}
-
-/* Campi rich text: il sanificatore si basa su questi. */
-export function richTextFields(kind: string): string[] {
-  return (
-    getSchema(kind)
-      ?.fields.filter((f) => f.type === "richtext")
+      ?.fields.filter((f) => f.type === "images" || f.type === "repeater")
       .map((f) => f.name) ?? []
   );
 }

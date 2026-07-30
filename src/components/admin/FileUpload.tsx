@@ -20,12 +20,16 @@ export function FileUpload({
   defaultPath,
   accept = "image/*",
   label,
+  onChange,
 }: {
   name: string;
   projectId: string;
   defaultPath?: string;
   accept?: string;
   label: string;
+  /* Se presente, il path risale al genitore (repeater) invece di finire nel
+     FormData con un campo proprio. */
+  onChange?: (path: string) => void;
 }) {
   const [path, setPath] = useState(defaultPath ?? "");
   const [stato, setStato] = useState<"idle" | "carico" | "errore">("idle");
@@ -54,13 +58,14 @@ export function FileUpload({
       return;
     }
     setPath(destinazione);
+    onChange?.(destinazione);
     setStato("idle");
   }
 
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[16px] text-grey">{label}</span>
-      <input type="hidden" name={name} value={path} />
+      {!onChange && <input type="hidden" name={name} value={path} />}
 
       <div className="flex flex-wrap items-center gap-3">
         <label className="hoverable cursor-pointer border border-grey px-4 py-2 text-[16px]">
@@ -88,7 +93,10 @@ export function FileUpload({
             </span>
             <button
               type="button"
-              onClick={() => setPath("")}
+              onClick={() => {
+                setPath("");
+                onChange?.("");
+              }}
               className="hoverable text-[16px] text-grey underline"
             >
               Rimuovi

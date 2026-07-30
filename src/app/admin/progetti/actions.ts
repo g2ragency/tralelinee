@@ -4,12 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/lib/auth";
-import { sanitizeContent } from "@/lib/sanitize";
-import {
-  richTextFields,
-  arrayFields,
-  getSchema,
-} from "@/lib/sections/schema";
+import { sanitizeBySchema } from "@/lib/sections/sanitize";
+import { arrayFields, getSchema } from "@/lib/sections/schema";
 
 /*
   Azioni del builder. I controlli qui servono all'interfaccia: la barriera
@@ -181,8 +177,8 @@ export async function updateSection(formData: FormData) {
     if (v !== null) content[nome] = typeof v === "string" ? v : String(v);
   }
 
-  // Gli elenchi di immagini arrivano come JSON: riportarli ad array, altrimenti
-  // il renderer riceverebbe una stringa e non troverebbe nulla da mostrare.
+  // Elenchi (immagini, voci ripetibili) arrivano come JSON: riportarli ad
+  // array, altrimenti il renderer riceverebbe una stringa.
   for (const campo of arrayFields(kind)) {
     if (typeof content[campo] === "string") {
       try {
@@ -194,8 +190,9 @@ export async function updateSection(formData: FormData) {
     }
   }
 
-  // Unico punto in cui l'HTML entra in archivio: qui va sanificato.
-  const pulito = sanitizeContent(content, richTextFields(kind));
+  // Unico punto in cui l'HTML entra in archivio: qui va sanificato,
+  // compresi i campi rich text annidati nei repeater.
+  const pulito = sanitizeBySchema(kind, content);
 
   const supabase = await createClient();
   await supabase

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { signedUrl, signedUrls } from "@/lib/media";
+import { VociLaterali } from "@/components/sections/VociLaterali";
 import type { SectionContent } from "./schema";
 
 /*
@@ -200,8 +201,21 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
   );
 }
 
+/* Voci laterali — interattivo, quindi delegato a un client component. */
+function VociRender({ content }: { content: SectionContent }) {
+  const voci = Array.isArray(content.voci)
+    ? (content.voci as unknown[])
+        .filter((v): v is Record<string, unknown> => !!v && typeof v === "object")
+        .map((v) => ({ titolo: s(v.titolo), testo: s(v.testo) }))
+        .filter((v) => v.titolo)
+    : [];
+  if (voci.length === 0) return null;
+  return <VociLaterali voci={voci} />;
+}
+
 export const RENDERERS: Record<string, SectionRenderer> = {
   intro: IntroRender,
+  voci: VociRender,
   carosello: CaroselloRender,
   media: MediaRender,
 };
