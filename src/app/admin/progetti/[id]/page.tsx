@@ -2,7 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { sectionOptions, getSection } from "@/lib/sections/registry";
+import { sectionOptions, getSchema } from "@/lib/sections/schema";
+import { SectionForm } from "@/components/admin/SectionForm";
 import {
   updateProject,
   setPublished,
@@ -210,15 +211,13 @@ export default async function BuilderPage({
         {sezioni.length > 0 && (
           <ul className="mt-8 border-t border-grey/40">
             {sezioni.map((s, i) => {
-              const def = getSection(s.kind);
+              const schema = getSchema(s.kind);
               return (
-                <li
-                  key={s.id}
-                  className="flex flex-wrap items-center justify-between gap-4 border-b border-grey/40 py-4"
-                >
+                <li key={s.id} className="border-b border-grey/40 py-6">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
                   <div>
                     <p className="text-[18px] tracking-[-0.72px]">
-                      {def?.label ?? (
+                      {schema?.label ?? (
                         <span className="text-grey">
                           {s.kind} — tipo non registrato
                         </span>
@@ -299,6 +298,15 @@ export default async function BuilderPage({
                       </button>
                     </form>
                   </div>
+                  </div>
+
+                  {/* Il form si costruisce dai campi dello schema del tipo */}
+                  <SectionForm
+                    id={s.id}
+                    projectId={progetto.id}
+                    kind={s.kind}
+                    content={s.content}
+                  />
                 </li>
               );
             })}

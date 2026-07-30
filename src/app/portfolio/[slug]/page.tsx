@@ -2,7 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { getSection, type SectionContent } from "@/lib/sections/registry";
+import { getRenderer } from "@/lib/sections/render";
+import type { SectionContent } from "@/lib/sections/schema";
 
 type Sezione = {
   id: string;
@@ -51,40 +52,48 @@ export default async function CaseStudyPage({
   const sezioni = (data as Sezione[] | null) ?? [];
 
   return (
-    <main className="min-h-svh px-6 py-32 xl:px-10">
-      <Link href="/portfolio" className="hoverable text-[16px] text-grey">
-        ← Portfolio
-      </Link>
-
+    /*
+      Misure dal Figma su base 1440: sezioni a piena larghezza dentro il
+      padding laterale del sito (40px), ~70px sotto l'header — che è alto ~91px
+      su desktop e ~72px su mobile — e 60px fra intestazione e primo blocco.
+    */
+    <main className="min-h-svh px-6 pb-32 pt-[142px] xl:px-10 xl:pt-[161px]">
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
-          blocco, così non vanno ricompilati per ogni case study. */}
-      <header className="mt-8 max-w-[1100px]">
-        <h1 className="text-[40px] leading-[1.02] tracking-[-1.6px] xl:text-[52px] xl:tracking-[-2.08px]">
+          blocco, così non vanno ricompilati per ogni case study.
+          Figma: 86px e 52px, interlinea 120%, spaziatura -4%. */}
+      <header>
+        <h1 className="text-[44px] leading-[1.2] tracking-[-1.76px] xl:text-[86px] xl:tracking-[-3.44px]">
           {progetto.title}
         </h1>
         {progetto.year && (
-          <p className="mt-1 text-[30px] leading-[0.933] tracking-[-1.2px] text-grey">
+          <p className="text-[28px] leading-[1.2] tracking-[-1.12px] text-grey xl:text-[52px] xl:tracking-[-2.08px]">
             {progetto.year}
           </p>
         )}
       </header>
 
       {sezioni.length === 0 ? (
-        <p className="mt-20 text-[18px] tracking-[-0.72px] text-grey">
+        <p className="mt-[60px] text-[18px] tracking-[-0.72px] text-grey">
           Questo case study non ha ancora contenuti.
         </p>
       ) : (
-        <div className="mt-20 flex flex-col gap-24">
+        <div className="mt-[60px] flex flex-col gap-[60px]">
           {sezioni.map((s) => {
-            const def = getSection(s.kind);
+            const Render = getRenderer(s.kind);
             // Tipo non (ancora) registrato: si salta invece di rompere la
             // pagina. Capita se una sezione resta in archivio dopo che il suo
-            // tipo è stato rinominato o rimosso dal registro.
-            if (!def) return null;
-            return <def.Render key={s.id} content={s.content} />;
+            // tipo è stato rinominato o rimosso.
+            if (!Render) return null;
+            return <Render key={s.id} content={s.content} />;
           })}
         </div>
       )}
+
+      <nav className="mt-32 flex items-center justify-between gap-6 text-[16px]">
+        <Link href="/portfolio" className="hoverable text-grey">
+          ← Torna all&rsquo;indice
+        </Link>
+      </nav>
     </main>
   );
 }

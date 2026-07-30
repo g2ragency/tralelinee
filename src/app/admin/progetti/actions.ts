@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/lib/auth";
 import { sanitizeContent } from "@/lib/sanitize";
-import { richTextFields } from "@/lib/sections/registry";
+import { richTextFields } from "@/lib/sections/schema";
 
 /*
   Azioni del builder. I controlli qui servono all'interfaccia: la barriera
