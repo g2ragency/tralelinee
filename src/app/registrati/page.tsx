@@ -9,7 +9,7 @@ export default function RegistratiPage() {
     <AuthShell>
       <AuthForm
         action={signup}
-        titolo="Richiedi l'accesso al portfolio"
+        titolo="Richiedi accesso al portfolio"
         cta="Invia richiesta"
         altroTesto="Hai già un accesso?"
         altroLink="/login"
