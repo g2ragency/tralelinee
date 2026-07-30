@@ -87,12 +87,12 @@ export function FilaBox({
             /* Figma: #1B1B1B, raggio 20px, padding 28px 30px */
             className="flex flex-col overflow-hidden rounded-[20px] bg-box px-[30px] py-[28px]"
           >
-            {/* Se nella fila c'è almeno un riquadro che ruota, anche gli altri
-                tengono lo spazio delle linette: senza, i titoli si
-                disallineerebbero da un riquadro all'altro. */}
-            {rotante && (
-              <div className="mb-7 flex min-h-[3px] gap-[10px]">
-                {(slides.length > 1 ? slides : []).map((_, k) => (
+            {/* Niente spazio riservato: un riquadro con un solo contenuto fa
+                salire il titolo al posto delle linette. I numeri restano
+                comunque allineati, sono ancorati in basso. */}
+            {slides.length > 1 && (
+              <div className="mb-7 flex gap-[10px]">
+                {slides.map((_, k) => (
                   <button
                     key={k}
                     type="button"
