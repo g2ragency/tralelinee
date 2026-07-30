@@ -213,7 +213,19 @@ function VociRender({ content }: { content: SectionContent }) {
   return <VociLaterali voci={voci} />;
 }
 
+/*
+  Conclusioni — stesso impianto delle voci laterali con un titolo solo: cambia
+  che il titolo non è selezionabile, e di quello si occupa già il componente.
+*/
+function ConclusioniRender({ content }: { content: SectionContent }) {
+  const titolo = s(content.titolo);
+  const testo = s(content.testo);
+  if (!titolo && !testo) return null;
+  return <VociLaterali voci={[{ titolo, testo }]} />;
+}
+
 export const RENDERERS: Record<string, SectionRenderer> = {
+  conclusioni: ConclusioniRender,
   intro: IntroRender,
   voci: VociRender,
   carosello: CaroselloRender,

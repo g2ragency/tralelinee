@@ -7,9 +7,12 @@ import { useRef, useState } from "react";
 
   Due motivi per cui deve essere client:
 
-  1. `data-lenis-prevent` — Lenis governa la rotella su tutta la pagina e non
-     lascia scorrere i contenitori interni: senza questo attributo il carosello
-     resta immobile anche con trackpad.
+  1. La rotella. Lenis la governa su tutta la pagina e non lascia scorrere i
+     contenitori interni. `data-lenis-prevent` risolverebbe lo scorrimento
+     orizzontale ma spegnerebbe anche quello verticale: col puntatore sopra il
+     carosello — che è alto quanto lo schermo — la pagina non si muoverebbe
+     più. Quindi si toglie a Lenis il solo gesto orizzontale, lasciandolo
+     gestire al browser, e il verticale prosegue fino a Lenis come sempre.
   2. Trascinamento col mouse — un mouse senza rotella orizzontale non ha alcun
      modo di scorrere un contenitore, e la barra di scorrimento è nascosta.
 */
@@ -19,9 +22,19 @@ export function Carosello({ urls }: { urls: string[] }) {
   const inizio = useRef({ x: 0, scroll: 0 });
   const spostato = useRef(0);
 
+  /*
+    Solo il gesto orizzontale viene sottratto a Lenis: il verticale continua a
+    salire fino a lui, così la pagina scorre anche col puntatore qui sopra.
+  */
+  const rotella = (e: React.WheelEvent) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) e.stopPropagation();
+  };
+
   const giu = (e: React.PointerEvent) => {
     const el = ref.current;
-    if (!el) return;
+    // Il dito scorre già da sé, e catturare il puntatore su touch dirotterebbe
+    // anche le passate verticali: il trascinamento serve solo al mouse.
+    if (!el || e.pointerType !== "mouse") return;
     setTrascina(true);
     spostato.current = 0;
     inizio.current = { x: e.clientX, scroll: el.scrollLeft };
@@ -44,7 +57,7 @@ export function Carosello({ urls }: { urls: string[] }) {
   return (
     <section
       ref={ref}
-      data-lenis-prevent
+      onWheel={rotella}
       onPointerDown={giu}
       onPointerMove={muovi}
       onPointerUp={su}

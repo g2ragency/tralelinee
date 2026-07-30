@@ -101,6 +101,15 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     ],
   },
 
+  conclusioni: {
+    label: "Conclusioni",
+    hint: "Titolo a sinistra, testo a destra con «Leggi di più» se è lungo.",
+    fields: [
+      { name: "titolo", label: "Titolo", type: "text", required: true },
+      { name: "testo", label: "Testo", type: "richtext" },
+    ],
+  },
+
   carosello: {
     label: "Carosello immagini",
     hint: "Card 30px di raggio, scorrimento orizzontale, 2,2 in vista su desktop.",

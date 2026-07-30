@@ -63,29 +63,41 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
     setEspansa(false);
   };
 
-  return (
-    <section className="grid gap-8 xl:grid-cols-[1fr_468px] xl:gap-0">
-      {/* Voci: attiva bianca e sottolineata, le altre grigie; hover a bianco */}
-      <ul className="flex flex-col gap-1">
-        {voci.map((v, i) => (
-          <li key={i}>
-            <button
-              type="button"
-              onClick={() => scegli(i)}
-              aria-current={i === attiva}
-              className={`hoverable text-left text-[34px] leading-[1.2] tracking-[-1.36px] transition-colors duration-200 hover:text-foreground xl:text-[52px] xl:tracking-[-2.08px] ${
-                i === attiva
-                  ? "text-foreground underline decoration-solid underline-offset-[6px]"
-                  : "text-grey"
-              }`}
-            >
-              {v.titolo}
-            </button>
-          </li>
-        ))}
-      </ul>
+  /* Titolo unico: non c'è niente da scegliere, quindi è un titolo e non un
+     elenco di pulsanti. È il caso del blocco «Conclusioni». */
+  const unica = voci.length === 1;
+  const corpoTitolo =
+    "text-[34px] leading-[1.2] tracking-[-1.36px] xl:text-[52px] xl:tracking-[-2.08px]";
 
-      <div className="xl:ml-auto xl:w-[468px]">
+  return (
+    /* Colonna del testo: 468px sul Figma (base 1440). Sopra i 1536 cresce con
+       la finestra invece di lasciare una riga corta in mezzo al vuoto. */
+    <section className="grid gap-8 xl:grid-cols-[1fr_468px] xl:gap-0 2xl:grid-cols-[1fr_clamp(468px,30.5vw,620px)]">
+      {unica ? (
+        <h2 className={`${corpoTitolo} max-w-[560px]`}>{voci[0].titolo}</h2>
+      ) : (
+        /* Voci: attiva bianca e sottolineata, le altre grigie; hover a bianco */
+        <ul className="flex flex-col gap-1">
+          {voci.map((v, i) => (
+            <li key={i}>
+              <button
+                type="button"
+                onClick={() => scegli(i)}
+                aria-current={i === attiva}
+                className={`hoverable ${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
+                  i === attiva
+                    ? "text-foreground underline decoration-solid underline-offset-[6px]"
+                    : "text-grey"
+                }`}
+              >
+                {v.titolo}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div className="xl:ml-auto xl:w-full">
         <div className="relative">
           <div
             ref={testoRef}

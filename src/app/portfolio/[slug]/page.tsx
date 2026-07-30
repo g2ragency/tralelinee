@@ -51,6 +51,24 @@ export default async function CaseStudyPage({
     .order("position");
   const sezioni = (data as Sezione[] | null) ?? [];
 
+  /*
+    Prossimo case study: si gira in tondo, così l'ultimo progetto riporta al
+    primo invece di ritrovarsi senza uscita. `published` è esplicito perché a
+    un super admin le RLS lascerebbero vedere anche le bozze, e il link è
+    rivolto ai lettori.
+  */
+  const { data: elenco } = await supabase
+    .from("projects")
+    .select("slug, title")
+    .eq("published", true)
+    .order("position");
+  const tutti = elenco ?? [];
+  const corrente = tutti.findIndex((p) => p.slug === slug);
+  const prossimo =
+    tutti.length > 1 && corrente !== -1
+      ? tutti[(corrente + 1) % tutti.length]
+      : null;
+
   return (
     /*
       Misure dal Figma su base 1440: sezioni a piena larghezza dentro il
@@ -92,10 +110,19 @@ export default async function CaseStudyPage({
         </div>
       )}
 
-      <nav className="mt-32 flex items-center justify-between gap-6 text-[16px]">
-        <Link href="/portfolio" className="hoverable text-grey">
+      {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
+      <nav className="mt-[95px] flex items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
+        <Link href="/portfolio" className="hoverable">
           ← Torna all&rsquo;indice
         </Link>
+        {prossimo && (
+          <Link
+            href={`/portfolio/${prossimo.slug}`}
+            className="hoverable text-right"
+          >
+            Guarda il prossimo Case Study →
+          </Link>
+        )}
       </nav>
     </main>
   );
