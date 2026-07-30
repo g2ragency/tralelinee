@@ -70,9 +70,10 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
     "text-[34px] leading-[1.2] tracking-[-1.36px] xl:text-[52px] xl:tracking-[-2.08px]";
 
   return (
-    /* Colonna del testo: 468px sul Figma (base 1440). Sopra i 1536 cresce con
-       la finestra invece di lasciare una riga corta in mezzo al vuoto. */
-    <section className="grid gap-8 xl:grid-cols-[1fr_468px] xl:gap-0 2xl:grid-cols-[1fr_clamp(468px,30.5vw,620px)]">
+    /* Colonna del testo: il Figma dà 468px su base 1440, ma nella pagina
+       lasciava troppo vuoto in mezzo. Sta a poco meno di metà della larghezza
+       utile e cresce con la finestra, senza scatti ai breakpoint. */
+    <section className="grid gap-8 xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0">
       {unica ? (
         <h2 className={`${corpoTitolo} max-w-[560px]`}>{voci[0].titolo}</h2>
       ) : (
