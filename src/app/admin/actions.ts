@@ -24,7 +24,7 @@ export async function setApproved(formData: FormData) {
 
   const supabase = await createClient();
   await supabase.from("profiles").update({ approved }).eq("id", id);
-  revalidatePath("/admin");
+  revalidatePath("/admin/accessi");
 }
 
 export async function addToWhitelist(formData: FormData) {
@@ -38,7 +38,7 @@ export async function addToWhitelist(formData: FormData) {
   // Se quell'utente si è già registrato ed è in attesa, approvalo subito:
   // il trigger vale solo alla registrazione.
   await supabase.from("profiles").update({ approved: true }).eq("email", email);
-  revalidatePath("/admin");
+  revalidatePath("/admin/accessi");
 }
 
 export async function removeFromWhitelist(formData: FormData) {
@@ -46,5 +46,5 @@ export async function removeFromWhitelist(formData: FormData) {
   const email = String(formData.get("email") ?? "");
   const supabase = await createClient();
   await supabase.from("approved_emails").delete().eq("email", email);
-  revalidatePath("/admin");
+  revalidatePath("/admin/accessi");
 }
