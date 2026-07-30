@@ -45,7 +45,7 @@ export function AuthForm({
       {/* Figma: 75px fra titolo e primo campo */}
       <form
         action={formAction}
-        className="mx-auto mt-[75px] flex w-full max-w-[350px] flex-col gap-[10px]"
+        className="mx-auto mt-[75px] flex w-full max-w-[352px] flex-col gap-[10px]"
       >
         <input
           type="email"
@@ -92,7 +92,7 @@ export function AuthForm({
 
       {/* Non è nel Figma della schermata, ma senza questo non resta nessuna
           strada per chiedere l'accesso o tornare al login. */}
-      <p className="mx-auto mt-6 max-w-[350px] text-center text-[14px] leading-[1.2] tracking-[-0.04em] text-grey">
+      <p className="mx-auto mt-6 max-w-[352px] text-center text-[14px] leading-[1.2] tracking-[-0.04em] text-grey">
         {altroTesto}{" "}
         <Link href={altroLink} className="hoverable text-foreground underline">
           {altroLabel}
