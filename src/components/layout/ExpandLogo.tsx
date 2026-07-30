@@ -16,8 +16,11 @@ const PARTS: Array<[initial: string, rest: string]> = [
   ["L", "INEE"],
 ];
 
-export function ExpandLogo() {
+/* `compatto`: versione ridotta per le pagine di accesso, dove il logo sta al
+   centro e non nell'header. */
+export function ExpandLogo({ compatto }: { compatto?: boolean }) {
   const rootRef = useRef<HTMLAnchorElement>(null);
+  const barra = compatto ? "px-[9px]" : "px-1 xl:px-[14px]";
 
   useEffect(() => {
     const root = rootRef.current;
@@ -68,12 +71,14 @@ export function ExpandLogo() {
     <Link
       href="/"
       ref={rootRef}
-      className="hoverable flex items-baseline text-2xl font-medium tracking-tight xl:text-[38px]"
+      className={`hoverable flex items-baseline font-medium tracking-tight ${
+        compatto ? "text-[26px]" : "text-2xl xl:text-[38px]"
+      }`}
       aria-label="Tra le linee — home"
     >
       {PARTS.map(([initial, rest], i) => (
         <span key={i} className="flex items-baseline">
-          <span className="px-1 xl:px-[14px]">|</span>
+          <span className={barra}>|</span>
           <span>{initial}</span>
           <span
             className="logo-reveal inline-block overflow-hidden whitespace-nowrap"
@@ -84,7 +89,7 @@ export function ExpandLogo() {
           </span>
         </span>
       ))}
-      <span className="px-1 xl:px-[14px]">|</span>
+      <span className={barra}>|</span>
     </Link>
   );
 }

@@ -1,19 +1,20 @@
 import { signup } from "@/app/auth/actions";
 import { AuthForm } from "@/components/auth/AuthForm";
+import { AuthShell } from "@/components/auth/AuthShell";
 
 export const metadata = { title: "Richiedi portfolio — Tra le linee" };
 
 export default function RegistratiPage() {
   return (
-    <main className="flex min-h-svh items-center px-6 py-32 xl:px-10">
+    <AuthShell>
       <AuthForm
         action={signup}
-        titolo="Richiedi portfolio"
+        titolo="Richiedi l'accesso al portfolio"
         cta="Invia richiesta"
         altroTesto="Hai già un accesso?"
         altroLink="/login"
         altroLabel="Accedi"
       />
-    </main>
+    </AuthShell>
   );
 }

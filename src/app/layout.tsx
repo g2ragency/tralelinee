@@ -9,6 +9,7 @@ import {
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { CustomCursor } from "@/components/CustomCursor";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Chrome } from "@/components/layout/Chrome";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
@@ -61,10 +62,16 @@ export default function RootLayout({
         <ThemeProvider>
           <SmoothScroll>
             <CustomCursor />
-            <Header />
+            <Chrome>
+              <Header />
+            </Chrome>
             {children}
-            <Footer />
-            <ThemeToggle />
+            <Chrome>
+              <Footer />
+            </Chrome>
+            <Chrome>
+              <ThemeToggle />
+            </Chrome>
           </SmoothScroll>
         </ThemeProvider>
       </body>
