@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getSchema, type FieldSpec } from "@/lib/sections/schema";
 import { updateSection } from "@/app/admin/progetti/actions";
 import { FileUpload } from "./FileUpload";
+import { MultiFileUpload } from "./MultiFileUpload";
 
 /*
   Form generico di una sezione: si costruisce dai `fields` dello schema, così
@@ -27,8 +28,16 @@ export function SectionForm({
     const init: Record<string, string> = {};
     for (const f of schema?.fields ?? []) {
       const v = content[f.name];
-      init[f.name] =
+      const salvato =
         typeof v === "string" || typeof v === "number" ? String(v) : "";
+      /*
+        I select partono dalla prima opzione, non da stringa vuota: altrimenti
+        su una sezione nuova il menu mostrerebbe la prima voce mentre lo stato
+        resta vuoto, e i campi con showIf legati a quel valore non compaiono
+        (era il caso del caricatore immagine nel blocco Media).
+      */
+      init[f.name] =
+        salvato || (f.type === "select" ? (f.options[0]?.value ?? "") : "");
     }
     return init;
   });
@@ -58,6 +67,24 @@ export function SectionForm({
       <input type="hidden" name="kind" value={kind} />
 
       {schema.fields.filter(visibile).map((f) => {
+        if (f.type === "images") {
+          const iniziali = Array.isArray(content[f.name])
+            ? (content[f.name] as unknown[]).filter(
+                (v): v is string => typeof v === "string",
+              )
+            : [];
+          return (
+            <MultiFileUpload
+              key={f.name}
+              name={f.name}
+              projectId={projectId}
+              defaultPaths={iniziali}
+              label={f.label}
+              hint={f.hint}
+            />
+          );
+        }
+
         if (f.type === "image" || f.type === "video") {
           return (
             <FileUpload
@@ -78,7 +105,7 @@ export function SectionForm({
             {f.type === "select" ? (
               <select
                 name={f.name}
-                value={valori[f.name] || f.options[0]?.value}
+                value={valori[f.name]}
                 onChange={(e) => set(f.name, e.target.value)}
                 className="border border-grey bg-background px-4 py-2 text-[18px]"
               >

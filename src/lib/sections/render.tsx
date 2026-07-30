@@ -1,6 +1,19 @@
 import type { ReactNode } from "react";
-import { signedUrl } from "@/lib/media";
+import { signedUrl, signedUrls } from "@/lib/media";
 import type { SectionContent } from "./schema";
+
+/*
+  Alcuni blocchi mostrano dati del progetto e non solo il proprio contenuto
+  (es. Intro legge industry e servizi), quindi il renderer li riceve entrambi.
+*/
+export type ProjectInfo = {
+  title: string;
+  client: string | null;
+  year: string | null;
+  industry: string | null;
+  services: string | null;
+  summary: string | null;
+};
 
 /*
   Renderer dei tipi di sezione. Sono Server Component asincroni: leggono dal
@@ -11,6 +24,7 @@ import type { SectionContent } from "./schema";
 */
 export type SectionRenderer = (props: {
   content: SectionContent;
+  project: ProjectInfo;
 }) => ReactNode | Promise<ReactNode>;
 
 const s = (v: unknown) => (typeof v === "string" ? v : "");
@@ -90,7 +104,99 @@ async function MediaRender({ content }: { content: SectionContent }) {
   );
 }
 
+/*
+  Intro — due colonne: scheda dati (dal progetto) e paragrafo.
+  Figma: etichette e valori 18px Medium, paragrafo 30px Regular,
+  entrambi interlinea 120% e spaziatura -4%.
+*/
+function IntroRender({
+  content,
+  project,
+}: {
+  content: SectionContent;
+  project: ProjectInfo;
+}) {
+  const paragrafi = s(content.testo)
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const voci = [
+    { label: "Industry", value: project.industry },
+    { label: "Servizi", value: project.services },
+  ].filter((v) => v.value);
+
+  return (
+    <section className="grid gap-10 xl:grid-cols-[385px_1fr] xl:gap-0">
+      <dl className="text-[18px] font-medium leading-[1.2] tracking-[-0.72px]">
+        {voci.map((v) => (
+          <div key={v.label} className="mb-6">
+            <dt className="text-grey">{v.label}</dt>
+            <dd className="max-w-[260px]">{v.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="max-w-[860px]">
+        {paragrafi.map((p, i) => (
+          <p
+            key={i}
+            className="text-[20px] leading-[1.2] tracking-[-0.8px] xl:text-[30px] xl:tracking-[-1.2px]"
+          >
+            {p}
+          </p>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/*
+  Carosello — scorrimento orizzontale con agganci.
+
+  Le card conservano la proporzione del Figma (596×760) e la larghezza cresce
+  col viewport fino a un tetto: a 1440 ne restano 2,2 in vista come da design,
+  su schermi molto grandi se ne vedono di più invece di gonfiarle a dismisura.
+*/
+async function CaroselloRender({ content }: { content: SectionContent }) {
+  const paths = Array.isArray(content.immagini)
+    ? (content.immagini as unknown[]).filter(
+        (p): p is string => typeof p === "string",
+      )
+    : [];
+  if (paths.length === 0) return null;
+  const urls = await signedUrls(paths);
+
+  return (
+    <section
+      /* -mx e px compensano il padding del sito: le card possono uscire dal
+         bordo destro come nel design, senza tagliare la prima a sinistra. */
+      className="-mx-6 flex snap-x snap-mandatory gap-[18px] overflow-x-auto px-6 pb-2 xl:-mx-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {urls.map((url, i) =>
+        url ? (
+          <figure
+            key={i}
+            className="aspect-[596/760] w-[clamp(260px,calc((100%-18px)/1.15),680px)] shrink-0 snap-start overflow-hidden rounded-[30px] bg-grey/15 xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)]"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element --
+                URL firmato a scadenza: next/image lo cacherebbe oltre la validità. */}
+            <img
+              src={url}
+              alt=""
+              className="h-full w-full object-cover"
+              loading={i > 1 ? "lazy" : undefined}
+            />
+          </figure>
+        ) : null,
+      )}
+    </section>
+  );
+}
+
 export const RENDERERS: Record<string, SectionRenderer> = {
+  intro: IntroRender,
+  carosello: CaroselloRender,
   media: MediaRender,
 };
 

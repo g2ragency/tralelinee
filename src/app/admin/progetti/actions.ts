@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/lib/auth";
 import { sanitizeContent } from "@/lib/sanitize";
-import { richTextFields } from "@/lib/sections/schema";
+import {
+  richTextFields,
+  arrayFields,
+  getSchema,
+} from "@/lib/sections/schema";
 
 /*
   Azioni del builder. I controlli qui servono all'interfaccia: la barriera
@@ -165,11 +169,29 @@ export async function updateSection(formData: FormData) {
   const kind = String(formData.get("kind"));
   if (!id) return;
 
-  // Tutti i campi tranne quelli di servizio finiscono nel content.
-  const riservati = new Set(["id", "project_id", "kind"]);
+  /*
+    Si prendono SOLO i campi dichiarati nello schema, non tutto il form:
+    Next inietta campi propri (es. $ACTION_ID_…) che altrimenti finirebbero
+    nel jsonb, e una lista chiusa evita di archiviare chiavi arbitrarie.
+  */
+  const ammessi = getSchema(kind)?.fields.map((f) => f.name) ?? [];
   const content: Record<string, unknown> = {};
-  for (const [k, v] of formData.entries()) {
-    if (!riservati.has(k)) content[k] = typeof v === "string" ? v : String(v);
+  for (const nome of ammessi) {
+    const v = formData.get(nome);
+    if (v !== null) content[nome] = typeof v === "string" ? v : String(v);
+  }
+
+  // Gli elenchi di immagini arrivano come JSON: riportarli ad array, altrimenti
+  // il renderer riceverebbe una stringa e non troverebbe nulla da mostrare.
+  for (const campo of arrayFields(kind)) {
+    if (typeof content[campo] === "string") {
+      try {
+        const parsed = JSON.parse(content[campo] as string);
+        content[campo] = Array.isArray(parsed) ? parsed : [];
+      } catch {
+        content[campo] = [];
+      }
+    }
   }
 
   // Unico punto in cui l'HTML entra in archivio: qui va sanificato.

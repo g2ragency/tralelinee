@@ -77,14 +77,17 @@ export default async function CaseStudyPage({
           Questo case study non ha ancora contenuti.
         </p>
       ) : (
-        <div className="mt-[60px] flex flex-col gap-[60px]">
+        /* 60px fra intestazione e primo blocco, ~95px fra i blocchi */
+        <div className="mt-[60px] flex flex-col gap-[95px]">
           {sezioni.map((s) => {
             const Render = getRenderer(s.kind);
             // Tipo non (ancora) registrato: si salta invece di rompere la
             // pagina. Capita se una sezione resta in archivio dopo che il suo
             // tipo è stato rinominato o rimosso.
             if (!Render) return null;
-            return <Render key={s.id} content={s.content} />;
+            return (
+              <Render key={s.id} content={s.content} project={progetto} />
+            );
           })}
         </div>
       )}

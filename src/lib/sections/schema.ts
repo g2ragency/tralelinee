@@ -37,6 +37,28 @@ export type SectionSchema = {
 };
 
 export const SCHEMAS: Record<string, SectionSchema> = {
+  intro: {
+    label: "Intro",
+    hint: "Scheda dati a sinistra (letta dal progetto) e paragrafo a destra.",
+    fields: [
+      {
+        name: "testo",
+        label: "Paragrafo",
+        type: "textarea",
+        hint: "Righe vuote per separare i paragrafi.",
+        required: true,
+      },
+    ],
+  },
+
+  carosello: {
+    label: "Carosello immagini",
+    hint: "Card 30px di raggio, scorrimento orizzontale, 2,2 in vista su desktop.",
+    fields: [
+      { name: "immagini", label: "Immagini", type: "images" },
+    ],
+  },
+
   media: {
     label: "Media",
     hint: "Immagine o video a piena larghezza, angoli 30px, proporzione 16:9.",
@@ -92,6 +114,18 @@ export function sectionOptions() {
   return Object.entries(SCHEMAS)
     .map(([kind, s]) => ({ kind, label: s.label, hint: s.hint }))
     .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+/*
+  Campi che viaggiano nel form come JSON (elenchi di path) e vanno riportati
+  ad array prima di finire nel jsonb.
+*/
+export function arrayFields(kind: string): string[] {
+  return (
+    getSchema(kind)
+      ?.fields.filter((f) => f.type === "images")
+      .map((f) => f.name) ?? []
+  );
 }
 
 /* Campi rich text: il sanificatore si basa su questi. */
