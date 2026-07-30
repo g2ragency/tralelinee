@@ -39,7 +39,7 @@ export default async function BuilderPage({
   const supabase = await createClient();
   const { data: progetto } = await supabase
     .from("projects")
-    .select("id, slug, title, client, summary, published")
+    .select("id, slug, title, client, year, industry, services, summary, published")
     .eq("id", id)
     .maybeSingle();
   if (!progetto) notFound();
@@ -118,6 +118,37 @@ export default async function BuilderPage({
             <input
               name="client"
               defaultValue={progetto.client ?? ""}
+              className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
+            />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="flex flex-col gap-2">
+              <span className="text-[16px] text-grey">Anno</span>
+              <input
+                name="year"
+                defaultValue={progetto.year ?? ""}
+                placeholder="2026"
+                className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
+              />
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-[16px] text-grey">Industry</span>
+              <input
+                name="industry"
+                defaultValue={progetto.industry ?? ""}
+                placeholder="Festival Culturale"
+                className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
+              />
+            </label>
+          </div>
+          <label className="flex flex-col gap-2">
+            <span className="text-[16px] text-grey">
+              Servizi (separati da virgola)
+            </span>
+            <input
+              name="services"
+              defaultValue={progetto.services ?? ""}
+              placeholder="Brand Identity, Comunicazione, Advertising"
               className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
             />
           </label>

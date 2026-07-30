@@ -81,6 +81,9 @@ export async function updateProject(formData: FormData) {
       title,
       slug,
       client: String(formData.get("client") ?? "").trim() || null,
+      year: String(formData.get("year") ?? "").trim() || null,
+      industry: String(formData.get("industry") ?? "").trim() || null,
+      services: String(formData.get("services") ?? "").trim() || null,
       summary: String(formData.get("summary") ?? "").trim() || null,
     })
     .eq("id", id);

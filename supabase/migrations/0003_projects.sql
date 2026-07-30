@@ -14,6 +14,14 @@ create table public.projects (
   slug       text not null unique,
   title      text not null,
   client     text,
+  -- Metadati mostrati nell'intestazione e nel blocco intro del case study.
+  -- year è testo per ammettere intervalli tipo "2025–2026"; l'ordinamento
+  -- della lista passa da `position`, non dall'anno.
+  year       text,
+  industry   text,
+  -- ponytail: stringa unica, non array. Il design li mostra separati da
+  -- virgola e basta; se serviranno filtri per servizio, allora varrà text[].
+  services   text,
   summary    text,
   cover_path text,                                  -- path nel bucket privato
   position   integer not null default 0,

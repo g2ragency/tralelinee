@@ -37,7 +37,7 @@ export default async function CaseStudyPage({
   // qui basta il notFound() quando la query non restituisce nulla.
   const { data: progetto } = await supabase
     .from("projects")
-    .select("id, slug, title, client, summary")
+    .select("id, slug, title, client, year, industry, services, summary")
     .eq("slug", slug)
     .maybeSingle();
   if (!progetto) notFound();
@@ -56,18 +56,15 @@ export default async function CaseStudyPage({
         ← Portfolio
       </Link>
 
+      {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
+          blocco, così non vanno ricompilati per ogni case study. */}
       <header className="mt-8 max-w-[1100px]">
-        {progetto.client && (
-          <p className="text-[24px] font-medium leading-[0.933] tracking-[-0.72px] text-label">
-            {progetto.client}
-          </p>
-        )}
-        <h1 className="mt-6 text-[40px] leading-[1.02] tracking-[-1.6px] xl:text-[52px] xl:tracking-[-2.08px]">
+        <h1 className="text-[40px] leading-[1.02] tracking-[-1.6px] xl:text-[52px] xl:tracking-[-2.08px]">
           {progetto.title}
         </h1>
-        {progetto.summary && (
-          <p className="mt-8 max-w-[900px] text-[18px] leading-[1.02] tracking-[-0.72px] text-grey">
-            {progetto.summary}
+        {progetto.year && (
+          <p className="mt-1 text-[30px] leading-[0.933] tracking-[-1.2px] text-grey">
+            {progetto.year}
           </p>
         )}
       </header>
