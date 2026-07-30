@@ -127,17 +127,18 @@ function IntroRender({
   ].filter((v) => v.value);
 
   return (
-    <section className="grid gap-10 xl:grid-cols-[385px_1fr] xl:gap-0">
+    /* Figma: colonna dati 288px, paragrafo allineato al bordo destro */
+    <section className="grid gap-10 xl:grid-cols-[288px_1fr] xl:gap-0">
       <dl className="text-[18px] font-medium leading-[1.2] tracking-[-0.72px]">
         {voci.map((v) => (
           <div key={v.label} className="mb-6">
             <dt className="text-grey">{v.label}</dt>
-            <dd className="max-w-[260px]">{v.value}</dd>
+            <dd>{v.value}</dd>
           </div>
         ))}
       </dl>
 
-      <div className="max-w-[860px]">
+      <div className="xl:ml-auto xl:max-w-[693px]">
         {paragrafi.map((p, i) => (
           <p
             key={i}
@@ -171,7 +172,12 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
     <section
       /* -mx e px compensano il padding del sito: le card possono uscire dal
          bordo destro come nel design, senza tagliare la prima a sinistra. */
-      className="-mx-6 flex snap-x snap-mandatory gap-[18px] overflow-x-auto px-6 pb-2 xl:-mx-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      /*
+        scroll-pl oltre a px: con snap obbligatorio l'aggancio della prima card
+        ignora il padding (scroll-padding vale `auto`), quindi il browser
+        scrollava di 40px e la card finiva a filo del bordo.
+      */
+      className="-mx-6 flex snap-x snap-mandatory scroll-pl-6 gap-[18px] overflow-x-auto px-6 pb-2 xl:-mx-10 xl:scroll-pl-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {urls.map((url, i) =>
         url ? (
