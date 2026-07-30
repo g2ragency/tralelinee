@@ -91,6 +91,16 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+/*
+  Area super admin: campi, pulsanti e riquadri con angoli da 10px.
+  Vale per tutto quello che sta dentro perché sugli elementi senza bordo né
+  sfondo il raggio non si vede: meglio una riga qui che quaranta classi
+  ripetute a mano, e il sito pubblico non viene toccato.
+*/
+[data-area="admin"] * {
+  border-radius: 10px;
+}
+
 /* ===== Cursore custom (A2) ===== */
 #cursor,
 #cursor-shadow {
