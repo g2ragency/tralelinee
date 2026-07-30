@@ -31,7 +31,21 @@ export type FieldSpec = {
     di una griglia). Viaggia nel form come JSON e finisce nel jsonb come array
     di oggetti. Un solo livello: niente repeater dentro repeater.
   */
-  | { type: "repeater"; itemLabel: string; fields: FieldSpec[] }
+  | {
+      type: "repeater";
+      itemLabel: string;
+      fields: FieldSpec[];
+      /*
+        Raccoglie gli elementi per il valore di questo campo, mostrandoli
+        dentro il gruppo a cui appartengono invece che in un elenco piatto: il
+        campo resta nei dati ma sparisce dal form, perché ricopiare la stessa
+        sigla su più elementi è il modo migliore per rendere il legame
+        illeggibile.
+      */
+      groupBy?: string;
+      groupLabel?: string;
+      groupHint?: string;
+    }
 );
 
 export type SectionContent = Record<string, unknown>;
@@ -47,13 +61,12 @@ export type SectionSchema = {
   stesso nome di box si alternano dentro lo stesso riquadro, con le linette in
   alto per passare da uno all'altro.
 */
+const GRUPPO_HINT =
+  "Con più contenuti il riquadro diventa un carosello: si alternano da soli e in cima compaiono le linette per sceglierli.";
+
 const CAMPI_BOX: FieldSpec[] = [
-  {
-    name: "box",
-    label: "Box",
-    type: "text",
-    hint: "Contenuti con lo stesso nome finiscono nello stesso riquadro e si alternano. Lasciandolo vuoto il contenuto ha un riquadro tutto suo.",
-  },
+  /* Nascosto dal form: il riquadro di appartenenza lo assegna `groupBy`. */
+  { name: "box", label: "Riquadro", type: "text" },
   { name: "etichetta", label: "Testo sopra il numero", type: "text" },
   {
     name: "numero",
@@ -128,6 +141,9 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
+        groupBy: "box",
+        groupLabel: "Riquadro",
+        groupHint: GRUPPO_HINT,
       },
       {
         name: "testo",
@@ -141,6 +157,9 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
+        groupBy: "box",
+        groupLabel: "Riquadro",
+        groupHint: GRUPPO_HINT,
       },
     ],
   },

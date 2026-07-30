@@ -91,6 +91,9 @@ export function SectionForm({
               fields={f.fields}
               projectId={projectId}
               defaultItems={iniziali}
+              groupBy={f.groupBy}
+              groupLabel={f.groupLabel}
+              groupHint={f.groupHint}
             />
           );
         }

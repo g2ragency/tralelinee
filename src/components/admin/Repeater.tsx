@@ -7,14 +7,105 @@ import { FileUpload } from "./FileUpload";
 
 type Item = Record<string, string>;
 
+const classeInput =
+  "border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground";
+
+const classeBottone = "hoverable border border-grey px-2 disabled:opacity-30";
+
+/* Campi di un singolo elemento. Uguali nelle due modalità del repeater. */
+function Campi({
+  fields,
+  item,
+  indice,
+  nome,
+  projectId,
+  aggiorna,
+}: {
+  fields: FieldSpec[];
+  item: Item;
+  indice: number;
+  nome: string;
+  projectId: string;
+  aggiorna: (indice: number, campo: string, valore: string) => void;
+}) {
+  return (
+    <>
+      {fields.map((f) => {
+        if (f.type === "richtext") {
+          return (
+            <RichText
+              key={f.name}
+              /* niente name: il valore viaggia nel JSON del repeater */
+              name={`__${nome}_${indice}_${f.name}`}
+              defaultValue={item[f.name]}
+              label={f.label}
+              hint={f.hint}
+              onChange={(html) => aggiorna(indice, f.name, html)}
+            />
+          );
+        }
+
+        if (f.type === "image") {
+          return (
+            <FileUpload
+              key={f.name}
+              name={`__${nome}_${indice}_${f.name}`}
+              projectId={projectId}
+              defaultPath={item[f.name]}
+              label={f.label}
+              onChange={(path) => aggiorna(indice, f.name, path)}
+            />
+          );
+        }
+
+        return (
+          <label key={f.name} className="flex flex-col gap-2">
+            <span className="text-[16px] text-grey">{f.label}</span>
+            {f.type === "textarea" ? (
+              <textarea
+                rows={3}
+                value={item[f.name] ?? ""}
+                onChange={(e) => aggiorna(indice, f.name, e.target.value)}
+                className={classeInput}
+              />
+            ) : f.type === "select" ? (
+              <select
+                value={item[f.name] ?? ""}
+                onChange={(e) => aggiorna(indice, f.name, e.target.value)}
+                className="border border-grey bg-background px-4 py-2 text-[18px]"
+              >
+                {f.options.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={f.type === "number" ? "number" : "text"}
+                value={item[f.name] ?? ""}
+                onChange={(e) => aggiorna(indice, f.name, e.target.value)}
+                className={classeInput}
+              />
+            )}
+            {f.hint && <span className="text-[14px] text-grey2">{f.hint}</span>}
+          </label>
+        );
+      })}
+    </>
+  );
+}
+
 /*
-  Elenco ripetibile di gruppi di campi (voci di un accordion, box di una
+  Elenco ripetibile di gruppi di campi (voci di un accordion, contenuti di una
   griglia). L'intero elenco viaggia in un unico input hidden come JSON: così
   la Server Action non deve ricostruire nomi indicizzati tipo voci[0][titolo],
   che è la parte che di solito si rompe.
 
-  I campi interni non usano `name`, altrimenti finirebbero anche loro nel
-  FormData duplicando i dati.
+  Con `groupBy` gli elementi vengono raccolti per il valore di quel campo e
+  mostrati dentro il riquadro a cui appartengono: il campo esiste ancora nei
+  dati ma sparisce dal form, perché scrivere a mano la stessa sigla su più
+  elementi è esattamente il modo in cui il legame diventa illeggibile.
 */
 export function Repeater({
   name,
@@ -23,6 +114,9 @@ export function Repeater({
   fields,
   projectId,
   defaultItems,
+  groupBy,
+  groupLabel = "Riquadro",
+  groupHint,
 }: {
   name: string;
   label: string;
@@ -30,8 +124,28 @@ export function Repeater({
   fields: FieldSpec[];
   projectId: string;
   defaultItems: Item[];
+  groupBy?: string;
+  groupLabel?: string;
+  groupHint?: string;
 }) {
-  const [items, setItems] = useState<Item[]>(defaultItems);
+  /*
+    Chiave vuota = elemento per conto suo: gliene si assegna una all'ingresso,
+    altrimenti nel form finirebbero tutti nello stesso riquadro mentre la
+    pagina continua a mostrarli separati.
+  */
+  const [items, setItems] = useState<Item[]>(() => {
+    if (!groupBy) return defaultItems;
+    const usate = new Set(defaultItems.map((it) => it[groupBy]).filter(Boolean));
+    let n = 0;
+    return defaultItems.map((it) => {
+      if (it[groupBy]) return it;
+      while (usate.has(String(++n)));
+      usate.add(String(n));
+      return { ...it, [groupBy]: String(n) };
+    });
+  });
+
+  const visibili = groupBy ? fields.filter((f) => f.name !== groupBy) : fields;
 
   const nuovo = (): Item =>
     Object.fromEntries(
@@ -46,132 +160,220 @@ export function Repeater({
       prev.map((it, k) => (k === i ? { ...it, [campo]: valore } : it)),
     );
 
-  const sposta = (i: number, delta: number) =>
-    setItems((prev) => {
-      const j = i + delta;
-      if (j < 0 || j >= prev.length) return prev;
-      const out = [...prev];
-      [out[i], out[j]] = [out[j], out[i]];
-      return out;
-    });
+  const rimuovi = (i: number) =>
+    setItems((prev) => prev.filter((_, k) => k !== i));
 
-  const classeInput =
-    "border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground";
+  /* Serve su elementi, gruppi e indici: la virgola dopo T è per non farlo
+     leggere come JSX. */
+  const scambia = <T,>(lista: T[], i: number, j: number) => {
+    const out = [...lista];
+    [out[i], out[j]] = [out[j], out[i]];
+    return out;
+  };
+
+  const sposta = (i: number, delta: number) =>
+    setItems((prev) =>
+      i + delta < 0 || i + delta >= prev.length
+        ? prev
+        : scambia(prev, i, i + delta),
+    );
+
+  const intestazione = (
+    testo: string,
+    su: () => void,
+    giu: () => void,
+    primo: boolean,
+    ultimo: boolean,
+    elimina: () => void,
+  ) => (
+    <legend className="flex items-center gap-2 px-2 text-[15px] text-grey">
+      {testo}
+      <button
+        type="button"
+        onClick={su}
+        disabled={primo}
+        aria-label="Sposta prima"
+        className={classeBottone}
+      >
+        ↑
+      </button>
+      <button
+        type="button"
+        onClick={giu}
+        disabled={ultimo}
+        aria-label="Sposta dopo"
+        className={classeBottone}
+      >
+        ↓
+      </button>
+      <button type="button" onClick={elimina} className="hoverable underline">
+        Rimuovi
+      </button>
+    </legend>
+  );
+
+  const hidden = (
+    <input type="hidden" name={name} value={JSON.stringify(items)} />
+  );
+
+  /* ===== Senza raggruppamento: elenco piatto ===== */
+  if (!groupBy) {
+    return (
+      <div className="flex flex-col gap-3">
+        <span className="text-[16px] text-grey">{label}</span>
+        {hidden}
+
+        {items.map((item, i) => (
+          <fieldset
+            key={i}
+            className="flex flex-col gap-3 border border-grey/40 p-4"
+          >
+            {intestazione(
+              `${itemLabel} ${i + 1}`,
+              () => sposta(i, -1),
+              () => sposta(i, 1),
+              i === 0,
+              i === items.length - 1,
+              () => rimuovi(i),
+            )}
+            <Campi
+              fields={visibili}
+              item={item}
+              indice={i}
+              nome={name}
+              projectId={projectId}
+              aggiorna={aggiorna}
+            />
+          </fieldset>
+        ))}
+
+        <button
+          type="button"
+          onClick={() => setItems((prev) => [...prev, nuovo()])}
+          className="hoverable self-start border border-grey px-4 py-2 text-[16px]"
+        >
+          Aggiungi {itemLabel.toLowerCase()}
+        </button>
+      </div>
+    );
+  }
+
+  /* ===== Raggruppato: un blocco per riquadro ===== */
+  const gruppi: { chiave: string; indici: number[] }[] = [];
+  items.forEach((it, i) => {
+    const chiave = it[groupBy] ?? "";
+    const g = gruppi.find((x) => x.chiave === chiave);
+    if (g) g.indici.push(i);
+    else gruppi.push({ chiave, indici: [i] });
+  });
+
+  // I gruppi si spostano in blocco: si riordinano e si riappiattisce l'elenco.
+  const riappiattisci = (ordine: { indici: number[] }[]) =>
+    ordine.flatMap((g) => g.indici.map((i) => items[i]));
+
+  const spostaGruppo = (gi: number, delta: number) => {
+    if (gi + delta < 0 || gi + delta >= gruppi.length) return;
+    setItems(riappiattisci(scambia(gruppi, gi, gi + delta)));
+  };
+
+  const spostaNelGruppo = (gi: number, pos: number, delta: number) => {
+    const g = gruppi[gi];
+    if (pos + delta < 0 || pos + delta >= g.indici.length) return;
+    const ordinati = gruppi.map((x, k) =>
+      k === gi ? { ...x, indici: scambia(x.indici, pos, pos + delta) } : x,
+    );
+    setItems(riappiattisci(ordinati));
+  };
+
+  const chiaveLibera = () => {
+    const usate = new Set(items.map((it) => it[groupBy]));
+    let n = 1;
+    while (usate.has(String(n))) n++;
+    return String(n);
+  };
+
+  const aggiungiAlGruppo = (gi: number) => {
+    const g = gruppi[gi];
+    const dopo = g.indici[g.indici.length - 1] + 1;
+    setItems((prev) => [
+      ...prev.slice(0, dopo),
+      { ...nuovo(), [groupBy]: g.chiave },
+      ...prev.slice(dopo),
+    ]);
+  };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <span className="text-[16px] text-grey">{label}</span>
-      <input type="hidden" name={name} value={JSON.stringify(items)} />
+      {/* Una volta sola: ripeterlo sotto ogni riquadro è solo rumore. */}
+      {groupHint && <p className="text-[14px] text-grey2">{groupHint}</p>}
+      {hidden}
 
-      {items.map((item, i) => (
+      {gruppi.map((g, gi) => (
         <fieldset
-          key={i}
-          className="flex flex-col gap-3 border border-grey/40 p-4"
+          key={g.chiave}
+          className="flex flex-col gap-3 border border-grey p-4"
         >
-          <legend className="flex items-center gap-2 px-2 text-[15px] text-grey">
-            {itemLabel} {i + 1}
-            <button
-              type="button"
-              onClick={() => sposta(i, -1)}
-              disabled={i === 0}
-              aria-label="Sposta prima"
-              className="hoverable border border-grey px-2 disabled:opacity-30"
-            >
-              ↑
-            </button>
-            <button
-              type="button"
-              onClick={() => sposta(i, 1)}
-              disabled={i === items.length - 1}
-              aria-label="Sposta dopo"
-              className="hoverable border border-grey px-2 disabled:opacity-30"
-            >
-              ↓
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                setItems((prev) => prev.filter((_, k) => k !== i))
-              }
-              className="hoverable underline"
-            >
-              Rimuovi
-            </button>
-          </legend>
+          {intestazione(
+            `${groupLabel} ${gi + 1}`,
+            () => spostaGruppo(gi, -1),
+            () => spostaGruppo(gi, 1),
+            gi === 0,
+            gi === gruppi.length - 1,
+            () =>
+              setItems((prev) =>
+                prev.filter((it) => it[groupBy] !== g.chiave),
+              ),
+          )}
 
-          {fields.map((f) => {
-            if (f.type === "richtext") {
-              return (
-                <RichText
-                  key={f.name}
-                  /* niente name: il valore viaggia nel JSON del repeater */
-                  name={`__${name}_${i}_${f.name}`}
-                  defaultValue={item[f.name]}
-                  label={f.label}
-                  hint={f.hint}
-                  onChange={(html) => aggiorna(i, f.name, html)}
-                />
-              );
-            }
+          {g.indici.map((i, pos) => (
+            <fieldset
+              key={i}
+              className="flex flex-col gap-3 border border-grey/40 p-4"
+            >
+              {intestazione(
+                g.indici.length > 1
+                  ? `${itemLabel} ${pos + 1} di ${g.indici.length}`
+                  : itemLabel,
+                () => spostaNelGruppo(gi, pos, -1),
+                () => spostaNelGruppo(gi, pos, 1),
+                pos === 0,
+                pos === g.indici.length - 1,
+                () => rimuovi(i),
+              )}
+              <Campi
+                fields={visibili}
+                item={items[i]}
+                indice={i}
+                nome={name}
+                projectId={projectId}
+                aggiorna={aggiorna}
+              />
+            </fieldset>
+          ))}
 
-            if (f.type === "image") {
-              return (
-                <FileUpload
-                  key={f.name}
-                  name={`__${name}_${i}_${f.name}`}
-                  projectId={projectId}
-                  defaultPath={item[f.name]}
-                  label={f.label}
-                  onChange={(path) => aggiorna(i, f.name, path)}
-                />
-              );
-            }
-
-            return (
-              <label key={f.name} className="flex flex-col gap-2">
-                <span className="text-[16px] text-grey">{f.label}</span>
-                {f.type === "textarea" ? (
-                  <textarea
-                    rows={3}
-                    value={item[f.name] ?? ""}
-                    onChange={(e) => aggiorna(i, f.name, e.target.value)}
-                    className={classeInput}
-                  />
-                ) : f.type === "select" ? (
-                  <select
-                    value={item[f.name] ?? ""}
-                    onChange={(e) => aggiorna(i, f.name, e.target.value)}
-                    className="border border-grey bg-background px-4 py-2 text-[18px]"
-                  >
-                    {f.options.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    type={f.type === "number" ? "number" : "text"}
-                    value={item[f.name] ?? ""}
-                    onChange={(e) => aggiorna(i, f.name, e.target.value)}
-                    className={classeInput}
-                  />
-                )}
-                {f.hint && (
-                  <span className="text-[14px] text-grey2">{f.hint}</span>
-                )}
-              </label>
-            );
-          })}
+          <button
+            type="button"
+            onClick={() => aggiungiAlGruppo(gi)}
+            className="hoverable self-start border border-grey/40 px-3 py-1 text-[15px]"
+          >
+            Aggiungi {itemLabel.toLowerCase()} a questo{" "}
+            {groupLabel.toLowerCase()}
+          </button>
         </fieldset>
       ))}
 
       <button
         type="button"
-        onClick={() => setItems((prev) => [...prev, nuovo()])}
+        onClick={() =>
+          setItems((prev) => [
+            ...prev,
+            { ...nuovo(), [groupBy]: chiaveLibera() },
+          ])
+        }
         className="hoverable self-start border border-grey px-4 py-2 text-[16px]"
       >
-        Aggiungi {itemLabel.toLowerCase()}
+        Aggiungi {groupLabel.toLowerCase()}
       </button>
     </div>
   );
