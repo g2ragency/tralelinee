@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { signedUrl, signedUrls } from "@/lib/media";
 import { VociLaterali } from "@/components/sections/VociLaterali";
 import { Carosello } from "@/components/sections/Carosello";
+import { FilaBox } from "@/components/sections/GrigliaNumeri";
+import { raggruppa } from "./griglia";
 import type { SectionContent } from "./schema";
 
 /*
@@ -175,6 +177,30 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
   return <Carosello urls={urls} />;
 }
 
+/* Griglia numeri — riquadri con i numeri e testo di raccordo in mezzo. */
+function GrigliaRender({ content }: { content: SectionContent }) {
+  const sopra = raggruppa(content.sopra);
+  const sotto = raggruppa(content.sotto);
+  const testo = s(content.testo);
+  if (sopra.length === 0 && sotto.length === 0 && !testo) return null;
+
+  return (
+    /* Figma: 14px fra righe e colonne, riquadri #1B1B1B raggio 20px */
+    <section className="flex flex-col gap-[14px]">
+      <FilaBox boxes={sopra} variante="sopra" />
+      {testo && (
+        <div
+          /* 30px, interlinea 120%, spaziatura -4%, GRIGIO1; il grassetto
+             non ingrossa, schiarisce — l'enfasi qui è di colore. */
+          className="rounded-[20px] bg-box px-[30px] py-[28px] text-[20px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-normal [&_strong]:text-foreground"
+          dangerouslySetInnerHTML={{ __html: testo }}
+        />
+      )}
+      <FilaBox boxes={sotto} variante="sotto" />
+    </section>
+  );
+}
+
 /* Voci laterali — interattivo, quindi delegato a un client component. */
 function VociRender({ content }: { content: SectionContent }) {
   const voci = Array.isArray(content.voci)
@@ -191,6 +217,7 @@ export const RENDERERS: Record<string, SectionRenderer> = {
   intro: IntroRender,
   voci: VociRender,
   carosello: CaroselloRender,
+  griglia: GrigliaRender,
   media: MediaRender,
 };
 

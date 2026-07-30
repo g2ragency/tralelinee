@@ -42,6 +42,28 @@ export type SectionSchema = {
   fields: FieldSpec[];
 };
 
+/*
+  Un box della griglia mostra un contenuto per volta. Più contenuti con lo
+  stesso nome di box si alternano dentro lo stesso riquadro, con le linette in
+  alto per passare da uno all'altro.
+*/
+const CAMPI_BOX: FieldSpec[] = [
+  {
+    name: "box",
+    label: "Box",
+    type: "text",
+    hint: "Contenuti con lo stesso nome finiscono nello stesso riquadro e si alternano. Lasciandolo vuoto il contenuto ha un riquadro tutto suo.",
+  },
+  { name: "etichetta", label: "Testo sopra il numero", type: "text" },
+  {
+    name: "numero",
+    label: "Numero",
+    type: "text",
+    hint: "I simboli + − % sono resi in corpo più piccolo, come nel design.",
+  },
+  { name: "didascalia", label: "Testo sotto il numero", type: "text" },
+];
+
 export const SCHEMAS: Record<string, SectionSchema> = {
   intro: {
     label: "Intro",
@@ -84,6 +106,33 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     hint: "Card 30px di raggio, scorrimento orizzontale, 2,2 in vista su desktop.",
     fields: [
       { name: "immagini", label: "Immagini", type: "images" },
+    ],
+  },
+
+  griglia: {
+    label: "Griglia numeri",
+    hint: "Riquadri con i numeri, testo di raccordo, e una seconda fila di riquadri.",
+    fields: [
+      {
+        name: "sopra",
+        label: "Riquadri sopra il testo",
+        type: "repeater",
+        itemLabel: "Contenuto",
+        fields: CAMPI_BOX,
+      },
+      {
+        name: "testo",
+        label: "Testo di raccordo",
+        type: "richtext",
+        hint: "Il grassetto mette in evidenza in bianco (nomi, cariche).",
+      },
+      {
+        name: "sotto",
+        label: "Riquadri sotto il testo",
+        type: "repeater",
+        itemLabel: "Contenuto",
+        fields: CAMPI_BOX,
+      },
     ],
   },
 
