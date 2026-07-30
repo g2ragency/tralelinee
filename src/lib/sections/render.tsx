@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { signedUrl, signedUrls } from "@/lib/media";
 import { VociLaterali } from "@/components/sections/VociLaterali";
+import { Carosello } from "@/components/sections/Carosello";
 import type { SectionContent } from "./schema";
 
 /*
@@ -167,38 +168,11 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
       )
     : [];
   if (paths.length === 0) return null;
-  const urls = await signedUrls(paths);
 
-  return (
-    <section
-      /* -mx e px compensano il padding del sito: le card possono uscire dal
-         bordo destro come nel design, senza tagliare la prima a sinistra. */
-      /*
-        scroll-pl oltre a px: con snap obbligatorio l'aggancio della prima card
-        ignora il padding (scroll-padding vale `auto`), quindi il browser
-        scrollava di 40px e la card finiva a filo del bordo.
-      */
-      className="-mx-6 flex snap-x snap-mandatory scroll-pl-6 gap-[18px] overflow-x-auto px-6 pb-2 xl:-mx-10 xl:scroll-pl-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-    >
-      {urls.map((url, i) =>
-        url ? (
-          <figure
-            key={i}
-            className="aspect-[596/760] w-[clamp(260px,calc((100%-18px)/1.15),680px)] shrink-0 snap-start overflow-hidden rounded-[30px] bg-grey/15 xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)]"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element --
-                URL firmato a scadenza: next/image lo cacherebbe oltre la validità. */}
-            <img
-              src={url}
-              alt=""
-              className="h-full w-full object-cover"
-              loading={i > 1 ? "lazy" : undefined}
-            />
-          </figure>
-        ) : null,
-      )}
-    </section>
-  );
+  // Gli URL si firmano qui (server); scorrimento e trascinamento sono client.
+  const urls = (await signedUrls(paths)).filter((u): u is string => !!u);
+  if (urls.length === 0) return null;
+  return <Carosello urls={urls} />;
 }
 
 /* Voci laterali — interattivo, quindi delegato a un client component. */

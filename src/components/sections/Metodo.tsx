@@ -144,7 +144,7 @@ export function Metodo() {
       </div>
 
       {/* Mobile: carosello, un item per volta con descrizione visibile */}
-      <div key={index} className="animate-metodo-slide xl:hidden">
+      <div key={index} className="animate-entra xl:hidden">
         <h3 className="text-[34px] font-light leading-[0.97] tracking-[-1.36px]">
           {item.title}
         </h3>

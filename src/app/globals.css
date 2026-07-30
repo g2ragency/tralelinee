@@ -49,8 +49,9 @@ html {
   scroll-behavior: initial; /* lo smooth scroll è di Lenis */
 }
 
-/* Transizione item carosello Metodo (mobile) */
-@keyframes metodo-slide {
+/* Entrata morbida di un contenuto che sostituisce il precedente:
+   carosello Metodo (mobile) e cambio voce nel case study. */
+@keyframes entra {
   from {
     opacity: 0;
     transform: translateX(12px);
@@ -61,8 +62,15 @@ html {
   }
 }
 
-.animate-metodo-slide {
-  animation: metodo-slide 0.35s ease-out;
+.animate-entra {
+  animation: entra 0.35s ease-out;
+}
+
+/* Chi ha chiesto meno animazioni non deve subire movimenti decorativi. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-entra {
+    animation: none;
+  }
 }
 
 body {

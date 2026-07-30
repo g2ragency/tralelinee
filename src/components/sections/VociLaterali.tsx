@@ -26,6 +26,12 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
   const [attiva, setAttiva] = useState(0);
   const [espansa, setEspansa] = useState(false);
   const [tronca, setTronca] = useState(false);
+  /*
+    Altezza reale del testo: serve per animare l'apertura. Una transizione
+    verso `none` non si anima, quindi da chiuso si va all'altezza misurata in
+    pixel e non a un valore automatico.
+  */
+  const [altezzaPiena, setAltezzaPiena] = useState(0);
   const testoRef = useRef<HTMLDivElement>(null);
 
   const voce = voci[attiva];
@@ -39,7 +45,10 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
   useEffect(() => {
     const el = testoRef.current;
     if (!el || espansa) return;
-    const misura = () => setTronca(el.scrollHeight > el.clientHeight + 8);
+    const misura = () => {
+      setTronca(el.scrollHeight > el.clientHeight + 8);
+      setAltezzaPiena(el.scrollHeight);
+    };
     misura();
     const ro = new ResizeObserver(misura);
     ro.observe(el);
@@ -80,15 +89,21 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
         <div className="relative">
           <div
             ref={testoRef}
-            style={
-              espansa
-                ? undefined
-                : { maxHeight: ALTEZZA_CHIUSA, overflow: "hidden" }
-            }
+            style={{
+              maxHeight: espansa ? `${altezzaPiena}px` : ALTEZZA_CHIUSA,
+              overflow: "hidden",
+            }}
             /* Corpo 30px grigio, attacchi in grassetto bianchi */
-            className="text-[20px] leading-[1.2] tracking-[-0.8px] text-grey xl:text-[30px] xl:tracking-[-1.2px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-bold [&_strong]:text-foreground"
-            dangerouslySetInnerHTML={{ __html: voce.testo }}
-          />
+            className="text-[20px] leading-[1.2] tracking-[-0.8px] text-grey transition-[max-height] duration-500 ease-out motion-reduce:transition-none xl:text-[30px] xl:tracking-[-1.2px]"
+          >
+            {/* La chiave rimonta il testo al cambio voce, così l'animazione
+                di entrata riparte invece di sostituirlo di scatto. */}
+            <div
+              key={attiva}
+              className="animate-entra [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-bold [&_strong]:text-foreground"
+              dangerouslySetInnerHTML={{ __html: voce.testo }}
+            />
+          </div>
 
           {/* Sfumatura sull'ultima parte del testo troncato */}
           {tronca && !espansa && (
