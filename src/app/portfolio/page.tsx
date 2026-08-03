@@ -4,7 +4,7 @@ import { getProfile, getUser } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/server";
 import { signedUrls } from "@/lib/media";
-import { FiltriProgetti } from "@/components/portfolio/FiltriProgetti";
+import { ElencoProgetti } from "@/components/portfolio/ElencoProgetti";
 
 export const metadata = { title: "Portfolio — Tra le linee" };
 
@@ -13,7 +13,7 @@ type Progetto = {
   slug: string;
   title: string;
   client: string | null;
-  summary: string | null;
+  category: string | null;
   cover_path: string | null;
 };
 
@@ -98,21 +98,25 @@ export default async function PortfolioPage({
 
   const supabase = await createClient();
   // Le RLS filtrano già: gli approvati vedono solo i pubblicati, l'admin tutto.
-  let query = supabase
+  const { data } = await supabase
     .from("projects")
-    .select("id, slug, title, client, summary, cover_path")
+    .select("id, slug, title, client, cover_path, category")
     .order("position");
-  if (attiva) query = query.eq("category", attiva);
-  const { data } = await query;
   const progetti = (data as Progetto[] | null) ?? [];
   const covers = await signedUrls(progetti.map((p) => p.cover_path));
+  /*
+    Le schede arrivano tutte al client, che filtra da solo: il portfolio è un
+    elenco corto e il cambio di filtro non deve passare dalla rete.
+  */
+  const schede = progetti.map((p, i) => ({ ...p, cover: covers[i] ?? null }));
 
   return (
     /* 90px sotto l'header, che è alto ~91px su desktop e ~72px su mobile */
     <main className="min-h-svh px-6 pb-32 pt-[162px] xl:px-10 xl:pt-[181px]">
-      <FiltriProgetti
+      <ElencoProgetti
+        schede={schede}
         categorie={CATEGORIE}
-        attiva={attiva}
+        iniziale={attiva}
         azioni={
           <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
             {profile.role === "super_admin" && (
@@ -127,46 +131,7 @@ export default async function PortfolioPage({
             </form>
           </div>
         }
-      >
-        {progetti.length === 0 ? (
-          <p className="mt-16 text-[18px] tracking-[-0.72px] text-grey">
-            {attiva
-              ? "Nessun progetto in questa categoria."
-              : "Nessun progetto pubblicato al momento."}
-          </p>
-        ) : (
-          /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */
-          <ul className="mt-[60px] grid gap-x-[20px] gap-y-[44px] xl:grid-cols-2">
-            {progetti.map((p, i) => (
-              <li key={p.id}>
-                <Link href={`/portfolio/${p.slug}`} className="hoverable block">
-                  {covers[i] ? (
-                    /* eslint-disable-next-line @next/next/no-img-element --
-                     URL firmato a scadenza: next/image lo rifirmerebbe e
-                     scadrebbe in cache. */
-                    <img
-                      src={covers[i]!}
-                      alt=""
-                      className="aspect-[4/3] w-full rounded-[20px] object-cover"
-                    />
-                  ) : (
-                    <div className="aspect-[4/3] w-full rounded-[20px] bg-box" />
-                  )}
-                  {/* 8px fra copertina e cliente, poi il titolo attaccato.
-                    Senza cliente resta una riga vuota, così i titoli di due
-                    schede affiancate restano sulla stessa linea. */}
-                  <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
-                    {p.client ?? " "}
-                  </p>
-                  <h2 className="text-[24px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
-                    {p.title}
-                  </h2>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </FiltriProgetti>
+      />
     </main>
   );
 }
