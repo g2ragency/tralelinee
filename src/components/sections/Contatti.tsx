@@ -6,7 +6,10 @@
 */
 export function Contatti() {
   return (
-    <section id="contatti" className="px-6 py-24 xl:px-10 xl:py-40">
+    <section
+      id="contatti"
+      className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+    >
       {/* Label: Medium 24px, lh 93.3%, ls -3% */}
       <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
         Contatti
@@ -20,7 +23,8 @@ export function Contatti() {
       </p>
       <a
         href="/registrati"
-        className="hoverable mt-10 inline-flex items-center justify-center border border-foreground px-5 py-3 text-[16px] font-normal leading-[0.933] tracking-[-0.64px] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:tracking-[-0.96px]"
+        /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */
+        className="hoverable mt-10 inline-flex items-center justify-center self-start border border-foreground px-5 py-3 text-[16px] font-normal leading-[0.933] tracking-[-0.64px] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:tracking-[-0.96px]"
       >
         Richiedi portfolio
       </a>

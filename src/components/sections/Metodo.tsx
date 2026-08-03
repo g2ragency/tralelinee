@@ -109,7 +109,12 @@ export function Metodo() {
   const item = ITEMS[index];
 
   return (
-    <section id="metodo" className="px-6 py-24 xl:px-10 xl:py-40">
+    /* min-h e non h fissa: da desktop il contenuto supera lo schermo,
+       un'altezza bloccata lo taglierebbe */
+    <section
+      id="metodo"
+      className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+    >
       <div className="mb-10 flex items-center justify-between xl:mb-20">
         {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
         {/* Label: Medium 24px, lh 93.3%, ls -3% */}
