@@ -45,15 +45,17 @@ export function ExpandLogo({ compatto }: { compatto?: boolean }) {
     });
   };
 
-  const barra = compatto ? "px-[9px]" : "px-[8px]";
+  const barra = compatto ? "px-[9px]" : "px-[5px] xl:px-[8px]";
 
   return (
     <Link
       href="/"
-      /* Figma: 126×30 nell'header. leading fissa l'altezza del riquadro,
-         che altrimenti dipenderebbe dall'interlinea del font. */
+      /* Figma: 85×22 su mobile, 126×30 da desktop. leading fissa l'altezza del
+         riquadro, che altrimenti dipenderebbe dall'interlinea del font. */
       className={`hoverable flex items-baseline font-medium tracking-tight ${
-        compatto ? "text-[26px] leading-none" : "text-[24px] leading-[30px]"
+        compatto
+          ? "text-[26px] leading-none"
+          : "text-[17px] leading-[22px] xl:text-[24px] xl:leading-[30px]"
       }`}
       aria-label="Tra le linee — home"
     >

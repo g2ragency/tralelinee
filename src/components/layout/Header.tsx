@@ -70,7 +70,8 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-5 xl:px-10">
+    /* Figma mobile: padding 10px 18px */
+    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[18px] py-[10px] xl:px-10 xl:py-5">
       {/*
         Velo sfumato: scende oltre l'header e si dissolve, così il testo della
         pagina che scorre sotto non entra in collisione col menu. Parte dal
@@ -110,15 +111,19 @@ export function Header() {
       </nav>
 
       {/* Hamburger mobile */}
+      {/* Figma: 25×20, tre righe da 2px distanziate 4px. Il bersaglio
+          tattile è allargato col padding e riassorbito col margine
+          negativo: 25×20 sono pochi per un dito. */}
       <button
         type="button"
-        className="hoverable flex h-10 w-10 flex-col items-center justify-center gap-1.5 xl:hidden"
+        className="hoverable -m-3 box-content flex h-[20px] w-[25px] flex-col justify-center gap-[4px] p-3 xl:hidden"
         aria-label="Apri menu"
         aria-expanded={menuOpen}
         onClick={() => setMenuOpen(true)}
       >
-        <span className="h-px w-6 bg-current" />
-        <span className="h-px w-6 bg-current" />
+        <span className="h-[2px] w-full bg-current" />
+        <span className="h-[2px] w-full bg-current" />
+        <span className="h-[2px] w-full bg-current" />
       </button>
 
       {/* Overlay mobile: sempre montato, scorre da destra */}

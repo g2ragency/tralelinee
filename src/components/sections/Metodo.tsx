@@ -118,11 +118,12 @@ export function Metodo() {
     <>
       <section
         id="metodo"
-        className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+        className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
       >
         <div className="mb-10 flex items-center justify-between xl:mb-20">
-          {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-          <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
+          {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da
+              desktop; spaziatura -4%, GRIGIO1 */}
+          <p className="text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
             Metodo
           </p>
           {/* Frecce carosello — solo mobile */}
@@ -140,13 +141,12 @@ export function Metodo() {
           </div>
         </div>
 
-        {/* Intro: Regular 52px, lh 102%, ls -4%; si accende con lo scroll */}
-        <div className="hidden xl:block">
-          <EvidenziaScroll
-            paragrafi={INTRO}
-            classeP="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
-          />
-        </div>
+        {/* Intro: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%,
+            allineata a sinistra; si accende con lo scroll */}
+        <EvidenziaScroll
+          paragrafi={INTRO}
+          classeP="mt-[26px] text-left text-[26px] font-normal leading-[1.02] tracking-[-0.04em] first:mt-0 xl:mt-[52px] xl:text-[52px]"
+        />
 
         {/* Mobile: carosello, un item per volta con descrizione visibile */}
         <div key={index} className="animate-entra xl:hidden">
@@ -162,7 +162,7 @@ export function Metodo() {
       {/* Desktop: accordion hover, schermata a sé */}
       <section
         aria-label="Metodo — i quattro punti"
-        className="hidden min-h-svh flex-col justify-center px-6 py-28 xl:flex xl:px-10"
+        className="hidden min-h-svh flex-col justify-center px-[10px] py-28 xl:flex xl:px-10"
       >
         <div className="flex max-w-[901px] flex-col gap-9">
           {ITEMS.map((it) => (

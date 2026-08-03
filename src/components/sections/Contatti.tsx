@@ -10,18 +10,19 @@ export function Contatti() {
   return (
     <section
       id="contatti"
-      className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+      className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
     >
-      {/* Label: Medium 24px, lh 93.3%, ls -3% */}
-      <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
+      {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da desktop */}
+      <p className="mb-6 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
         Contatti
       </p>
-      {/* Testo: Regular 52px, lh 102%, ls -4%; si accende con lo scroll */}
+      {/* Testo: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%;
+          si accende con lo scroll */}
       <EvidenziaScroll
         paragrafi={[
           "Per istituzioni, imprese e organizzazioni che desiderano esplorare nuovi scenari, rafforzare il proprio posizionamento o attivare strategie di influenza culturale e comunicativa. Contattaci per avviare un dialogo e valutare insieme percorsi di collaborazione.",
         ]}
-        classeP="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] xl:max-w-none xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px]"
+        classeP="text-left text-[26px] font-normal leading-[1.02] tracking-[-0.04em] xl:text-[52px]"
       />
       <a
         href="/registrati"

@@ -95,16 +95,18 @@ export function ChiSiamo() {
       id="chi-siamo"
       className="relative flex h-svh items-center overflow-hidden"
     >
-      <p className="absolute left-6 top-24 text-[16px] tracking-[-0.64px] text-label xl:hidden">
+      {/* Etichetta: Medium 12px, interlinea 110%, spaziatura -4% */}
+      <p className="absolute left-[10px] top-24 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:hidden">
         Chi Siamo
       </p>
       <div ref={trackRef} className="flex will-change-transform">
         {SLIDES.map((slide, i) => (
           <div
             key={i}
-            className="grid w-screen shrink-0 place-items-center px-6 xl:px-10"
+            className="grid w-screen shrink-0 place-items-center px-[10px] xl:px-10"
           >
-            <p className="max-w-[1009px] text-left text-[26px] leading-none tracking-[-1.04px] xl:text-center xl:text-[52px] xl:tracking-[-2.08px]">
+            {/* Figma: Regular 26px, interlinea 100%, spaziatura -4%, centrato */}
+            <p className="max-w-[1009px] text-center text-[26px] leading-none tracking-[-0.04em] xl:text-[52px]">
               {slide}
             </p>
           </div>

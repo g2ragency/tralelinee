@@ -13,7 +13,7 @@ import Link from "next/link";
 */
 export function Footer() {
   return (
-    <footer className="flex flex-col gap-10 px-6 pb-16 pt-16 xl:gap-[34px] xl:px-10 xl:pb-20 xl:pt-[349px]">
+    <footer className="flex flex-col gap-10 px-[10px] pb-16 pt-16 xl:gap-[34px] xl:px-10 xl:pb-20 xl:pt-[349px]">
       <svg
         viewBox="0 0 1360 328"
         fill="currentColor"

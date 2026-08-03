@@ -171,21 +171,22 @@ export function Capabilities() {
   }, []);
 
   return (
-    <section id="capabilities" className="px-6 pb-24 xl:px-10 xl:pb-40">
+    <section id="capabilities" className="px-[10px] pb-24 xl:px-10 xl:pb-40">
       {/* Servizi col suo testo: schermata a sé, alta quanto la finestra.
           La pila con numeri e accordion scorre subito dopo. */}
       <div className="flex min-h-svh max-w-[1265px] flex-col justify-center py-24 xl:py-28">
-        {/* Label: Medium 24px, lh 93.3%, ls -3% */}
-        <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
+        {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da desktop */}
+        <p className="mb-6 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
           Servizi
         </p>
-        {/* Intro: Regular 52px, lh 102%, ls -4%; si accende con lo scroll.
-            Niente classi colore: lo «spento» lo fa l'opacità dei caratteri. */}
+        {/* Intro: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%;
+            si accende con lo scroll. Niente classi colore: lo «spento» lo fa
+            l'opacità dei caratteri. */}
         <EvidenziaScroll
           paragrafi={[
             "Chiamati dalla vocazione agli scenari del futuro, plasmiamo il dibattito pubblico costruendo nuovi mondi narrativi. Il nostro obiettivo è creare cornici culturali dove istituzioni, corporate e professionisti possano affermarsi come leader di pensiero sviluppando concept in grado di ispirare politiche.",
           ]}
-          classeP="text-[15px] leading-[1.2] tracking-[-0.45px] xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px]"
+          classeP="text-left text-[26px] font-normal leading-[1.02] tracking-[-0.04em] xl:text-[52px]"
         />
       </div>
 
