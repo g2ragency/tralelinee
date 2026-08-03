@@ -26,9 +26,9 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     /*
       ScrollTrigger calcola le posizioni una volta e non si accorge se la
       pagina si allunga DOPO: un accordion aperto sposta tutto quello che sta
-      sotto, e i punti in cui il digit 01→06 cambia — come i punti di aggancio
-      dello snap — restano quelli del layout vecchio. Aprendo più pannelli lo
-      sfasamento si accumula fino a mostrare il numero della sezione sbagliata.
+      sotto, e i punti in cui il digit 01→06 cambia restano quelli del layout
+      vecchio. Aprendo più pannelli lo sfasamento si accumula fino a mostrare
+      il numero della sezione sbagliata.
       Si osserva l'altezza del body e a variazione finita si rimisura tutto.
       Il confronto con l'altezza precedente evita di rimisurare in loop
       (refresh muove i pin-spacer e rifarebbe scattare l'observer).

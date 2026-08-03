@@ -16,11 +16,11 @@ gsap.registerPlugin(ScrollTrigger);
   resterebbero stantii dopo un cambio tema.
 
   Il trigger è la <section> che contiene il testo, non il testo stesso (che a
-  riposo sta centrato, mai in cima). La finestra è spostata IN AVANTI rispetto
-  all'aggancio: parte quando la sezione è quasi arrivata (top 45%) e si
-  completa a tre quarti d'uscita (top -75%). All'aggancio sono accese solo le
-  prime righe (~35%), il resto si riempie attraversando la sezione: farla
-  finire all'arrivo significava trovare il testo già fatto.
+  riposo sta centrato, mai in cima). Parte quando la sezione è quasi arrivata
+  (top 45%) e si completa a tre quarti d'uscita (top -75%): quando la sezione
+  è in cima sono accese solo le prime righe (~35%), il resto si riempie
+  attraversandola. Farla finire all'arrivo significava trovare il testo già
+  fatto.
 
   I caratteri stanno in span per parola con nowrap: senza, gli a-capo
   cadrebbero dentro le parole spezzate in singoli span.

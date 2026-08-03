@@ -55,24 +55,6 @@ html {
   scroll-behavior: initial; /* lo smooth scroll è di Lenis */
 }
 
-/*
-  Aggancio alle sezioni della home su TOUCH: qui lo scroll è nativo (Lenis non
-  media i gesti) e il modulo snap di Lenis li ignora, quindi si usa lo
-  scroll-snap del browser. `proximity`, non `mandatory`: aggancia solo quando
-  ci si ferma vicino all'inizio di una sezione e lascia scorrere liberi
-  altrove — dentro i pin e nelle sezioni più alte dello schermo non interviene.
-  Su desktop se ne occupa SnapSezioni via Lenis: attivare entrambi farebbe
-  litigare il browser con lo scroll animato.
-*/
-@media (hover: none) and (pointer: coarse) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-  .sezione-snap {
-    scroll-snap-align: start;
-  }
-}
-
 /* Entrata morbida di un contenuto che sostituisce il precedente:
    carosello Metodo (mobile) e cambio voce nel case study. */
 @keyframes entra {

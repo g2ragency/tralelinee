@@ -111,15 +111,14 @@ export function Metodo() {
 
   return (
     /*
-      Due schermate distinte, ognuna col proprio aggancio: label+intro e le
-      quattro voci. Su mobile la seconda non esiste (il carosello nella prima
-      copre già le voci) e da nascosta non produce né schermo vuoto né punto
-      di aggancio.
+      Due schermate distinte: label+intro e le quattro voci. Su mobile la
+      seconda non esiste — il carosello nella prima copre già le voci — e da
+      nascosta non lascia uno schermo vuoto.
     */
     <>
       <section
         id="metodo"
-        className="sezione-snap flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+        className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
       >
         <div className="mb-10 flex items-center justify-between xl:mb-20">
           {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
@@ -163,7 +162,7 @@ export function Metodo() {
       {/* Desktop: accordion hover, schermata a sé */}
       <section
         aria-label="Metodo — i quattro punti"
-        className="sezione-snap hidden min-h-svh flex-col justify-center px-6 py-28 xl:flex xl:px-10"
+        className="hidden min-h-svh flex-col justify-center px-6 py-28 xl:flex xl:px-10"
       >
         <div className="flex max-w-[901px] flex-col gap-9">
           {ITEMS.map((it) => (
