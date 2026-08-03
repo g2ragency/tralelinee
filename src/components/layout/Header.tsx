@@ -71,12 +71,23 @@ export function Header() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-6 py-5 xl:px-10">
+      {/*
+        Velo sfumato: scende oltre l'header e si dissolve, così il testo della
+        pagina che scorre sotto non entra in collisione col menu. Parte dal
+        colore di sfondo e non dal nero, altrimenti sul tema chiaro comparirebbe
+        una fascia scura in cima.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[180%] bg-gradient-to-b from-background to-transparent"
+      />
+
       <ExpandLogo />
 
       {/* Menu desktop */}
       <nav className="hidden xl:block" aria-label="Principale">
-        {/* Voci menu: Diatype Medium 19px, gap 30px */}
-        <ul className="flex items-center gap-[30px] text-[19px] font-medium">
+        {/* Voci menu: Diatype Medium 18px, interlinea 100%, spaziatura -2% */}
+        <ul className="flex items-center gap-[30px] text-[18px] font-medium leading-none tracking-[-0.36px]">
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="hoverable">
