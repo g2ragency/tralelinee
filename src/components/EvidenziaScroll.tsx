@@ -15,12 +15,17 @@ gsap.registerPlugin(ScrollTrigger);
   piena. Così il tema chiaro funziona da sé, senza colori letti al mount che
   resterebbero stantii dopo un cambio tema.
 
-  Il trigger è la <section> che contiene il testo, non il testo stesso (che a
-  riposo sta centrato, mai in cima). Parte quando la sezione è quasi arrivata
-  (top 45%) e si completa a tre quarti d'uscita (top -75%): quando la sezione
-  è in cima sono accese solo le prime righe (~35%), il resto si riempie
-  attraversandola. Farla finire all'arrivo significava trovare il testo già
-  fatto.
+  La corsa è misurata sul testo, non sulla sezione che lo contiene: il testo
+  sta centrato, quindi una fine legata alla sezione lo faceva completare
+  quando era già uscito dallo schermo — le ultime lettere si accendevano
+  invisibili.
+
+  Si guarda la CIMA del blocco in entrambi gli estremi, non il fondo: così la
+  corsa è la stessa mezza schermata per tutti (450px a 900 di altezza), mentre
+  legandola al fondo dipenderebbe dall'altezza del blocco — il testo lungo di
+  Metodo finirebbe già tagliato in cima e quello corto di Contatti prima
+  ancora di arrivare. Accende mentre il testo sale da 80% a 30% dello schermo,
+  cioè fin dove si legge comodo.
 
   I caratteri stanno in span per parola con nowrap: senza, gli a-capo
   cadrebbero dentro le parole spezzate in singoli span.
@@ -54,9 +59,9 @@ export function EvidenziaScroll({
         duration: 2,
         stagger: { each: 0.15 },
         scrollTrigger: {
-          trigger: root.closest("section") ?? root,
-          start: "top 45%",
-          end: "top -75%",
+          trigger: root,
+          start: "top 80%",
+          end: "top 30%",
           scrub: 0.6,
         },
       });
