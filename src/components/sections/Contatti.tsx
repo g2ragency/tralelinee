@@ -4,6 +4,8 @@
   ponytail: la CTA è un placeholder — il flusso account/portfolio arriva
   nella fase 5 (Auth + Portfolio).
 */
+import { EvidenziaScroll } from "@/components/EvidenziaScroll";
+
 export function Contatti() {
   return (
     <section
@@ -14,13 +16,13 @@ export function Contatti() {
       <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
         Contatti
       </p>
-      {/* Testo: Regular 52px, lh 102%, ls -4% */}
-      <p className="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:max-w-none xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
-        Per istituzioni, imprese e organizzazioni che desiderano esplorare
-        nuovi scenari, rafforzare il proprio posizionamento o attivare
-        strategie di influenza culturale e comunicativa. Contattaci per
-        avviare un dialogo e valutare insieme percorsi di collaborazione.
-      </p>
+      {/* Testo: Regular 52px, lh 102%, ls -4%; si accende con lo scroll */}
+      <EvidenziaScroll
+        paragrafi={[
+          "Per istituzioni, imprese e organizzazioni che desiderano esplorare nuovi scenari, rafforzare il proprio posizionamento o attivare strategie di influenza culturale e comunicativa. Contattaci per avviare un dialogo e valutare insieme percorsi di collaborazione.",
+        ]}
+        classeP="max-w-[340px] text-[15px] leading-[1.2] tracking-[-0.45px] xl:max-w-none xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px]"
+      />
       <a
         href="/registrati"
         /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */

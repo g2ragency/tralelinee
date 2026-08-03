@@ -3,6 +3,7 @@
 import { forwardRef, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { EvidenziaScroll } from "@/components/EvidenziaScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -178,14 +179,14 @@ export function Capabilities() {
         <p className="mb-6 text-[40px] leading-[0.97] tracking-[-1.6px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
           Servizi
         </p>
-        {/* Intro: Regular 52px, lh 102%, ls -4% */}
-        <p className="text-[15px] leading-[1.2] tracking-[-0.45px] text-grey2 xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px] xl:text-foreground">
-          Chiamati dalla vocazione agli scenari del futuro, plasmiamo il
-          dibattito pubblico costruendo nuovi mondi narrativi. Il nostro
-          obiettivo è creare cornici culturali dove istituzioni, corporate e
-          professionisti possano affermarsi come leader di pensiero sviluppando
-          concept in grado di ispirare politiche.
-        </p>
+        {/* Intro: Regular 52px, lh 102%, ls -4%; si accende con lo scroll.
+            Niente classi colore: lo «spento» lo fa l'opacità dei caratteri. */}
+        <EvidenziaScroll
+          paragrafi={[
+            "Chiamati dalla vocazione agli scenari del futuro, plasmiamo il dibattito pubblico costruendo nuovi mondi narrativi. Il nostro obiettivo è creare cornici culturali dove istituzioni, corporate e professionisti possano affermarsi come leader di pensiero sviluppando concept in grado di ispirare politiche.",
+          ]}
+          classeP="text-[15px] leading-[1.2] tracking-[-0.45px] xl:text-[52px] xl:font-normal xl:leading-[1.02] xl:tracking-[-2.08px]"
+        />
       </div>
 
       {/* Nav interna [01]-[06] con smooth scroll alle sezioni */}

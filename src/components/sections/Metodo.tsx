@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { EvidenziaScroll } from "@/components/EvidenziaScroll";
 
 /*
   A6 — Metodo. Desktop: accordion su hover (max-height 0→scrollHeight +
@@ -140,16 +141,12 @@ export function Metodo() {
           </div>
         </div>
 
-        {/* Intro: Regular 52px, lh 102%, ls -4% */}
+        {/* Intro: Regular 52px, lh 102%, ls -4%; si accende con lo scroll */}
         <div className="hidden xl:block">
-          {INTRO.map((p) => (
-            <p
-              key={p.slice(0, 20)}
-              className="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
-            >
-              {p}
-            </p>
-          ))}
+          <EvidenziaScroll
+            paragrafi={INTRO}
+            classeP="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
+          />
         </div>
 
         {/* Mobile: carosello, un item per volta con descrizione visibile */}
