@@ -114,15 +114,13 @@ export function ChiSiamo() {
         aria-hidden
         className={`absolute left-1/2 top-[calc(50%+120px)] -translate-x-1/2 transition-opacity duration-300 xl:top-[calc(50%+170px)] ${pinned ? "opacity-100" : "opacity-0"}`}
       >
-        {/* Desktop: contatore n/4 — mobile: trattini di paginazione */}
-        <p className="hidden text-[19px] font-bold text-grey xl:block">
-          {active}/{SLIDES.length}
-        </p>
-        <div className="flex gap-2 xl:hidden">
+        {/* Pallini di paginazione, 10px con gap 5. Attivo #DFDFDF e spenti
+            #696969 via token, così sul tema chiaro restano visibili. */}
+        <div className="flex gap-[5px]">
           {SLIDES.map((_, i) => (
             <span
               key={i}
-              className={`h-px w-6 transition-colors duration-300 ${i + 1 === active ? "bg-foreground" : "bg-grey"}`}
+              className={`h-[10px] w-[10px] rounded-full transition-colors duration-300 ${i + 1 === active ? "bg-foreground" : "bg-grey"}`}
             />
           ))}
         </div>
