@@ -111,8 +111,8 @@ export default async function PortfolioPage({
   const schede = progetti.map((p, i) => ({ ...p, cover: covers[i] ?? null }));
 
   return (
-    /* 90px sotto l'header, alto 70px su desktop e 80px su mobile */
-    <main className="min-h-svh px-6 pb-32 pt-[170px] xl:px-10 xl:pt-[160px]">
+    /* 90px sotto l'header, alto 70px su desktop e 58px su mobile */
+    <main className="min-h-svh px-6 pb-32 pt-[148px] xl:px-10 xl:pt-[160px]">
       <ElencoProgetti
         schede={schede}
         categorie={CATEGORIE}

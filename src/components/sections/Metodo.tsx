@@ -86,7 +86,7 @@ export function Metodo() {
       >
         {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da
             desktop; spaziatura -4%, GRIGIO1 */}
-        <p className="mb-10 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-20 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
+        <p className="mb-[10px] text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-20 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
           Metodo
         </p>
 

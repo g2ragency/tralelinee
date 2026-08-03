@@ -95,10 +95,6 @@ export function ChiSiamo() {
       id="chi-siamo"
       className="relative flex h-svh items-center overflow-hidden"
     >
-      {/* Etichetta: Medium 12px, interlinea 110%, spaziatura -4% */}
-      <p className="absolute left-[10px] top-24 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:hidden">
-        Chi Siamo
-      </p>
       <div ref={trackRef} className="flex will-change-transform">
         {SLIDES.map((slide, i) => (
           <div

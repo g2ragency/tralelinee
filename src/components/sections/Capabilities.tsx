@@ -95,9 +95,11 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
   return (
     <div id={`cap-${num}`} ref={ref} className="scroll-mt-[130px]">
       <div>
-        {/* Figma Component 2 (1230:2228): Diatype Regular 52px, ls -2.08 */}
-        <h3 className="mb-4 text-[24px] font-normal leading-[0.933] tracking-[-0.96px] xl:mb-6 xl:text-[52px] xl:tracking-[-2.08px]">
-          <span className="xl:hidden">[{num}] </span>
+        {/* Regular, ls -4%: 26px lh 93% su mobile, dove il numero precede il
+            titolo senza parentesi; 52px da desktop, dove il numero sta nella
+            colonna sticky a sinistra. */}
+        <h3 className="mb-4 text-[26px] font-normal leading-[0.93] tracking-[-0.04em] xl:mb-6 xl:text-[52px]">
+          <span className="xl:hidden">{num} </span>
           {title}
         </h3>
         <ul className="border-b border-grey/40">
@@ -109,11 +111,26 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="hoverable flex w-full items-center justify-between gap-6 py-3 text-left"
+                  className="hoverable flex w-full items-center justify-between gap-3 py-3 text-left xl:gap-6"
                 >
-                  {/* Voci padre: Regular 30px, lh 93.3%, ls -4%, GRIGIO1 */}
-                  <span className="text-[16px] font-normal leading-[0.933] tracking-[-0.64px] text-grey xl:text-[30px] xl:tracking-[-1.2px]">
-                    {item.t}
+                  {/*
+                    Voci padre: Regular, ls -4%, GRIGIO1; 26px lh 80% su
+                    mobile, 30px lh 93.3% da desktop.
+
+                    Su mobile la riga non va a capo: se il titolo è lungo
+                    prosegue sotto il «+», e una sfumatura verso il colore di
+                    sfondo copre il taglio invece di lasciarlo netto.
+                  */}
+                  <span className="relative min-w-0 flex-1 overflow-hidden">
+                    {/* nowrap senza `truncate`: niente puntini di sospensione,
+                        il taglio lo nasconde la sfumatura */}
+                    <span className="block whitespace-nowrap text-[26px] font-normal leading-[0.8] tracking-[-0.04em] text-grey xl:whitespace-normal xl:text-[30px] xl:leading-[0.933]">
+                      {item.t}
+                    </span>
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-y-0 right-0 w-14 bg-gradient-to-r from-transparent to-background xl:hidden"
+                    />
                   </span>
                   <svg
                     aria-hidden
@@ -176,7 +193,7 @@ export function Capabilities() {
           La pila con numeri e accordion scorre subito dopo. */}
       <div className="flex min-h-svh max-w-[1265px] flex-col justify-center py-24 xl:py-28">
         {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da desktop */}
-        <p className="mb-6 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
+        <p className="mb-[10px] text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-6 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
           Servizi
         </p>
         {/* Intro: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%;

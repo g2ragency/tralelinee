@@ -13,7 +13,7 @@ export function Contatti() {
       className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
     >
       {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da desktop */}
-      <p className="mb-6 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
+      <p className="mb-[10px] text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-6 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
         Contatti
       </p>
       {/* Testo: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%;

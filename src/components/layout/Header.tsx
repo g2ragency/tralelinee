@@ -70,8 +70,8 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    /* Figma mobile: padding 10px 18px */
-    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[18px] py-[10px] xl:px-10 xl:py-5">
+    /* Figma mobile: padding 18px 10px */
+    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[10px] py-[18px] xl:px-10 xl:py-5">
       {/*
         Velo sfumato: scende oltre l'header e si dissolve, così il testo della
         pagina che scorre sotto non entra in collisione col menu. Parte dal
