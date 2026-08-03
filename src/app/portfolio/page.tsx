@@ -16,7 +16,21 @@ type Progetto = {
   cover_path: string | null;
 };
 
-export default async function PortfolioPage() {
+/*
+  Filtri dell'elenco. La chiave vuota è «tutti»: non finisce nell'indirizzo,
+  così /portfolio resta l'indirizzo canonico della pagina senza doppioni.
+*/
+const CATEGORIE = [
+  { chiave: "", label: "Tutti i progetti" },
+  { chiave: "portfolio", label: "Portfolio" },
+  { chiave: "case_study", label: "Case Studies" },
+];
+
+export default async function PortfolioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ categoria?: string }>;
+}) {
   // Distinzione importante: "non loggato" e "profilo non leggibile" sono due
   // casi diversi. Trattarli entrambi con un redirect al login creava un
   // rimbalzo infinito quando la sessione c'era ma la riga profiles no.
@@ -75,12 +89,20 @@ export default async function PortfolioPage() {
     );
   }
 
+  // Solo valori dell'elenco: uno inventato nell'indirizzo vale come «tutti».
+  const { categoria } = await searchParams;
+  const attiva = CATEGORIE.some((c) => c.chiave === categoria)
+    ? (categoria as string)
+    : "";
+
   const supabase = await createClient();
   // Le RLS filtrano già: gli approvati vedono solo i pubblicati, l'admin tutto.
-  const { data } = await supabase
+  let query = supabase
     .from("projects")
     .select("id, slug, title, client, summary, cover_path")
     .order("position");
+  if (attiva) query = query.eq("category", attiva);
+  const { data } = await query;
   const progetti = (data as Progetto[] | null) ?? [];
   const covers = await signedUrls(progetti.map((p) => p.cover_path));
 
@@ -88,15 +110,23 @@ export default async function PortfolioPage() {
     /* 90px sotto l'header, che è alto ~91px su desktop e ~72px su mobile */
     <main className="min-h-svh px-6 pb-32 pt-[162px] xl:px-10 xl:pt-[181px]">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
-        {/*
-          Le tre voci sono quelle del Figma. Per ora sono un'indicazione, non
-          un filtro: i progetti non hanno una categoria in banca dati, quindi
-          filtrare vorrebbe dire prima aggiungere il campo.
-          Figma: 30px Regular, interlinea 120%, spaziatura -4%.
-        */}
+        {/* Figma: 30px Regular, interlinea 120%, spaziatura -4%; la voce
+            attiva è bianca e sottolineata, le altre grigie. */}
         <p className="text-[22px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]">
-          <span className="text-foreground underline">Tutti i progetti</span>,
-          Portfolio, Case Studies
+          {CATEGORIE.map((c, i) => (
+            <span key={c.chiave || "tutti"}>
+              {i > 0 && ", "}
+              <Link
+                href={c.chiave ? `/portfolio?categoria=${c.chiave}` : "/portfolio"}
+                aria-current={attiva === c.chiave ? "page" : undefined}
+                className={`hoverable transition-colors duration-200 hover:text-foreground ${
+                  attiva === c.chiave ? "text-foreground underline" : ""
+                }`}
+              >
+                {c.label}
+              </Link>
+            </span>
+          ))}
         </p>
 
         <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
@@ -115,7 +145,9 @@ export default async function PortfolioPage() {
 
       {progetti.length === 0 ? (
         <p className="mt-16 text-[18px] tracking-[-0.72px] text-grey">
-          Nessun progetto pubblicato al momento.
+          {attiva
+            ? "Nessun progetto in questa categoria."
+            : "Nessun progetto pubblicato al momento."}
         </p>
       ) : (
         /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */

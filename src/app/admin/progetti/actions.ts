@@ -74,12 +74,18 @@ export async function updateProject(formData: FormData) {
   const slug = slugify(String(formData.get("slug") ?? "")) || undefined;
   if (!id || !title) return;
 
+  // Whitelist: il vincolo in banca dati rifiuterebbe comunque un valore
+  // inventato, ma qui l'errore sarebbe un salvataggio muto.
+  const category =
+    formData.get("category") === "portfolio" ? "portfolio" : "case_study";
+
   const supabase = await createClient();
   await supabase
     .from("projects")
     .update({
       title,
       slug,
+      category,
       client: String(formData.get("client") ?? "").trim() || null,
       year: String(formData.get("year") ?? "").trim() || null,
       industry: String(formData.get("industry") ?? "").trim() || null,

@@ -40,7 +40,12 @@ export default async function BuilderPage({
   const supabase = await createClient();
   const { data: progetto } = await supabase
     .from("projects")
-    .select("id, slug, title, client, year, industry, services, summary, published")
+    /*
+      Riga intera: il form la mostra quasi tutta, e con l'elenco esplicito
+      una colonna aggiunta da una migrazione non ancora eseguita farebbe
+      fallire la query, cioè un 404 sulla pagina invece di un campo vuoto.
+    */
+    .select("*")
     .eq("id", id)
     .maybeSingle();
   if (!progetto) notFound();
@@ -113,6 +118,19 @@ export default async function BuilderPage({
               required
               className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
             />
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className="text-[16px] text-grey">
+              Categoria (filtro nell&rsquo;elenco portfolio)
+            </span>
+            <select
+              name="category"
+              defaultValue={progetto.category ?? "case_study"}
+              className="border border-grey bg-background px-4 py-2 text-[18px]"
+            >
+              <option value="case_study">Case Study</option>
+              <option value="portfolio">Portfolio</option>
+            </select>
           </label>
           <label className="flex flex-col gap-2">
             <span className="text-[16px] text-grey">Cliente</span>
