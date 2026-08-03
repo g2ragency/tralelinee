@@ -37,15 +37,11 @@ export default function Home() {
         <ChiSiamo />
       </div>
 
-      {/* Metodo — accordion hover (A6) */}
-      <div className="sezione-snap">
-        <Metodo />
-      </div>
-
-      {/* Capabilities — digit sticky 01→06 (A4/A5) */}
-      <div className="sezione-snap">
-        <Capabilities />
-      </div>
+      {/* Metodo e Capabilities portano i propri `.sezione-snap` all'interno:
+          si dividono in più schermate (intro / voci) e i punti di aggancio
+          stanno sui pezzi, non sull'insieme. */}
+      <Metodo />
+      <Capabilities />
 
       {/* Contatti */}
       <div className="sezione-snap">

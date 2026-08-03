@@ -109,61 +109,71 @@ export function Metodo() {
   const item = ITEMS[index];
 
   return (
-    /* min-h e non h fissa: da desktop il contenuto supera lo schermo,
-       un'altezza bloccata lo taglierebbe */
-    <section
-      id="metodo"
-      className="flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
-    >
-      <div className="mb-10 flex items-center justify-between xl:mb-20">
-        {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
-        {/* Label: Medium 24px, lh 93.3%, ls -3% */}
-        <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
-          Metodo
-        </p>
-        {/* Frecce carosello — solo mobile */}
-        <div className="flex gap-3 xl:hidden">
-          <ArrowButton
-            dir="prev"
-            onClick={() =>
-              setIndex((i) => (i - 1 + ITEMS.length) % ITEMS.length)
-            }
-          />
-          <ArrowButton
-            dir="next"
-            onClick={() => setIndex((i) => (i + 1) % ITEMS.length)}
-          />
-        </div>
-      </div>
-
-      {/* Intro: Regular 52px, lh 102%, ls -4% */}
-      <div className="mb-24 hidden xl:block">
-        {INTRO.map((p) => (
-          <p
-            key={p.slice(0, 20)}
-            className="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
-          >
-            {p}
+    /*
+      Due schermate distinte, ognuna col proprio aggancio: label+intro e le
+      quattro voci. Su mobile la seconda non esiste (il carosello nella prima
+      copre già le voci) e da nascosta non produce né schermo vuoto né punto
+      di aggancio.
+    */
+    <>
+      <section
+        id="metodo"
+        className="sezione-snap flex min-h-svh flex-col justify-center px-6 py-24 xl:px-10 xl:py-28"
+      >
+        <div className="mb-10 flex items-center justify-between xl:mb-20">
+          {/* Label di sezione: Diatype Medium 24px, lh 93.3%, ls -4%, GRIGIO1 */}
+          <p className="text-[16px] tracking-[-0.64px] text-label xl:text-[24px] xl:font-medium xl:leading-[0.933] xl:tracking-[-0.72px]">
+            Metodo
           </p>
-        ))}
-      </div>
+          {/* Frecce carosello — solo mobile */}
+          <div className="flex gap-3 xl:hidden">
+            <ArrowButton
+              dir="prev"
+              onClick={() =>
+                setIndex((i) => (i - 1 + ITEMS.length) % ITEMS.length)
+              }
+            />
+            <ArrowButton
+              dir="next"
+              onClick={() => setIndex((i) => (i + 1) % ITEMS.length)}
+            />
+          </div>
+        </div>
 
-      {/* Mobile: carosello, un item per volta con descrizione visibile */}
-      <div key={index} className="animate-entra xl:hidden">
-        <h3 className="text-[34px] font-light leading-[0.97] tracking-[-1.36px]">
-          {item.title}
-        </h3>
-        <p className="mt-5 max-w-[340px] text-[18px] font-light leading-[1.2] tracking-[-0.72px] text-grey2">
-          {item.desc}
-        </p>
-      </div>
+        {/* Intro: Regular 52px, lh 102%, ls -4% */}
+        <div className="hidden xl:block">
+          {INTRO.map((p) => (
+            <p
+              key={p.slice(0, 20)}
+              className="mt-[52px] text-[52px] font-normal leading-[1.02] tracking-[-2.08px] first:mt-0"
+            >
+              {p}
+            </p>
+          ))}
+        </div>
 
-      {/* Desktop: accordion hover */}
-      <div className="hidden max-w-[901px] flex-col gap-9 xl:flex">
-        {ITEMS.map((it) => (
-          <Row key={it.title} {...it} />
-        ))}
-      </div>
-    </section>
+        {/* Mobile: carosello, un item per volta con descrizione visibile */}
+        <div key={index} className="animate-entra xl:hidden">
+          <h3 className="text-[34px] font-light leading-[0.97] tracking-[-1.36px]">
+            {item.title}
+          </h3>
+          <p className="mt-5 max-w-[340px] text-[18px] font-light leading-[1.2] tracking-[-0.72px] text-grey2">
+            {item.desc}
+          </p>
+        </div>
+      </section>
+
+      {/* Desktop: accordion hover, schermata a sé */}
+      <section
+        aria-label="Metodo — i quattro punti"
+        className="sezione-snap hidden min-h-svh flex-col justify-center px-6 py-28 xl:flex xl:px-10"
+      >
+        <div className="flex max-w-[901px] flex-col gap-9">
+          {ITEMS.map((it) => (
+            <Row key={it.title} {...it} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
