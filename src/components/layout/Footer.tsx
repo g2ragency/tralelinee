@@ -29,8 +29,9 @@ export function Footer() {
         <path d="M1087.17 236.228V60H1056V264H1190V236.228H1087.17Z" />
         <path d="M644.132 60H613V264H747V236.228H644.132V60Z" />
       </svg>
-      {/* Diatype Medium 14px, lh 93.3%, ls -4% (Figma 1230:2279/2280) */}
-      <div className="flex items-center justify-between gap-4 text-[14px] font-medium leading-[0.933] tracking-[-0.56px]">
+      {/* Diatype Medium, ls -4%: 12px lh 110% su mobile, 14px lh 93.3% da
+          desktop (Figma 1230:2279/2280) */}
+      <div className="flex items-center justify-between gap-4 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] xl:text-[14px] xl:leading-[0.933]">
         <p>©2025 Tra le linee All Rights Reserved</p>
         <Link href="/privacy-policy" className="hoverable">
           Privacy Policy

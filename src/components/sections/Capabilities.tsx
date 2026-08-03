@@ -99,7 +99,7 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
             titolo senza parentesi; 52px da desktop, dove il numero sta nella
             colonna sticky a sinistra. */}
         <h3 className="mb-4 text-[26px] font-normal leading-[0.93] tracking-[-0.04em] xl:mb-6 xl:text-[52px]">
-          <span className="xl:hidden">{num} </span>
+          <span className="text-grey xl:hidden">{num} </span>
           {title}
         </h3>
         <ul className="border-b border-grey/40">
