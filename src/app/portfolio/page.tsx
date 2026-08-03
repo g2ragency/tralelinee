@@ -4,6 +4,7 @@ import { getProfile, getUser } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/server";
 import { signedUrls } from "@/lib/media";
+import { FiltriProgetti } from "@/components/portfolio/FiltriProgetti";
 
 export const metadata = { title: "Portfolio — Tra le linee" };
 
@@ -73,8 +74,8 @@ export default async function PortfolioPage({
             La tua richiesta è in attesa di approvazione.
           </h1>
           <p className="mt-6 text-[18px] leading-[1.02] tracking-[-0.72px] text-grey">
-            Ti scriveremo a {profile.email} appena il portfolio sarà
-            disponibile per il tuo account.
+            Ti scriveremo a {profile.email} appena il portfolio sarà disponibile
+            per il tuo account.
           </p>
           <form action={logout} className="mt-10">
             <button
@@ -109,78 +110,63 @@ export default async function PortfolioPage({
   return (
     /* 90px sotto l'header, che è alto ~91px su desktop e ~72px su mobile */
     <main className="min-h-svh px-6 pb-32 pt-[162px] xl:px-10 xl:pt-[181px]">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
-        {/* Figma: 30px Regular, interlinea 120%, spaziatura -4%; la voce
-            attiva è bianca e sottolineata, le altre grigie. */}
-        <p className="text-[22px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]">
-          {CATEGORIE.map((c, i) => (
-            <span key={c.chiave || "tutti"}>
-              {i > 0 && ", "}
-              <Link
-                href={c.chiave ? `/portfolio?categoria=${c.chiave}` : "/portfolio"}
-                aria-current={attiva === c.chiave ? "page" : undefined}
-                className={`hoverable transition-colors duration-200 hover:text-foreground ${
-                  attiva === c.chiave ? "text-foreground underline" : ""
-                }`}
-              >
-                {c.label}
+      <FiltriProgetti
+        categorie={CATEGORIE}
+        attiva={attiva}
+        azioni={
+          <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
+            {profile.role === "super_admin" && (
+              <Link href="/admin" className="hoverable">
+                Amministrazione
               </Link>
-            </span>
-          ))}
-        </p>
-
-        <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
-          {profile.role === "super_admin" && (
-            <Link href="/admin" className="hoverable">
-              Amministrazione
-            </Link>
-          )}
-          <form action={logout}>
-            <button type="submit" className="hoverable">
-              Esci
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {progetti.length === 0 ? (
-        <p className="mt-16 text-[18px] tracking-[-0.72px] text-grey">
-          {attiva
-            ? "Nessun progetto in questa categoria."
-            : "Nessun progetto pubblicato al momento."}
-        </p>
-      ) : (
-        /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */
-        <ul className="mt-[60px] grid gap-x-[20px] gap-y-[44px] xl:grid-cols-2">
-          {progetti.map((p, i) => (
-            <li key={p.id}>
-              <Link href={`/portfolio/${p.slug}`} className="hoverable block">
-                {covers[i] ? (
-                  /* eslint-disable-next-line @next/next/no-img-element --
+            )}
+            <form action={logout}>
+              <button type="submit" className="hoverable">
+                Esci
+              </button>
+            </form>
+          </div>
+        }
+      >
+        {progetti.length === 0 ? (
+          <p className="mt-16 text-[18px] tracking-[-0.72px] text-grey">
+            {attiva
+              ? "Nessun progetto in questa categoria."
+              : "Nessun progetto pubblicato al momento."}
+          </p>
+        ) : (
+          /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */
+          <ul className="mt-[60px] grid gap-x-[20px] gap-y-[44px] xl:grid-cols-2">
+            {progetti.map((p, i) => (
+              <li key={p.id}>
+                <Link href={`/portfolio/${p.slug}`} className="hoverable block">
+                  {covers[i] ? (
+                    /* eslint-disable-next-line @next/next/no-img-element --
                      URL firmato a scadenza: next/image lo rifirmerebbe e
                      scadrebbe in cache. */
-                  <img
-                    src={covers[i]!}
-                    alt=""
-                    className="aspect-[4/3] w-full rounded-[20px] object-cover"
-                  />
-                ) : (
-                  <div className="aspect-[4/3] w-full rounded-[20px] bg-box" />
-                )}
-                {/* 8px fra copertina e cliente, poi il titolo attaccato.
+                    <img
+                      src={covers[i]!}
+                      alt=""
+                      className="aspect-[4/3] w-full rounded-[20px] object-cover"
+                    />
+                  ) : (
+                    <div className="aspect-[4/3] w-full rounded-[20px] bg-box" />
+                  )}
+                  {/* 8px fra copertina e cliente, poi il titolo attaccato.
                     Senza cliente resta una riga vuota, così i titoli di due
                     schede affiancate restano sulla stessa linea. */}
-                <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
-                  {p.client ?? " "}
-                </p>
-                <h2 className="text-[24px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
-                  {p.title}
-                </h2>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                  <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
+                    {p.client ?? " "}
+                  </p>
+                  <h2 className="text-[24px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
+                    {p.title}
+                  </h2>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </FiltriProgetti>
     </main>
   );
 }

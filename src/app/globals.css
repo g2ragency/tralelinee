@@ -92,6 +92,47 @@ body {
 }
 
 /*
+  Schede del portfolio: rientrano scalate al cambio di filtro. Il ritardo è a
+  gradini invece che per indice perché con tante schede la coda finirebbe per
+  entrare troppo dopo; oltre la sesta partono tutte insieme.
+*/
+@keyframes entra-su {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.griglia-entra li {
+  animation: entra-su 0.45s ease-out backwards;
+}
+.griglia-entra li:nth-child(2) {
+  animation-delay: 60ms;
+}
+.griglia-entra li:nth-child(3) {
+  animation-delay: 120ms;
+}
+.griglia-entra li:nth-child(4) {
+  animation-delay: 180ms;
+}
+.griglia-entra li:nth-child(5) {
+  animation-delay: 240ms;
+}
+.griglia-entra li:nth-child(n + 6) {
+  animation-delay: 300ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .griglia-entra li {
+    animation: none;
+  }
+}
+
+/*
   Area super admin: campi, pulsanti e riquadri con angoli da 10px.
   Vale per tutto quello che sta dentro perché sugli elementi senza bordo né
   sfondo il raggio non si vede: meglio una riga qui che quaranta classi
