@@ -85,30 +85,28 @@ export default async function PortfolioPage() {
   const covers = await signedUrls(progetti.map((p) => p.cover_path));
 
   return (
-    <main className="min-h-svh px-6 py-32 xl:px-10">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div>
-          <p className="text-[24px] font-medium leading-[0.933] tracking-[-0.72px] text-label">
-            Portfolio
-          </p>
-          <h1 className="mt-6 max-w-[900px] text-[40px] leading-[1.02] tracking-[-1.6px] xl:text-[52px] xl:tracking-[-2.08px]">
-            I nostri lavori
-          </h1>
-        </div>
-        <div className="flex items-center gap-3">
+    /* 90px sotto l'header, che è alto ~91px su desktop e ~72px su mobile */
+    <main className="min-h-svh px-6 pb-32 pt-[162px] xl:px-10 xl:pt-[181px]">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
+        {/*
+          Le tre voci sono quelle del Figma. Per ora sono un'indicazione, non
+          un filtro: i progetti non hanno una categoria in banca dati, quindi
+          filtrare vorrebbe dire prima aggiungere il campo.
+          Figma: 30px Regular, interlinea 120%, spaziatura -4%.
+        */}
+        <p className="text-[22px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]">
+          <span className="text-foreground underline">Tutti i progetti</span>,
+          Portfolio, Case Studies
+        </p>
+
+        <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
           {profile.role === "super_admin" && (
-            <Link
-              href="/admin"
-              className="hoverable border border-grey px-5 py-3 text-[18px] tracking-[-0.72px]"
-            >
+            <Link href="/admin" className="hoverable">
               Amministrazione
             </Link>
           )}
           <form action={logout}>
-            <button
-              type="submit"
-              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
-            >
+            <button type="submit" className="hoverable">
               Esci
             </button>
           </form>
@@ -120,7 +118,8 @@ export default async function PortfolioPage() {
           Nessun progetto pubblicato al momento.
         </p>
       ) : (
-        <ul className="mt-20 grid gap-12 xl:grid-cols-2">
+        /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */
+        <ul className="mt-[60px] grid gap-x-[20px] gap-y-[44px] xl:grid-cols-2">
           {progetti.map((p, i) => (
             <li key={p.id}>
               <Link href={`/portfolio/${p.slug}`} className="hoverable block">
@@ -131,24 +130,20 @@ export default async function PortfolioPage() {
                   <img
                     src={covers[i]!}
                     alt=""
-                    className="aspect-[4/3] w-full object-cover"
+                    className="aspect-[4/3] w-full rounded-[20px] object-cover"
                   />
                 ) : (
-                  <div className="aspect-[4/3] w-full border border-grey/40" />
+                  <div className="aspect-[4/3] w-full rounded-[20px] bg-box" />
                 )}
-                <h2 className="mt-5 text-[30px] leading-[0.933] tracking-[-1.2px]">
+                {/* 8px fra copertina e cliente, poi il titolo attaccato.
+                    Senza cliente resta una riga vuota, così i titoli di due
+                    schede affiancate restano sulla stessa linea. */}
+                <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
+                  {p.client ?? " "}
+                </p>
+                <h2 className="text-[24px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
                   {p.title}
                 </h2>
-                {p.client && (
-                  <p className="mt-2 text-[18px] tracking-[-0.72px] text-grey">
-                    {p.client}
-                  </p>
-                )}
-                {p.summary && (
-                  <p className="mt-3 max-w-[520px] text-[18px] leading-[1.02] tracking-[-0.72px] text-grey2">
-                    {p.summary}
-                  </p>
-                )}
               </Link>
             </li>
           ))}

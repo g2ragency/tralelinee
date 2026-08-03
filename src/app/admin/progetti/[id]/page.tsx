@@ -155,7 +155,7 @@ export default async function BuilderPage({
           </label>
           <label className="flex flex-col gap-2">
             <span className="text-[16px] text-grey">
-              Sommario (mostrato nella lista)
+              Sommario (uso interno, non compare nell&rsquo;elenco)
             </span>
             <textarea
               name="summary"
