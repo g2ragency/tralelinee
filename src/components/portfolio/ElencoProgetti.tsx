@@ -88,11 +88,18 @@ export function ElencoProgetti({
     : schede;
 
   return (
-    <>
+    /*
+      Su mobile i comandi di servizio stanno in fondo alla pagina: nella riga
+      dei filtri andrebbero a capo fra i filtri e le card, sballando sia i
+      50px sotto l'header sia i 65px prima della griglia. Da desktop tornano
+      in alto a destra, in posizione assoluta: così restano un elemento solo
+      nel markup invece di essere stampati due volte.
+    */
+    <div className="relative flex flex-col">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
-        {/* Figma: 30px Regular, interlinea 120%, spaziatura -4%; la voce
-            attiva è bianca e sottolineata, le altre grigie. */}
-        <p className="text-[22px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]">
+        {/* Figma: Regular, interlinea 120%, spaziatura -4%; 26px su mobile e
+            30px da desktop. La voce attiva è bianca e sottolineata. */}
+        <p className="text-[26px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]">
           {categorie.map((c, i) => (
             <span key={c.chiave || "tutti"}>
               {i > 0 && ", "}
@@ -109,8 +116,6 @@ export function ElencoProgetti({
             </span>
           ))}
         </p>
-
-        {azioni}
       </div>
 
       <div
@@ -128,8 +133,9 @@ export function ElencoProgetti({
               : "Nessun progetto pubblicato al momento."}
           </p>
         ) : (
-          /* Figma: 60px sotto la riga, 20px fra le colonne, ~44px fra le righe */
-          <ul className="mt-[60px] grid gap-x-[20px] gap-y-[44px] xl:grid-cols-2">
+          /* Figma: sotto la riga dei filtri 65px su mobile e 60px da desktop;
+             20px fra le colonne; fra le righe 30px su mobile e 44px da desktop */
+          <ul className="mt-[65px] grid gap-x-[20px] gap-y-[30px] xl:mt-[60px] xl:grid-cols-2 xl:gap-y-[44px]">
             {visibili.map((p) => (
               <li key={p.id}>
                 <Link href={`/portfolio/${p.slug}`} className="hoverable block">
@@ -151,7 +157,8 @@ export function ElencoProgetti({
                   <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
                     {p.client ?? " "}
                   </p>
-                  <h2 className="text-[24px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
+                  {/* Regular, lh 120%, ls -4%: 26px su mobile, 30px da desktop */}
+                  <h2 className="text-[26px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
                     {p.title}
                   </h2>
                 </Link>
@@ -160,6 +167,10 @@ export function ElencoProgetti({
           </ul>
         )}
       </div>
-    </>
+
+      <div className="mt-16 xl:absolute xl:right-0 xl:top-[10px] xl:mt-0">
+        {azioni}
+      </div>
+    </div>
   );
 }
