@@ -84,7 +84,7 @@ export function AuthForm({
         <button
           type="submit"
           disabled={pending}
-          className="hoverable h-[50px] rounded-[10px] bg-foreground text-[18px] leading-[0.93] tracking-[-0.04em] text-background disabled:opacity-50"
+          className="h-[50px] rounded-[10px] bg-foreground text-[18px] leading-[0.93] tracking-[-0.04em] text-background disabled:opacity-50"
         >
           {pending ? "Attendi…" : cta}
         </button>
@@ -94,7 +94,7 @@ export function AuthForm({
           strada per chiedere l'accesso o tornare al login. */}
       <p className="mx-auto mt-6 max-w-[352px] text-center text-[14px] leading-[1.2] tracking-[-0.04em] text-grey">
         {altroTesto}{" "}
-        <Link href={altroLink} className="hoverable text-foreground underline">
+        <Link href={altroLink} className="text-foreground underline">
           {altroLabel}
         </Link>
       </p>

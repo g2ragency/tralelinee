@@ -85,7 +85,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
                 type="button"
                 onClick={() => scegli(i)}
                 aria-current={i === attiva}
-                className={`hoverable ${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
+                className={`${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
                   i === attiva
                     ? "text-foreground underline decoration-solid underline-offset-[6px]"
                     : "text-grey"
@@ -131,7 +131,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
           <button
             type="button"
             onClick={() => setEspansa((v) => !v)}
-            className="hoverable mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] underline underline-offset-[6px] xl:text-[30px] xl:tracking-[-1.2px]"
+            className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] underline underline-offset-[6px] xl:text-[30px] xl:tracking-[-1.2px]"
           >
             {espansa ? "Chiudi −" : "Leggi di più +"}
           </button>

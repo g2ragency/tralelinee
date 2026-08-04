@@ -185,7 +185,7 @@ export function SectionForm({
 
       <button
         type="submit"
-        className="hoverable self-start border border-foreground px-5 py-2 text-[16px]"
+        className="self-start border border-foreground px-5 py-2 text-[16px]"
       >
         Salva sezione
       </button>

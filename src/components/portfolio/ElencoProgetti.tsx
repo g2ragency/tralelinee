@@ -107,7 +107,7 @@ export function ElencoProgetti({
                 href={indirizzo(c.chiave)}
                 onClick={(e) => scegli(e, c.chiave)}
                 aria-current={attiva === c.chiave ? "page" : undefined}
-                className={`hoverable transition-colors duration-200 hover:text-foreground ${
+                className={`transition-colors duration-200 hover:text-foreground ${
                   attiva === c.chiave ? "text-foreground underline" : ""
                 }`}
               >
@@ -138,7 +138,7 @@ export function ElencoProgetti({
           <ul className="mt-[65px] grid gap-x-[20px] gap-y-[30px] xl:mt-[60px] xl:grid-cols-2 xl:gap-y-[44px]">
             {visibili.map((p) => (
               <li key={p.id}>
-                <Link href={`/portfolio/${p.slug}`} className="hoverable block">
+                <Link href={`/portfolio/${p.slug}`} className="block">
                   {p.cover ? (
                     /* eslint-disable-next-line @next/next/no-img-element --
                        URL firmato a scadenza: next/image lo rifirmerebbe e

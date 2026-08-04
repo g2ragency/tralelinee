@@ -31,7 +31,7 @@ export default async function ProgettiPage() {
 
   return (
     <main className="min-h-svh px-6 py-32 xl:px-10">
-      <Link href="/admin" className="hoverable text-[16px] text-grey">
+      <Link href="/admin" className="text-[16px] text-grey">
         ← Area riservata
       </Link>
       <h1 className="mt-6 text-[40px] leading-[1.02] tracking-[-1.6px] xl:text-[52px] xl:tracking-[-2.08px]">
@@ -48,7 +48,7 @@ export default async function ProgettiPage() {
         />
         <button
           type="submit"
-          className="hoverable border border-foreground px-5 py-2 text-[16px]"
+          className="border border-foreground px-5 py-2 text-[16px]"
         >
           Crea
         </button>
@@ -68,7 +68,7 @@ export default async function ProgettiPage() {
               <div>
                 <Link
                   href={`/admin/progetti/${p.id}`}
-                  className="hoverable text-[24px] tracking-[-0.96px]"
+                  className="text-[24px] tracking-[-0.96px]"
                 >
                   {p.title}
                 </Link>
@@ -91,14 +91,14 @@ export default async function ProgettiPage() {
                   />
                   <button
                     type="submit"
-                    className="hoverable border border-grey px-4 py-2 text-[16px] text-grey"
+                    className="border border-grey px-4 py-2 text-[16px] text-grey"
                   >
                     {p.published ? "Ritira" : "Pubblica"}
                   </button>
                 </form>
                 <Link
                   href={`/admin/progetti/${p.id}`}
-                  className="hoverable border border-foreground px-4 py-2 text-[16px]"
+                  className="border border-foreground px-4 py-2 text-[16px]"
                 >
                   Modifica
                 </Link>

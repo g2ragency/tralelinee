@@ -60,7 +60,7 @@ export default async function BuilderPage({
 
   return (
     <main className="min-h-svh px-6 py-32 xl:px-10">
-      <Link href="/admin/progetti" className="hoverable text-[16px] text-grey">
+      <Link href="/admin/progetti" className="text-[16px] text-grey">
         ← Progetti
       </Link>
 
@@ -78,7 +78,7 @@ export default async function BuilderPage({
             />
             <button
               type="submit"
-              className="hoverable border border-foreground px-4 py-2 text-[16px]"
+              className="border border-foreground px-4 py-2 text-[16px]"
             >
               {progetto.published ? "Ritira" : "Pubblica"}
             </button>
@@ -86,7 +86,7 @@ export default async function BuilderPage({
           {progetto.published && (
             <Link
               href={`/portfolio/${progetto.slug}`}
-              className="hoverable border border-grey px-4 py-2 text-[16px] text-grey"
+              className="border border-grey px-4 py-2 text-[16px] text-grey"
             >
               Vedi pagina
             </Link>
@@ -184,7 +184,7 @@ export default async function BuilderPage({
           </label>
           <button
             type="submit"
-            className="hoverable self-start border border-foreground px-5 py-2 text-[16px]"
+            className="self-start border border-foreground px-5 py-2 text-[16px]"
           >
             Salva
           </button>
@@ -219,7 +219,7 @@ export default async function BuilderPage({
             </select>
             <button
               type="submit"
-              className="hoverable border border-foreground px-5 py-2 text-[16px]"
+              className="border border-foreground px-5 py-2 text-[16px]"
             >
               Aggiungi sezione
             </button>
@@ -260,7 +260,7 @@ export default async function BuilderPage({
                         type="submit"
                         disabled={i === 0}
                         aria-label="Sposta su"
-                        className="hoverable border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
+                        className="border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
                       >
                         ↑
                       </button>
@@ -277,7 +277,7 @@ export default async function BuilderPage({
                         type="submit"
                         disabled={i === sezioni.length - 1}
                         aria-label="Sposta giù"
-                        className="hoverable border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
+                        className="border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
                       >
                         ↓
                       </button>
@@ -296,7 +296,7 @@ export default async function BuilderPage({
                       />
                       <button
                         type="submit"
-                        className="hoverable border border-grey px-3 py-1 text-[16px] text-grey"
+                        className="border border-grey px-3 py-1 text-[16px] text-grey"
                       >
                         {s.visible ? "Nascondi" : "Mostra"}
                       </button>
@@ -310,7 +310,7 @@ export default async function BuilderPage({
                       />
                       <button
                         type="submit"
-                        className="hoverable px-3 py-1 text-[16px] text-grey underline"
+                        className="px-3 py-1 text-[16px] text-grey underline"
                       >
                         Elimina
                       </button>
@@ -338,7 +338,7 @@ export default async function BuilderPage({
           <input type="hidden" name="id" value={progetto.id} />
           <button
             type="submit"
-            className="hoverable text-[16px] text-grey underline"
+            className="text-[16px] text-grey underline"
           >
             Elimina questo progetto e tutte le sue sezioni
           </button>

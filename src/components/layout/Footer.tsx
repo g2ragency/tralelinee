@@ -33,7 +33,7 @@ export function Footer() {
           desktop (Figma 1230:2279/2280) */}
       <div className="flex items-center justify-between gap-4 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] xl:text-[14px] xl:leading-[0.933]">
         <p>©2025 Tra le linee All Rights Reserved</p>
-        <Link href="/privacy-policy" className="hoverable">
+        <Link href="/privacy-policy">
           Privacy Policy
         </Link>
       </div>

@@ -101,7 +101,7 @@ export function FilaBox({
                     aria-current={k === attivo}
                     /* La linea è alta 3px: il bersaglio cliccabile lo si allarga
                        con del padding trasparente, non ingrossando la linea. */
-                    className="hoverable -my-2 flex-1 py-2"
+                    className="-my-2 flex-1 py-2"
                   >
                     <span
                       /* Dai token e non dai due esadecimali: sul tema chiaro

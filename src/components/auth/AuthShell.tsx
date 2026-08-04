@@ -16,7 +16,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
     <main className="relative flex min-h-svh flex-col items-center px-6 py-8 xl:px-10">
       <Link
         href="/"
-        className="hoverable self-start text-[18px] leading-[0.93] tracking-[-0.04em] text-[#C4C4C4]"
+        className="self-start text-[18px] leading-[0.93] tracking-[-0.04em] text-[#C4C4C4]"
       >
         ← Indietro
       </Link>
@@ -32,7 +32,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         Accedendo, accetterai la nostra{" "}
         <Link
           href="/privacy-policy"
-          className="hoverable text-foreground underline"
+          className="text-foreground underline"
         >
           Privacy Policy
         </Link>

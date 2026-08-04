@@ -53,7 +53,7 @@ export default async function PortfolioPage({
           <form action={logout} className="mt-10">
             <button
               type="submit"
-              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
+              className="border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
             >
               Esci
             </button>
@@ -80,7 +80,7 @@ export default async function PortfolioPage({
           <form action={logout} className="mt-10">
             <button
               type="submit"
-              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
+              className="border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
             >
               Esci
             </button>
@@ -121,12 +121,12 @@ export default async function PortfolioPage({
         azioni={
           <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
             {profile.role === "super_admin" && (
-              <Link href="/admin" className="hoverable">
+              <Link href="/admin">
                 Amministrazione
               </Link>
             )}
             <form action={logout}>
-              <button type="submit" className="hoverable">
+              <button type="submit">
                 Esci
               </button>
             </form>

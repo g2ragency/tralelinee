@@ -21,7 +21,6 @@
 :root[data-theme="dark"] {
   --bg-color: var(--black);
   --text-color: var(--white);
-  --cursor-color: #ffffff;
   /* Label di sezione: GRIGIO1 pieno sul dark, al 50% sul light */
   --label-color: var(--grey);
   --box-bg: var(--box);
@@ -30,7 +29,6 @@
 :root[data-theme="light"] {
   --bg-color: var(--white);
   --text-color: var(--black);
-  --cursor-color: #000000;
   --label-color: color-mix(in srgb, var(--grey) 50%, transparent);
   /* Sul light il riquadro si stacca nella direzione opposta, altrimenti
      resterebbe una scatola nera con dentro testo nero. */
@@ -142,54 +140,46 @@ body {
 }
 
 /* ===== Cursore custom (A2) ===== */
-#cursor,
-#cursor-shadow {
+
+/* La classe la mette il componente: senza pallino la pagina tiene il suo
+   cursore invece di restare senza. `*` perché i controlli di modulo hanno
+   cursori propri che vincerebbero su quello dell'elemento radice. */
+.cursore-custom,
+.cursore-custom * {
+  cursor: none;
+}
+
+/*
+  Pallino di vetro: sfoca e schiarisce quello che ha sotto invece di
+  colorarsi, così si vede su qualunque sfondo senza doverne conoscere il
+  colore. Niente transizioni: non ha stati.
+*/
+#cursor {
   position: fixed;
   top: 0;
   left: 0;
-  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   pointer-events: none;
-  z-index: 100;
-}
-
-#cursor {
-  width: 0.3rem;
-  height: 0.3rem;
-  background-color: var(--cursor-color);
-  transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease,
-    opacity 0.2s ease;
-}
-
-#cursor.is-hover {
-  width: 6rem;
-  height: 6rem;
-  opacity: 0.7;
-}
-
-#cursor-shadow {
-  width: 4.5rem;
-  height: 4.5rem;
-  border: 1px solid var(--cursor-color);
-  transition: opacity 0.1s;
-}
-
-#cursor-shadow.is-hover {
   opacity: 0;
+  z-index: 100;
+  background-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(4px) saturate(140%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.25),
+    inset 0 1px 1px rgb(255 255 255 / 0.35);
 }
 
-/* Aree che forzano il cursore a bianco */
-[data-cursor-white="true"] #cursor {
-  background-color: #ffffff;
-}
-
-[data-cursor-white="true"] #cursor-shadow {
-  border-color: #ffffff;
+/* Senza sfocatura di sfondo resterebbe un disco quasi invisibile. */
+@supports not (backdrop-filter: blur(4px)) {
+  #cursor {
+    background-color: rgb(255 255 255 / 0.35);
+  }
 }
 
 @media (max-width: 768px) {
-  #cursor,
-  #cursor-shadow {
+  #cursor {
     display: none;
   }
 }

@@ -29,7 +29,7 @@ export function Contatti() {
       <a
         href="/registrati"
         /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */
-        className="hoverable mt-10 inline-flex items-center justify-center self-start border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
+        className="mt-10 inline-flex items-center justify-center self-start border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
       >
         {/* Il Figma mobile chiama il pulsante «Contattaci», il desktop
             «Richiedi portfolio». `display:none` toglie la voce nascosta anche
@@ -44,13 +44,13 @@ export function Contatti() {
           <p>Viale Parioli 39c - Roma</p>
           <p className="text-grey">Email</p>
           <p>
-            <a href="mailto:info@tralelinee.com" className="hoverable">
+            <a href="mailto:info@tralelinee.com">
               info@tralelinee.com
             </a>
           </p>
           <p className="text-grey">Cellulare</p>
           <p>
-            <a href="tel:+393324353480" className="hoverable">
+            <a href="tel:+393324353480">
               +39 332 435 3480
             </a>
           </p>

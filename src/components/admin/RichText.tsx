@@ -59,7 +59,7 @@ export function RichText({
   });
 
   const attivo = (check: boolean) =>
-    `hoverable border px-3 py-1 text-[15px] ${check ? "border-foreground" : "border-grey text-grey"}`;
+    `border px-3 py-1 text-[15px] ${check ? "border-foreground" : "border-grey text-grey"}`;
 
   return (
     <div className="flex flex-col gap-2">

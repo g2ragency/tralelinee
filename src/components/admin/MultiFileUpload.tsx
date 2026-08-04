@@ -70,7 +70,7 @@ export function MultiFileUpload({
       <input type="hidden" name={name} value={JSON.stringify(paths)} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="hoverable cursor-pointer border border-grey px-4 py-2 text-[16px]">
+        <label className="cursor-pointer border border-grey px-4 py-2 text-[16px]">
           Aggiungi immagini
           <input
             type="file"
@@ -111,7 +111,7 @@ export function MultiFileUpload({
                   onClick={() => sposta(i, -1)}
                   disabled={i === 0}
                   aria-label="Sposta prima"
-                  className="hoverable border border-grey px-2 text-[15px] text-grey disabled:opacity-30"
+                  className="border border-grey px-2 text-[15px] text-grey disabled:opacity-30"
                 >
                   ↑
                 </button>
@@ -120,7 +120,7 @@ export function MultiFileUpload({
                   onClick={() => sposta(i, 1)}
                   disabled={i === paths.length - 1}
                   aria-label="Sposta dopo"
-                  className="hoverable border border-grey px-2 text-[15px] text-grey disabled:opacity-30"
+                  className="border border-grey px-2 text-[15px] text-grey disabled:opacity-30"
                 >
                   ↓
                 </button>
@@ -129,7 +129,7 @@ export function MultiFileUpload({
                   onClick={() =>
                     setPaths((all) => all.filter((_, k) => k !== i))
                   }
-                  className="hoverable text-[15px] text-grey underline"
+                  className="text-[15px] text-grey underline"
                 >
                   Rimuovi
                 </button>

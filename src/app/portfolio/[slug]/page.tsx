@@ -112,13 +112,13 @@ export default async function CaseStudyPage({
 
       {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
       <nav className="mt-[95px] flex items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
-        <Link href="/portfolio" className="hoverable">
+        <Link href="/portfolio">
           ← Torna all&rsquo;indice
         </Link>
         {prossimo && (
           <Link
             href={`/portfolio/${prossimo.slug}`}
-            className="hoverable text-right"
+            className="text-right"
           >
             Guarda il prossimo Case Study →
           </Link>

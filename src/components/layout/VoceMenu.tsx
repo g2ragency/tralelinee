@@ -41,7 +41,7 @@ export function VoceMenu({
     onMouseEnter: (e: MouseEvent<HTMLAnchorElement>) => muovi(e, true),
     onMouseLeave: (e: MouseEvent<HTMLAnchorElement>) => muovi(e, false),
     "aria-current": attiva ? ("true" as const) : undefined,
-    className: "hoverable relative inline-block",
+    className: "relative inline-block",
   };
 
   const contenuto = (

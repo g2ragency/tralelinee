@@ -29,7 +29,7 @@ function ThemePill() {
       type="button"
       onClick={toggleTheme}
       aria-label="Cambia tema"
-      className="hoverable relative h-[42px] w-[75px] rounded-full border border-foreground"
+      className="relative h-[42px] w-[75px] rounded-full border border-foreground"
     >
       <span
         className={`absolute top-1/2 h-[31px] w-[31px] -translate-y-1/2 rounded-full bg-foreground transition-[left] duration-300 ${isDark ? "left-[5px]" : "left-[39px]"}`}
@@ -157,7 +157,7 @@ export function Header() {
           negativo: 25×20 sono pochi per un dito. */}
       <button
         type="button"
-        className="hoverable -m-3 box-content flex h-[20px] w-[25px] flex-col justify-center gap-[4px] p-3 xl:hidden"
+        className="-m-3 box-content flex h-[20px] w-[25px] flex-col justify-center gap-[4px] p-3 xl:hidden"
         aria-label="Apri menu"
         aria-expanded={menuOpen}
         onClick={() => setMenuOpen(true)}
@@ -177,7 +177,7 @@ export function Header() {
             <ExpandLogo />
             <button
               type="button"
-              className="hoverable flex h-8 w-8 items-center justify-center"
+              className="flex h-8 w-8 items-center justify-center"
               aria-label="Chiudi menu"
               onClick={() => setMenuOpen(false)}
             >

@@ -2,70 +2,41 @@
 
 import { useEffect, useRef } from "react";
 
-const HOVER_SELECTOR = "a, button, .popup-btn, .popup-btn2, .hoverable";
-const WHITE_AREA_SELECTOR = "footer, .bluebg-sec, #popup-content, .popup-content";
-
 /*
-  A2 — cursore custom a due elementi:
-  - dot (#cursor): segue il mouse istantaneamente
-  - ring (#cursor-shadow): insegue con lerp 0.1 in requestAnimationFrame
-  Su hover di link/bottoni il dot cresce a 6rem (classi in globals.css);
-  dentro footer/aree scure il colore è forzato a bianco.
-  Sotto i 768px è nascosto via CSS.
+  A2 — cursore custom: un solo pallino di vetro, senza cerchio, senza stati e
+  senza inseguimento.
+
+  Il pallino sta ESATTAMENTE sotto il puntatore: la posizione si scrive nel
+  gestore del movimento, non in un ciclo di animazione che rincorre. Qualsiasi
+  interpolazione, anche breve, si sente come ritardo.
+
+  Il cursore di sistema si nasconde da qui e non dal foglio di stile: se il
+  JavaScript non parte — o non c'è un puntatore fine, quindi niente pallino —
+  la pagina resta col suo cursore invece di ritrovarsi senza nulla.
 */
 export function CustomCursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const dot = dotRef.current;
-    const ring = ringRef.current;
-    if (!dot || !ring) return;
+    const dot = ref.current;
+    if (!dot) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
-    const mouse = { x: -100, y: -100 };
-    const ringPos = { x: -100, y: -100 };
-    let raf = 0;
+    document.documentElement.classList.add("cursore-custom");
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      dot.style.left = `${mouse.x}px`;
-      dot.style.top = `${mouse.y}px`;
+    const muovi = (e: MouseEvent) => {
+      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+      // Fino al primo movimento resta fuori campo, per non farlo comparire
+      // nell'angolo in alto a sinistra al caricamento.
+      if (!dot.style.opacity) dot.style.opacity = "1";
     };
 
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as Element | null;
-      const hover = !!target?.closest(HOVER_SELECTOR);
-      dot.classList.toggle("is-hover", hover);
-      ring.classList.toggle("is-hover", hover);
-      document.body.dataset.cursorWhite = String(
-        !!target?.closest(WHITE_AREA_SELECTOR)
-      );
-    };
-
-    const tick = () => {
-      ringPos.x += (mouse.x - ringPos.x) * 0.1;
-      ringPos.y += (mouse.y - ringPos.y) * 0.1;
-      ring.style.left = `${ringPos.x}px`;
-      ring.style.top = `${ringPos.y}px`;
-      raf = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseover", onMouseOver);
-    raf = requestAnimationFrame(tick);
-
+    window.addEventListener("mousemove", muovi);
     return () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseover", onMouseOver);
-      cancelAnimationFrame(raf);
+      window.removeEventListener("mousemove", muovi);
+      document.documentElement.classList.remove("cursore-custom");
     };
   }, []);
 
-  return (
-    <>
-      <div id="cursor" ref={dotRef} aria-hidden="true" />
-      <div id="cursor-shadow" ref={ringRef} aria-hidden="true" />
-    </>
-  );
+  return <div id="cursor" ref={ref} aria-hidden="true" />;
 }

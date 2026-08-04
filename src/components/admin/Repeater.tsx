@@ -10,7 +10,7 @@ type Item = Record<string, string>;
 const classeInput =
   "border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground";
 
-const classeBottone = "hoverable border border-grey px-2 disabled:opacity-30";
+const classeBottone = "border border-grey px-2 disabled:opacity-30";
 
 /* Campi di un singolo elemento. Uguali nelle due modalità del repeater. */
 function Campi({
@@ -206,7 +206,7 @@ export function Repeater({
       >
         ↓
       </button>
-      <button type="button" onClick={elimina} className="hoverable underline">
+      <button type="button" onClick={elimina} className="underline">
         Rimuovi
       </button>
     </legend>
@@ -250,7 +250,7 @@ export function Repeater({
         <button
           type="button"
           onClick={() => setItems((prev) => [...prev, nuovo()])}
-          className="hoverable self-start border border-grey px-4 py-2 text-[16px]"
+          className="self-start border border-grey px-4 py-2 text-[16px]"
         >
           Aggiungi {itemLabel.toLowerCase()}
         </button>
@@ -355,7 +355,7 @@ export function Repeater({
           <button
             type="button"
             onClick={() => aggiungiAlGruppo(gi)}
-            className="hoverable self-start border border-grey/40 px-3 py-1 text-[15px]"
+            className="self-start border border-grey/40 px-3 py-1 text-[15px]"
           >
             Aggiungi {itemLabel.toLowerCase()} a questo{" "}
             {groupLabel.toLowerCase()}
@@ -371,7 +371,7 @@ export function Repeater({
             { ...nuovo(), [groupBy]: chiaveLibera() },
           ])
         }
-        className="hoverable self-start border border-grey px-4 py-2 text-[16px]"
+        className="self-start border border-grey px-4 py-2 text-[16px]"
       >
         Aggiungi {groupLabel.toLowerCase()}
       </button>

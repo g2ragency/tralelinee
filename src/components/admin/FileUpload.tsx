@@ -68,7 +68,7 @@ export function FileUpload({
       {!onChange && <input type="hidden" name={name} value={path} />}
 
       <div className="flex flex-wrap items-center gap-3">
-        <label className="hoverable cursor-pointer border border-grey px-4 py-2 text-[16px]">
+        <label className="cursor-pointer border border-grey px-4 py-2 text-[16px]">
           {path ? "Sostituisci" : "Scegli file"}
           <input
             type="file"
@@ -97,7 +97,7 @@ export function FileUpload({
                 setPath("");
                 onChange?.("");
               }}
-              className="hoverable text-[16px] text-grey underline"
+              className="text-[16px] text-grey underline"
             >
               Rimuovi
             </button>

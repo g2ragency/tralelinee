@@ -53,14 +53,14 @@ export default async function AdminPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/portfolio"
-            className="hoverable border border-grey px-5 py-3 text-[18px] tracking-[-0.72px]"
+            className="border border-grey px-5 py-3 text-[18px] tracking-[-0.72px]"
           >
             Portfolio
           </Link>
           <form action={logout}>
             <button
               type="submit"
-              className="hoverable border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
+              className="border border-foreground px-5 py-3 text-[18px] tracking-[-0.72px]"
             >
               Esci
             </button>
@@ -73,7 +73,7 @@ export default async function AdminPage() {
           <li key={v.href}>
             <Link
               href={v.href}
-              className="hoverable block border border-grey/40 p-8 transition-colors hover:border-foreground"
+              className="block border border-grey/40 p-8 transition-colors hover:border-foreground"
             >
               <div className="flex items-baseline justify-between gap-4">
                 <h2 className="text-[30px] tracking-[-1.2px]">{v.titolo}</h2>

@@ -111,7 +111,7 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   type="button"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="hoverable flex w-full items-center justify-between gap-3 py-3 text-left xl:gap-6"
+                  className="flex w-full items-center justify-between gap-3 py-3 text-left xl:gap-6"
                 >
                   {/*
                     Voci padre: Regular, ls -4%, GRIGIO1; 26px lh 80% su
@@ -218,7 +218,7 @@ export function Capabilities() {
       <nav aria-label="Capabilities" className="mb-32 hidden grid-cols-6 gap-6 xl:grid">
         {/* Nav interna: Heavy 14px, lh 93.3%, ls -4%; nome in GRIGIO1 */}
         {SECTIONS.map(({ num, title }) => (
-          <a key={num} href={`#cap-${num}`} className="hoverable block">
+          <a key={num} href={`#cap-${num}`} className="block">
             <span className="block text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px]">
               [{num}]
             </span>
