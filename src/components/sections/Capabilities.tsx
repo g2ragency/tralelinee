@@ -128,7 +128,7 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                     mozzate. Il padding allarga la finestra di ritaglio, il
                     margine negativo la riassorbe: il ritmo resta quello.
                   */}
-                  <span className="relative -my-[6px] min-w-0 flex-1 overflow-hidden py-[6px] xl:my-0 xl:py-0">
+                  <span className="relative -my-[6px] min-w-0 flex-1 overflow-hidden py-[6px] xl:my-0 xl:overflow-visible xl:py-0">
                     {/* nowrap senza `truncate`: niente puntini di sospensione,
                         il taglio lo nasconde la sfumatura */}
                     <span className="block whitespace-nowrap text-[26px] font-normal leading-[0.8] tracking-[-0.04em] text-grey xl:whitespace-normal xl:text-[30px] xl:leading-[0.933]">
