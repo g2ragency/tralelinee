@@ -141,41 +141,36 @@ body {
 
 /* ===== Cursore custom (A2) ===== */
 
-/* La classe la mette il componente: senza pallino la pagina tiene il suo
-   cursore invece di restare senza. `*` perché i controlli di modulo hanno
-   cursori propri che vincerebbero su quello dell'elemento radice. */
-.cursore-custom,
-.cursore-custom * {
-  cursor: none;
+/*
+  Nascosto dal foglio di stile e non dal componente: aspettando il montaggio
+  di React si vedeva comparire la freccia per un istante appena atterrati.
+  `*` perché i controlli di modulo hanno cursori propri che vincerebbero su
+  quello del contenitore.
+*/
+@media (pointer: fine) {
+  body,
+  body * {
+    cursor: none;
+  }
 }
 
 /*
-  Pallino di vetro: sfoca e schiarisce quello che ha sotto invece di
-  colorarsi, così si vede su qualunque sfondo senza doverne conoscere il
-  colore. Niente transizioni: non ha stati.
+  Pallino di vetro: sfoca quello che ha sotto invece di colorarsi, così si
+  vede su qualunque sfondo senza doverne conoscere il colore. Niente bordi,
+  niente ombre, niente transizioni: non ha stati.
 */
 #cursor {
   position: fixed;
   top: 0;
   left: 0;
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   pointer-events: none;
   opacity: 0;
   z-index: 100;
-  background-color: rgb(255 255 255 / 0.1);
-  backdrop-filter: blur(4px) saturate(140%);
-  box-shadow:
-    inset 0 0 0 1px rgb(255 255 255 / 0.25),
-    inset 0 1px 1px rgb(255 255 255 / 0.35);
-}
-
-/* Senza sfocatura di sfondo resterebbe un disco quasi invisibile. */
-@supports not (backdrop-filter: blur(4px)) {
-  #cursor {
-    background-color: rgb(255 255 255 / 0.35);
-  }
+  background-color: rgb(255 255 255 / 0.25);
+  backdrop-filter: blur(5px);
 }
 
 @media (max-width: 768px) {
