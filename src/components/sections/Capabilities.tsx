@@ -121,7 +121,14 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                     prosegue sotto il «+», e una sfumatura verso il colore di
                     sfondo copre il taglio invece di lasciarlo netto.
                   */}
-                  <span className="relative min-w-0 flex-1 overflow-hidden">
+                  {/*
+                    py + -my: l'overflow serve al taglio orizzontale, ma
+                    ritaglia anche in verticale, e con l'interlinea all'80% le
+                    discendenti (p, g, j) escono dalla riga e venivano
+                    mozzate. Il padding allarga la finestra di ritaglio, il
+                    margine negativo la riassorbe: il ritmo resta quello.
+                  */}
+                  <span className="relative -my-[6px] min-w-0 flex-1 overflow-hidden py-[6px] xl:my-0 xl:py-0">
                     {/* nowrap senza `truncate`: niente puntini di sospensione,
                         il taglio lo nasconde la sfumatura */}
                     <span className="block whitespace-nowrap text-[26px] font-normal leading-[0.8] tracking-[-0.04em] text-grey xl:whitespace-normal xl:text-[30px] xl:leading-[0.933]">
