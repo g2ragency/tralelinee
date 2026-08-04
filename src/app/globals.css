@@ -24,6 +24,8 @@
   /* Label di sezione: GRIGIO1 pieno sul dark, al 50% sul light */
   --label-color: var(--grey);
   --box-bg: var(--box);
+  /* Nel dark il cursore deve essere più chiaro e più bianco, per restare
+     ben visibile sul fondo nero. */
   --cursor-bg: rgb(255 255 255 / 0.25);
 }
 
@@ -34,9 +36,9 @@
   /* Sul light il riquadro si stacca nella direzione opposta, altrimenti
      resterebbe una scatola nera con dentro testo nero. */
   --box-bg: #efefef;
-  /* Sul light il cursore deve essere più luminoso e meno grigio, per restare
-     ben visibile sul fondo chiaro senza diventare troppo opaco. */
-  --cursor-bg: color-mix(in srgb, var(--white) 80%, transparent);
+  /* Sul light il cursore deve essere più grigio e meno luminoso, per
+     mantenere il look coerente col fondo chiaro. */
+  --cursor-bg: color-mix(in srgb, var(--grey) 45%, transparent);
 }
 
 @theme inline {
@@ -89,7 +91,9 @@ body {
      diversi sono eccezioni dichiarate sul singolo elemento. */
   font-weight: 400;
   /* Cambio tema = crossfade 300ms (come il sito live) */
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 /*
