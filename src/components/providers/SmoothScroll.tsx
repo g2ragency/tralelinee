@@ -55,7 +55,19 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   return (
     <ReactLenis
       root
-      options={{ autoRaf: false, anchors: { duration: 1.5 } }}
+      options={{
+        autoRaf: false,
+        anchors: { duration: 1.5 },
+        /*
+          Scorrimento più lento e con partenza più morbida del prestabilito.
+          `lerp` è la frazione di distanza recuperata a ogni fotogramma: più
+          bassa del solito 0.1, quindi la pagina prende velocità con calma
+          invece di scattare; `wheelMultiplier` accorcia il passo di ogni
+          scatto di rotella.
+        */
+        lerp: 0.065,
+        wheelMultiplier: 0.9,
+      }}
       ref={lenisRef}
     >
       {children}

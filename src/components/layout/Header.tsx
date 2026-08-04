@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ExpandLogo } from "./ExpandLogo";
+import { VoceMenu } from "./VoceMenu";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { createClient } from "@/lib/supabase/client";
 
@@ -57,9 +59,48 @@ function useLoggato() {
   return loggato;
 }
 
+/*
+  Voce attiva = la sezione che sta attraversando la metà dello schermo.
+  Il margine negativo al 50% riduce l'area osservata a una riga sottile a
+  metà finestra: una sezione «interseca» solo mentre la taglia.
+  Non si azzera quando nessuna la taglia — fra una sezione e l'altra (per
+  esempio le voci del Metodo, che non hanno una voce di menu) resta accesa
+  l'ultima, invece di lampeggiare.
+*/
+function useSezioneAttiva(attivo: boolean) {
+  const [sezione, setSezione] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!attivo) return;
+    const sezioni = NAV_ITEMS.map((i) => document.querySelector(i.href)).filter(
+      (el): el is Element => !!el,
+    );
+    if (sezioni.length === 0) return;
+
+    const io = new IntersectionObserver(
+      (voci) => {
+        for (const v of voci) {
+          if (v.isIntersecting) setSezione(`#${v.target.id}`);
+        }
+      },
+      { rootMargin: "-50% 0px -50% 0px" },
+    );
+    sezioni.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [attivo]);
+
+  // Fuori dalla home il valore si deriva, non si azzera: azzerarlo dentro
+  // l'effetto costringerebbe a un secondo giro di render.
+  return attivo ? sezione : null;
+}
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const loggato = useLoggato();
+  const pathname = usePathname();
+  const inHome = pathname === "/";
+  const sezione = useSezioneAttiva(inHome);
+  const areaAttiva = !inHome && /^\/(portfolio|admin)/.test(pathname);
 
   // Blocca lo scroll del body quando il menu è aperto
   useEffect(() => {
@@ -91,20 +132,20 @@ export function Header() {
         <ul className="flex items-center gap-[30px] text-[18px] font-medium leading-none tracking-[-0.36px]">
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
-              <a href={item.href} className="hoverable">
+              <VoceMenu href={item.href} attiva={sezione === item.href}>
                 {item.label}
-              </a>
+              </VoceMenu>
             </li>
           ))}
           {/* Accesso: mostrato solo a stato noto, per non lampeggiare */}
           {loggato !== null && (
             <li className="border-l border-grey/40 pl-[30px]">
-              <Link
+              <VoceMenu
                 href={loggato ? "/portfolio" : "/login"}
-                className="hoverable"
+                attiva={areaAttiva}
               >
                 {loggato ? "Area riservata" : "Accedi"}
-              </Link>
+              </VoceMenu>
             </li>
           )}
         </ul>

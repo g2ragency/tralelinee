@@ -10,10 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
   Testo che si «accende» con lo scroll, carattere per carattere in ordine di
   lettura (come il taglio a metà parola nel design: «strum|enti»).
 
-  Si anima l'OPACITÀ, non il colore: i caratteri restano il bianco del tema a
-  ~45% — che sul nero rende quasi esattamente il grigio #696969 — e salgono a
-  piena. Così il tema chiaro funziona da sé, senza colori letti al mount che
-  resterebbero stantii dopo un cambio tema.
+  Si anima l'OPACITÀ, non il colore: i caratteri sono il bianco del tema
+  (#DFDFDF) e da spenti stanno al 47,1%, che sul nero dà 223 × 0,471 = 105,
+  cioè esattamente il grigio #696969 richiesto. Animare il colore vero
+  significherebbe leggerlo al montaggio e ritrovarselo stantìo dopo un cambio
+  tema; così invece il tema chiaro si arrangia da sé.
 
   La corsa è misurata sul testo, non sulla sezione che lo contiene: il testo
   sta centrato, quindi una fine legata alla sezione lo faceva completare
@@ -60,8 +61,8 @@ export function EvidenziaScroll({
         stagger: { each: 0.15 },
         scrollTrigger: {
           trigger: root,
-          start: "top 80%",
-          end: "top 30%",
+          start: "top 50%",
+          end: "top 0%",
           scrub: 0.6,
         },
       });
@@ -78,7 +79,7 @@ export function EvidenziaScroll({
               {j > 0 && " "}
               <span className="whitespace-nowrap">
                 {[...parola].map((c, k) => (
-                  <span key={k} data-c className="opacity-45">
+                  <span key={k} data-c className="opacity-[0.471]">
                     {c}
                   </span>
                 ))}
