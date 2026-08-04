@@ -24,8 +24,8 @@
   /* Label di sezione: GRIGIO1 pieno sul dark, al 50% sul light */
   --label-color: var(--grey);
   --box-bg: var(--box);
-  /* Nel dark il cursore deve leggere chiaramente bianco, non grigio. */
-  --cursor-bg: rgb(255 255 255 / 0.72);
+  /* Opacità bassa apposta: troppo piena copre il blur e il vetro sparisce. */
+  --cursor-bg: rgb(255 255 255 / 0.4);
 }
 
 :root[data-theme="light"] {
@@ -176,7 +176,7 @@ body {
   opacity: 0;
   z-index: 100;
   background-color: var(--cursor-bg);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px) saturate(180%);
 }
 
 @media (max-width: 768px) {
