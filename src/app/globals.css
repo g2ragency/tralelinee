@@ -25,7 +25,7 @@
   --label-color: var(--grey);
   --box-bg: var(--box);
   /* Alpha alta: col backdrop-filter il colore si mischia con lo sfondo, sotto 0.7 su nero il bianco diventava grigio. */
-  --cursor-bg: rgb(255 255 255 / 0.85);
+  --cursor-bg: rgb(255 255 255 / 0.65);
 }
 
 :root[data-theme="light"] {
@@ -36,7 +36,7 @@
      resterebbe una scatola nera con dentro testo nero. */
   --box-bg: #efefef;
   /* Alpha alta: stesso motivo del dark, altrimenti il grigio si schiarisce troppo sul fondo chiaro. */
-  --cursor-bg: rgb(105 105 105 / 0.8);
+  --cursor-bg: rgb(105 105 105 / 0.65);
 }
 
 @theme inline {
