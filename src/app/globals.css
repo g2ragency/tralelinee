@@ -34,10 +34,9 @@
   /* Sul light il riquadro si stacca nella direzione opposta, altrimenti
      resterebbe una scatola nera con dentro testo nero. */
   --box-bg: #efefef;
-  /* Il velo bianco su fondo chiaro sparisce: sul light si passa al grigio
-     del sito, con una quota più alta per pareggiare il contrasto che sul
-     nero dà il bianco al 25%. */
-  --cursor-bg: color-mix(in srgb, var(--grey) 45%, transparent);
+  /* Sul light il cursore deve essere più luminoso e meno grigio, per restare
+     ben visibile sul fondo chiaro senza diventare troppo opaco. */
+  --cursor-bg: color-mix(in srgb, var(--white) 80%, transparent);
 }
 
 @theme inline {
