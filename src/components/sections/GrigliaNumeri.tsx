@@ -104,8 +104,10 @@ export function FilaBox({
                     className="hoverable -my-2 flex-1 py-2"
                   >
                     <span
+                      /* Dai token e non dai due esadecimali: sul tema chiaro
+                         le linette restavano quelle del tema scuro. */
                       className={`block h-[3px] rounded-full transition-colors duration-300 ${
-                        k === attivo ? "bg-[#DFDFDF]" : "bg-[#696969]"
+                        k === attivo ? "bg-foreground" : "bg-grey"
                       }`}
                     />
                   </button>

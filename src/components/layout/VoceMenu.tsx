@@ -51,7 +51,7 @@ export function VoceMenu({
         ref={linea}
         aria-hidden
         style={{ transform: attiva ? "scaleX(1)" : "scaleX(0)" }}
-        className="pointer-events-none absolute -bottom-[4px] left-0 h-px w-full origin-left bg-foreground transition-transform duration-300 ease-out motion-reduce:transition-none"
+        className="pointer-events-none absolute -bottom-[4px] left-0 h-[2px] w-full origin-left bg-foreground transition-transform duration-300 ease-out motion-reduce:transition-none"
       />
     </>
   );
