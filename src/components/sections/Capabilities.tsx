@@ -153,7 +153,7 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
                   <div className="overflow-hidden">
                     <p
                       /* Descrizione che si apre: Regular 18px, ls -4% */
-                      className={`max-w-[720px] pb-5 text-[15px] font-normal leading-[1.02] tracking-[-0.6px] text-grey2 transition-opacity duration-300 xl:text-[18px] xl:tracking-[-0.72px] ${isOpen ? "opacity-100" : "opacity-0"}`}
+                      className={`max-w-[720px] pb-5 text-[15px] font-normal leading-[1.02] tracking-[-0.6px] text-grey transition-opacity duration-300 xl:text-[18px] xl:tracking-[-0.72px] ${isOpen ? "opacity-100" : "opacity-0"}`}
                     >
                       {item.d}
                     </p>

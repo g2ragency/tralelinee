@@ -112,7 +112,7 @@ export function RichText({
       )}
 
       <EditorContent editor={editor} />
-      {hint && <span className="text-[14px] text-grey2">{hint}</span>}
+      {hint && <span className="text-[14px] text-grey">{hint}</span>}
     </div>
   );
 }

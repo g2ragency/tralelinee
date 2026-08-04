@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 /*
-  Design token dal Figma definitivo (eEsO9qVT3E4FKjb0nIVkbk) e dal CSS del tema WP.
+  Profilo colori del progetto: quattro valori, nessun altro.
   NB: il "bianco" del sito è #DFDFDF, non bianco puro.
+  C'era un secondo grigio #868686 per i testi secondari: non fa parte del
+  profilo, è stato assorbito in --grey.
 */
 :root {
-  --black: #000000;
-  --white: #dfdfdf;
-  --grey: #696969;
-  /* --grey è il GRIGIO1 del Figma: label di sezione + testi attenuati */
-  --grey2: #868686; /* testi secondari (descrizioni accordion, slide chi-siamo) */
+  --black: #000000; /* sfondo */
+  --white: #dfdfdf; /* bianco */
+  --grey: #696969; /* grigio: etichette e testi attenuati */
+  --box: #1b1b1b; /* nero2: riquadri delle infografiche */
 
   /* --font-diatype è impostata da next/font/local in layout.tsx
      (ABC Diatype Trial — licenza da regolarizzare, vedi HANDOFF.md). */
@@ -23,8 +24,7 @@
   --cursor-color: #ffffff;
   /* Label di sezione: GRIGIO1 pieno sul dark, al 50% sul light */
   --label-color: var(--grey);
-  /* Riquadri della griglia numeri: staccati dallo sfondo di un soffio */
-  --box-bg: #1b1b1b;
+  --box-bg: var(--box);
 }
 
 :root[data-theme="light"] {
@@ -42,7 +42,6 @@
   --color-black: var(--black);
   --color-white: var(--white);
   --color-grey: var(--grey);
-  --color-grey2: var(--grey2);
   --color-label: var(--label-color);
   --color-box: var(--box-bg);
   --color-background: var(--bg-color);

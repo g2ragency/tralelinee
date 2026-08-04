@@ -178,7 +178,7 @@ export function SectionForm({
               />
             )}
 
-            {f.hint && <span className="text-[14px] text-grey2">{f.hint}</span>}
+            {f.hint && <span className="text-[14px] text-grey">{f.hint}</span>}
           </label>
         );
       })}

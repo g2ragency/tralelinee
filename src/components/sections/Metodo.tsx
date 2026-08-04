@@ -68,7 +68,7 @@ function Row({ title, desc }: { title: string; desc: string }) {
         ref={bodyRef}
         className="max-h-0 overflow-hidden opacity-0 transition-[max-height,opacity] duration-400 ease-out"
       >
-        <p className="max-w-[862px] pt-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] text-grey2 xl:pt-5 xl:text-[30px]">
+        <p className="max-w-[862px] pt-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] text-grey xl:pt-5 xl:text-[30px]">
           {desc}
         </p>
       </div>

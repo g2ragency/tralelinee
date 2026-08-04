@@ -69,12 +69,12 @@ export function AuthForm({
         />
 
         {state.error && (
-          <p role="alert" className="text-[14px] leading-[1.2] text-grey2">
+          <p role="alert" className="text-[14px] leading-[1.2] text-grey">
             {state.error}
           </p>
         )}
         {state.message && (
-          <p role="status" className="text-[14px] leading-[1.2] text-grey2">
+          <p role="status" className="text-[14px] leading-[1.2] text-grey">
             {state.message}
           </p>
         )}

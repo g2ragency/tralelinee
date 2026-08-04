@@ -88,7 +88,7 @@ function Campi({
                 className={classeInput}
               />
             )}
-            {f.hint && <span className="text-[14px] text-grey2">{f.hint}</span>}
+            {f.hint && <span className="text-[14px] text-grey">{f.hint}</span>}
           </label>
         );
       })}
@@ -306,7 +306,7 @@ export function Repeater({
     <div className="flex flex-col gap-4">
       <span className="text-[16px] text-grey">{label}</span>
       {/* Una volta sola: ripeterlo sotto ogni riquadro è solo rumore. */}
-      {groupHint && <p className="text-[14px] text-grey2">{groupHint}</p>}
+      {groupHint && <p className="text-[14px] text-grey">{groupHint}</p>}
       {hidden}
 
       {gruppi.map((g, gi) => (

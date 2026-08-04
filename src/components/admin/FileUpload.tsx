@@ -82,13 +82,13 @@ export function FileUpload({
           <span className="text-[16px] text-grey">Caricamento…</span>
         )}
         {stato === "errore" && (
-          <span role="alert" className="text-[16px] text-grey2">
+          <span role="alert" className="text-[16px] text-grey">
             Caricamento non riuscito. Riprova.
           </span>
         )}
         {path && stato === "idle" && (
           <>
-            <span className="max-w-[320px] truncate text-[16px] text-grey2">
+            <span className="max-w-[320px] truncate text-[16px] text-grey">
               {path.split("/").pop()}
             </span>
             <button

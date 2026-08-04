@@ -84,16 +84,16 @@ export function MultiFileUpload({
           <span className="text-[16px] text-grey">Caricamento…</span>
         )}
         {stato === "errore" && (
-          <span role="alert" className="text-[16px] text-grey2">
+          <span role="alert" className="text-[16px] text-grey">
             Caricamento non riuscito. Riprova.
           </span>
         )}
-        <span className="text-[16px] text-grey2">
+        <span className="text-[16px] text-grey">
           {paths.length} {paths.length === 1 ? "immagine" : "immagini"}
         </span>
       </div>
 
-      {hint && <span className="text-[14px] text-grey2">{hint}</span>}
+      {hint && <span className="text-[14px] text-grey">{hint}</span>}
 
       {paths.length > 0 && (
         <ol className="mt-2 flex flex-col gap-1">
@@ -102,7 +102,7 @@ export function MultiFileUpload({
               key={p}
               className="flex items-center justify-between gap-3 border border-grey/40 px-3 py-2"
             >
-              <span className="truncate text-[15px] text-grey2">
+              <span className="truncate text-[15px] text-grey">
                 {i + 1}. {p.split("/").pop()}
               </span>
               <span className="flex shrink-0 items-center gap-2">
