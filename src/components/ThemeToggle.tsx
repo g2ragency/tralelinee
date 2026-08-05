@@ -17,7 +17,9 @@ export function ThemeToggle() {
       /* Lo sfondo non è decorativo: senza, il pulsante è trasparente e il
          logo gigante del footer gli passa dietro restando visibile dentro la
          cornice. Sta già sopra a tutto, era il vuoto a ingannare. */
-      className="fixed bottom-6 right-6 z-30 hidden border border-current bg-background px-5 py-2 text-[16px] font-bold transition-colors duration-300 xl:block"
+      /* right-10 come il padding laterale del sito: a 24px il pulsante
+         sbordava di 16px oltre il filo di tutto il resto. */
+      className="fixed bottom-10 right-10 z-30 hidden border border-current bg-background px-5 py-2 text-[16px] font-bold transition-colors duration-300 xl:block"
       aria-label="Cambia tema"
     >
       {theme === "dark" ? "Light" : "Dark"}
