@@ -133,11 +133,11 @@ export const SCHEMAS: Record<string, SectionSchema> = {
 
   griglia: {
     label: "Griglia numeri",
-    hint: "Riquadri con i numeri, testo di raccordo, e una seconda fila di riquadri.",
+    hint: "Riquadri con i numeri e testo di raccordo sotto.",
     fields: [
       {
         name: "sopra",
-        label: "Riquadri sopra il testo",
+        label: "Riquadri",
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
@@ -151,15 +151,42 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "richtext",
         hint: "Il grassetto mette in evidenza in bianco (nomi, cariche).",
       },
+    ],
+  },
+
+  social: {
+    label: "Riquadri social",
+    hint: "Riquadri con nome del canale, numero e didascalia; più contenuti per riquadro diventano un carosello.",
+    fields: [
       {
-        name: "sotto",
-        label: "Riquadri sotto il testo",
+        name: "riquadri",
+        label: "Riquadri",
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
         groupBy: "box",
         groupLabel: "Riquadro",
         groupHint: GRUPPO_HINT,
+      },
+    ],
+  },
+
+  loghi: {
+    label: "Copertura stampa",
+    hint: "Due righe di loghi che scorrono all'infinito in senso opposto.",
+    fields: [
+      { name: "titolo", label: "Titolo", type: "text" },
+      {
+        name: "riga1",
+        label: "Loghi della prima riga",
+        type: "images",
+        hint: "Scorre verso sinistra.",
+      },
+      {
+        name: "riga2",
+        label: "Loghi della seconda riga",
+        type: "images",
+        hint: "Scorre verso destra. Lasciandola vuota resta una riga sola.",
       },
     ],
   },

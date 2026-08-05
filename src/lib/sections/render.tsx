@@ -3,6 +3,7 @@ import { signedUrl, signedUrls } from "@/lib/media";
 import { VociLaterali } from "@/components/sections/VociLaterali";
 import { Carosello } from "@/components/sections/Carosello";
 import { FilaBox } from "@/components/sections/GrigliaNumeri";
+import { Loghi } from "@/components/sections/Loghi";
 import { raggruppa } from "./griglia";
 import type { SectionContent } from "./schema";
 
@@ -177,12 +178,11 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
   return <Carosello urls={urls} />;
 }
 
-/* Griglia numeri — riquadri con i numeri e testo di raccordo in mezzo. */
+/* Griglia numeri — riquadri con i numeri e testo di raccordo sotto. */
 function GrigliaRender({ content }: { content: SectionContent }) {
   const sopra = raggruppa(content.sopra);
-  const sotto = raggruppa(content.sotto);
   const testo = s(content.testo);
-  if (sopra.length === 0 && sotto.length === 0 && !testo) return null;
+  if (sopra.length === 0 && !testo) return null;
 
   return (
     /* Figma: 14px fra righe e colonne, riquadri #1B1B1B raggio 20px */
@@ -196,8 +196,43 @@ function GrigliaRender({ content }: { content: SectionContent }) {
           dangerouslySetInnerHTML={{ __html: testo }}
         />
       )}
-      <FilaBox boxes={sotto} variante="sotto" />
     </section>
+  );
+}
+
+/*
+  Riquadri social — erano la fila sotto la griglia, ora blocco a sé: si
+  possono mettere altrove nella pagina e in numero diverso dai numeri sopra.
+*/
+function SocialRender({ content }: { content: SectionContent }) {
+  const riquadri = raggruppa(content.riquadri);
+  if (riquadri.length === 0) return null;
+  return (
+    <section>
+      <FilaBox boxes={riquadri} variante="sotto" />
+    </section>
+  );
+}
+
+/* Copertura stampa — due righe di loghi in movimento, delegate al client. */
+async function LoghiRender({ content }: { content: SectionContent }) {
+  const percorsi = (campo: unknown) =>
+    Array.isArray(campo)
+      ? (campo as unknown[]).filter((p): p is string => typeof p === "string")
+      : [];
+
+  const [riga1, riga2] = await Promise.all([
+    signedUrls(percorsi(content.riga1)),
+    signedUrls(percorsi(content.riga2)),
+  ]);
+  const pulisci = (urls: (string | null)[]) =>
+    urls.filter((u): u is string => !!u);
+
+  return (
+    <Loghi
+      titolo={s(content.titolo)}
+      righe={[pulisci(riga1), pulisci(riga2)]}
+    />
   );
 }
 
@@ -230,6 +265,8 @@ export const RENDERERS: Record<string, SectionRenderer> = {
   voci: VociRender,
   carosello: CaroselloRender,
   griglia: GrigliaRender,
+  social: SocialRender,
+  loghi: LoghiRender,
   media: MediaRender,
 };
 

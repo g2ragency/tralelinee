@@ -73,9 +73,43 @@ html {
   animation: entra 0.35s ease-out;
 }
 
+/*
+  Righe di loghi che scorrono all'infinito. La pista contiene due copie dello
+  stesso gruppo e trasla di metà della propria larghezza: a fine corsa la
+  seconda copia sta dove stava la prima, quindi il ritorno non si vede.
+  La durata la scrive il componente, calcolata sulla larghezza.
+*/
+@keyframes scorri-sx {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scorri-dx {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-scorri-sx {
+  animation: scorri-sx linear infinite;
+}
+
+.animate-scorri-dx {
+  animation: scorri-dx linear infinite;
+}
+
 /* Chi ha chiesto meno animazioni non deve subire movimenti decorativi. */
 @media (prefers-reduced-motion: reduce) {
-  .animate-entra {
+  .animate-entra,
+  .animate-scorri-sx,
+  .animate-scorri-dx {
     animation: none;
   }
 }
