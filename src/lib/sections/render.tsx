@@ -148,7 +148,7 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
 
   return (
     <section
-      className={`grid gap-[10px] xl:gap-[20px] ${f.doppio ? "grid-cols-2" : ""}`}
+      className={`grid gap-[20px] ${f.doppio ? "grid-cols-2" : ""}`}
     >
       {celle.map((url, i) => (
         <div

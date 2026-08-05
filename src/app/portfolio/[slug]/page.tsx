@@ -11,6 +11,10 @@ type Sezione = {
   content: SectionContent;
 };
 
+/* Blocchi che sono immagini a tutti gli effetti: fra due di questi lo stacco
+   è quello della griglia, non quello fra sezioni. */
+const IMMAGINI = new Set(["immagini", "media"]);
+
 export async function generateMetadata({
   params,
 }: {
@@ -49,7 +53,15 @@ export default async function CaseStudyPage({
     .eq("project_id", progetto.id)
     .eq("visible", true)
     .order("position");
-  const sezioni = (data as Sezione[] | null) ?? [];
+  /*
+    Tipo non (ancora) registrato: si scarta invece di rompere la pagina.
+    Capita se una sezione resta in archivio dopo che il suo tipo è stato
+    rinominato o rimosso. Si scarta qui e non nel map perché lo stacco fra i
+    blocchi guarda quello prima: un buco in mezzo lo falserebbe.
+  */
+  const sezioni = ((data as Sezione[] | null) ?? []).filter((s) =>
+    getRenderer(s.kind),
+  );
 
   /*
     Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
@@ -97,16 +109,24 @@ export default async function CaseStudyPage({
           Questo case study non ha ancora contenuti.
         </p>
       ) : (
-        /* 60px fra intestazione e primo blocco, ~95px fra i blocchi */
-        <div className="mt-[60px] flex flex-col gap-[95px]">
-          {sezioni.map((s) => {
-            const Render = getRenderer(s.kind);
-            // Tipo non (ancora) registrato: si salta invece di rompere la
-            // pagina. Capita se una sezione resta in archivio dopo che il suo
-            // tipo è stato rinominato o rimosso.
-            if (!Render) return null;
+        /* 60px fra intestazione e primo blocco */
+        <div className="mt-[60px]">
+          {sezioni.map((s, i) => {
+            const Render = getRenderer(s.kind)!;
+            /*
+              ~95px fra un blocco e l'altro, ma due blocchi di immagini di
+              fila stanno a 20px come le righe e le colonne dentro il blocco:
+              così la sequenza si legge come una griglia sola invece che come
+              sezioni staccate.
+            */
+            const attaccato = IMMAGINI.has(s.kind) && IMMAGINI.has(sezioni[i - 1]?.kind);
             return (
-              <Render key={s.id} content={s.content} project={progetto} />
+              <div
+                key={s.id}
+                className={i === 0 ? "" : attaccato ? "mt-[20px]" : "mt-[95px]"}
+              >
+                <Render content={s.content} project={progetto} />
+              </div>
             );
           })}
         </div>
