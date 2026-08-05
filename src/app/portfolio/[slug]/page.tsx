@@ -38,7 +38,7 @@ export default async function CaseStudyPage({
   // qui basta il notFound() quando la query non restituisce nulla.
   const { data: progetto } = await supabase
     .from("projects")
-    .select("id, slug, title, client, year, industry, services, summary")
+    .select("id, slug, title, client, year, industry, services, summary, category")
     .eq("slug", slug)
     .maybeSingle();
   if (!progetto) notFound();
@@ -52,15 +52,17 @@ export default async function CaseStudyPage({
   const sezioni = (data as Sezione[] | null) ?? [];
 
   /*
-    Prossimo case study: si gira in tondo, così l'ultimo progetto riporta al
-    primo invece di ritrovarsi senza uscita. `published` è esplicito perché a
-    un super admin le RLS lascerebbero vedere anche le bozze, e il link è
-    rivolto ai lettori.
+    Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
+    di ritrovarsi senza uscita. Resta dentro la stessa categoria, altrimenti da
+    un portfolio si finirebbe su un case study (e viceversa) senza preavviso.
+    `published` è esplicito perché a un super admin le RLS lascerebbero vedere
+    anche le bozze, e il link è rivolto ai lettori.
   */
   const { data: elenco } = await supabase
     .from("projects")
     .select("slug, title")
     .eq("published", true)
+    .eq("category", progetto.category)
     .order("position");
   const tutti = elenco ?? [];
   const corrente = tutti.findIndex((p) => p.slug === slug);
@@ -120,7 +122,8 @@ export default async function CaseStudyPage({
             href={`/portfolio/${prossimo.slug}`}
             className="text-right"
           >
-            Guarda il prossimo Case Study →
+            Guarda il prossimo{" "}
+            {progetto.category === "portfolio" ? "progetto" : "Case Study"} →
           </Link>
         )}
       </nav>

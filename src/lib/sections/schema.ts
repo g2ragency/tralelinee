@@ -191,6 +191,34 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     ],
   },
 
+  immagini: {
+    label: "Immagini",
+    hint: "Un formato per blocco. Più blocchi, spostabili con le frecce, compongono la sequenza della pagina.",
+    fields: [
+      {
+        name: "formato",
+        label: "Formato",
+        type: "select",
+        /*
+          Misure del Figma su base 1440: larghezza utile 1360 e 20px di gap,
+          quindi i formati affiancati sono larghi (1360 − 20) / 2 = 670.
+        */
+        options: [
+          { value: "16-9", label: "Piena larghezza 16:9 — 1360×765" },
+          { value: "fascia", label: "Fascia orizzontale — 1360×300" },
+          { value: "quadrate", label: "Due affiancate quadrate — 670×670" },
+          { value: "verticali", label: "Due affiancate verticali — 670×820" },
+        ],
+      },
+      {
+        name: "immagini",
+        label: "Immagini",
+        type: "images",
+        hint: "I formati affiancati vanno a due per riga: con quattro immagini si ottengono due righe. L'ordine è quello dell'elenco.",
+      },
+    ],
+  },
+
   media: {
     label: "Media",
     hint: "Immagine o video a piena larghezza, angoli 30px, proporzione 16:9.",

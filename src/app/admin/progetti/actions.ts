@@ -86,6 +86,7 @@ export async function updateProject(formData: FormData) {
       title,
       slug,
       category,
+      cover_path: String(formData.get("cover_path") ?? "").trim() || null,
       client: String(formData.get("client") ?? "").trim() || null,
       year: String(formData.get("year") ?? "").trim() || null,
       industry: String(formData.get("industry") ?? "").trim() || null,
@@ -107,18 +108,6 @@ export async function setPublished(formData: FormData) {
   await supabase.from("projects").update({ published }).eq("id", id);
 
   revalidatePath("/admin/progetti");
-  revalidatePath(`/admin/progetti/${id}`);
-  revalidatePath("/portfolio");
-}
-
-export async function setCover(formData: FormData) {
-  await assertAdmin();
-  const id = String(formData.get("id"));
-  const path = String(formData.get("cover_path") ?? "").trim() || null;
-
-  const supabase = await createClient();
-  await supabase.from("projects").update({ cover_path: path }).eq("id", id);
-
   revalidatePath(`/admin/progetti/${id}`);
   revalidatePath("/portfolio");
 }

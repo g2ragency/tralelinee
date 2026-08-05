@@ -4,6 +4,7 @@ import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { sectionOptions, getSchema } from "@/lib/sections/schema";
 import { SectionForm } from "@/components/admin/SectionForm";
+import { FileUpload } from "@/components/admin/FileUpload";
 import {
   updateProject,
   setPublished,
@@ -132,6 +133,14 @@ export default async function BuilderPage({
               <option value="portfolio">Portfolio</option>
             </select>
           </label>
+          {/* La copertina è l'immagine della card nell'elenco portfolio: non
+              è una sezione della pagina, quindi sta qui coi dati. */}
+          <FileUpload
+            name="cover_path"
+            projectId={progetto.id}
+            defaultPath={progetto.cover_path ?? ""}
+            label="Copertina (card nell'elenco, proporzione 4:3)"
+          />
           <label className="flex flex-col gap-2">
             <span className="text-[16px] text-grey">Cliente</span>
             <input
@@ -194,7 +203,7 @@ export default async function BuilderPage({
       {/* Sezioni -------------------------------------------------------- */}
       <section className="mt-20">
         <h2 className="text-[30px] tracking-[-1.2px]">
-          Sezioni del case study{" "}
+          Sezioni della pagina{" "}
           <span className="text-grey">({sezioni.length})</span>
         </h2>
 

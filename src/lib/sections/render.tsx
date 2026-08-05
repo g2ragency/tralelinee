@@ -111,6 +111,63 @@ async function MediaRender({ content }: { content: SectionContent }) {
 }
 
 /*
+  Formati del blocco immagini. Le proporzioni sono quelle del Figma su base
+  1440: larghezza utile 1360 e 20px di gap, quindi gli affiancati sono 670.
+
+  Le classi stanno scritte per intero perché Tailwind legge il sorgente: una
+  costruita a pezzi (`aspect-[${x}]`) non finirebbe mai nel CSS.
+*/
+const FORMATI: Record<string, { doppio: boolean; aspetto: string }> = {
+  "16-9": { doppio: false, aspetto: "aspect-video" },
+  fascia: { doppio: false, aspetto: "aspect-[1360/300]" },
+  quadrate: { doppio: true, aspetto: "aspect-square" },
+  verticali: { doppio: true, aspetto: "aspect-[670/820]" },
+};
+
+/*
+  Immagini — un formato per blocco, tante immagini quante se ne caricano.
+
+  Il formato decide proporzione e numero di colonne, non quante immagini
+  accettare: due formati «affiancati» con quattro immagini danno due righe,
+  senza bisogno di un tipo di sezione per ogni combinazione.
+*/
+async function ImmaginiRender({ content }: { content: SectionContent }) {
+  const f = FORMATI[s(content.formato)] ?? FORMATI["16-9"];
+  const paths = Array.isArray(content.immagini)
+    ? (content.immagini as unknown[]).filter(
+        (p): p is string => typeof p === "string",
+      )
+    : [];
+  const urls = (await signedUrls(paths)).filter((u): u is string => !!u);
+
+  // Senza immagini restano i riquadri vuoti, come nel blocco Media: si vede
+  // il formato scelto mentre si monta la pagina.
+  const celle: (string | null)[] = urls.length
+    ? urls
+    : Array(f.doppio ? 2 : 1).fill(null);
+
+  return (
+    <section
+      className={`grid gap-[10px] xl:gap-[20px] ${f.doppio ? "grid-cols-2" : ""}`}
+    >
+      {celle.map((url, i) => (
+        <div
+          key={i}
+          className={`w-full overflow-hidden rounded-[30px] bg-box ${f.aspetto}`}
+        >
+          {url && (
+            /* eslint-disable-next-line @next/next/no-img-element --
+               URL firmato a scadenza: next/image lo terrebbe in cache oltre
+               la validità. */
+            <img src={url} alt="" className="h-full w-full object-cover" />
+          )}
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/*
   Intro — due colonne: scheda dati (dal progetto) e paragrafo.
   Figma: etichette e valori 18px Medium, paragrafo 30px Regular,
   entrambi interlinea 120% e spaziatura -4%.
@@ -144,7 +201,9 @@ function IntroRender({
         ))}
       </dl>
 
-      <div className="xl:ml-auto xl:max-w-[693px]">
+      {/* Senza stacco i paragrafi si leggevano come uno solo: il ritorno a
+          capo da solo non basta a farli vedere separati. */}
+      <div className="xl:ml-auto xl:max-w-[693px] [&_p]:mt-[1.2em] [&_p:first-child]:mt-0">
         {paragrafi.map((p, i) => (
           <p
             key={i}
@@ -265,6 +324,7 @@ export const RENDERERS: Record<string, SectionRenderer> = {
   intro: IntroRender,
   voci: VociRender,
   carosello: CaroselloRender,
+  immagini: ImmaginiRender,
   griglia: GrigliaRender,
   social: SocialRender,
   loghi: LoghiRender,
