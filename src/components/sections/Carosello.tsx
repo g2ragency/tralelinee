@@ -75,7 +75,9 @@ export function Carosello({ urls }: { urls: string[] }) {
       {urls.map((url, i) => (
         <figure
           key={i}
-          className="aspect-[596/760] w-[clamp(260px,calc((100%-18px)/1.15),680px)] shrink-0 snap-start overflow-hidden rounded-[30px] bg-grey/15 xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)]"
+          /* Fondo dei riquadri = Nero2, il colore del profilo per le
+             superfici, non un grigio trasparente qualsiasi. */
+          className="aspect-[596/760] w-[clamp(260px,calc((100%-18px)/1.15),680px)] shrink-0 snap-start overflow-hidden rounded-[30px] bg-box xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo cacherebbe oltre la validità. */}

@@ -55,7 +55,8 @@ async function MediaRender({ content }: { content: SectionContent }) {
   const tipo = s(content.tipo) || "immagine";
   const alt = s(content.alt);
   const cornice =
-    "relative w-full overflow-hidden rounded-[30px] bg-grey/15 aspect-video";
+    /* Nero2 quando non c'è ancora un'immagine, come i riquadri del carosello */
+    "relative w-full overflow-hidden rounded-[30px] bg-box aspect-video";
 
   if (tipo === "video_embed") {
     const src = embedUrl(s(content.embed));

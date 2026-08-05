@@ -55,7 +55,11 @@ function Riga({ urls, verso }: { urls: string[]; verso: "sinistra" | "destra" })
                 key={i}
                 src={url}
                 alt=""
-                className="h-[22px] w-auto shrink-0 object-contain xl:h-[30px]"
+                /* Tetto, non altezza fissa: ogni logo resta della misura con
+                   cui è stato preparato, e solo quelli troppo alti vengono
+                   ricondotti. Così il bilanciamento fra i marchi lo decide
+                   chi carica i file. */
+                className="max-h-[32px] w-auto shrink-0 object-contain xl:max-h-[44px]"
               />
             ))}
           </div>

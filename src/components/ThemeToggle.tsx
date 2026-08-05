@@ -14,7 +14,10 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      className="fixed bottom-6 right-6 z-30 hidden border border-current px-5 py-2 text-[16px] font-bold transition-colors duration-300 xl:block"
+      /* Lo sfondo non è decorativo: senza, il pulsante è trasparente e il
+         logo gigante del footer gli passa dietro restando visibile dentro la
+         cornice. Sta già sopra a tutto, era il vuoto a ingannare. */
+      className="fixed bottom-6 right-6 z-30 hidden border border-current bg-background px-5 py-2 text-[16px] font-bold transition-colors duration-300 xl:block"
       aria-label="Cambia tema"
     >
       {theme === "dark" ? "Light" : "Dark"}
