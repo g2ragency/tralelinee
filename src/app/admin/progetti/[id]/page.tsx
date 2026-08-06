@@ -133,13 +133,13 @@ export default async function BuilderPage({
               <option value="portfolio">Portfolio</option>
             </select>
           </label>
-          {/* La copertina è l'immagine della card nell'elenco portfolio: non
-              è una sezione della pagina, quindi sta qui coi dati. */}
+          {/* La copertina non è una sezione della pagina, quindi sta qui coi
+              dati: serve in due posti e si carica una volta sola. */}
           <FileUpload
             name="cover_path"
             projectId={progetto.id}
             defaultPath={progetto.cover_path ?? ""}
-            label="Copertina (card nell'elenco, proporzione 4:3)"
+            label="Copertina — apre la pagina del progetto ed è la card nell'elenco"
           />
           <label className="flex flex-col gap-2">
             <span className="text-[16px] text-grey">Cliente</span>

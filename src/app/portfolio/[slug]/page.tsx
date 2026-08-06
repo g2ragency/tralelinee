@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { signedUrl } from "@/lib/media";
 import { getRenderer } from "@/lib/sections/render";
 import type { SectionContent } from "@/lib/sections/schema";
 
@@ -15,13 +16,25 @@ type Sezione = {
    è quello della griglia, non quello fra sezioni. */
 const IMMAGINI = new Set(["immagini", "media"]);
 
+/*
+  Il titolo della scheda del browser è il TITOLO del progetto, non lo slug.
+  Lo slug è un indirizzo, lo sceglie chi compila e può essere qualunque cosa:
+  vederlo scritto «officina-lambro» in cima alla finestra è un dettaglio
+  interno che è finito sotto gli occhi del pubblico.
+*/
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  return { title: `${slug} — Tra le linee` };
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("projects")
+    .select("title")
+    .eq("slug", slug)
+    .maybeSingle();
+  return { title: `${data?.title ?? "Progetto"} — Tra le linee` };
 }
 
 export default async function CaseStudyPage({
@@ -42,7 +55,9 @@ export default async function CaseStudyPage({
   // qui basta il notFound() quando la query non restituisce nulla.
   const { data: progetto } = await supabase
     .from("projects")
-    .select("id, slug, title, client, year, industry, services, summary, category")
+    .select(
+      "id, slug, title, client, year, industry, services, summary, category, cover_path",
+    )
     .eq("slug", slug)
     .maybeSingle();
   if (!progetto) notFound();
@@ -62,6 +77,8 @@ export default async function CaseStudyPage({
   const sezioni = ((data as Sezione[] | null) ?? []).filter((s) =>
     getRenderer(s.kind),
   );
+
+  const copertina = await signedUrl(progetto.cover_path);
 
   /*
     Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
@@ -104,13 +121,34 @@ export default async function CaseStudyPage({
         )}
       </header>
 
+      {/*
+        La copertina apre la pagina, oltre a essere la card dell'elenco: chi
+        compila la carica una volta e la ritrova in tutti e due i posti. Prima
+        stava solo nell'elenco, e per avere l'immagine in cima al progetto
+        bisognava ricaricare lo stesso file dentro un blocco Media.
+        Stesse misure del blocco Media: 16:9, angoli 30px.
+      */}
+      {copertina && (
+        <figure className="mt-[60px] aspect-video w-full overflow-hidden rounded-[30px] bg-box">
+          {/* eslint-disable-next-line @next/next/no-img-element --
+              URL firmato a scadenza: next/image lo terrebbe in cache oltre la
+              validità. */}
+          <img
+            src={copertina}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </figure>
+      )}
+
       {sezioni.length === 0 ? (
         <p className="mt-[60px] text-[18px] tracking-[-0.72px] text-grey">
           Questo case study non ha ancora contenuti.
         </p>
       ) : (
-        /* 60px fra intestazione e primo blocco */
-        <div className="mt-[60px]">
+        /* 60px dall'intestazione, o dalla copertina se c'è: fra un'immagine
+           e il blocco che la segue vale lo stesso stacco delle sezioni. */
+        <div className={copertina ? "mt-[95px]" : "mt-[60px]"}>
           {sezioni.map((s, i) => {
             const Render = getRenderer(s.kind)!;
             /*

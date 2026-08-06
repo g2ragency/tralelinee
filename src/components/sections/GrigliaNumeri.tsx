@@ -8,16 +8,16 @@ import type { Slide } from "@/lib/sections/griglia";
 const DURATA = 4500;
 
 /* Ritardo fra un carattere e il successivo, da sinistra a destra. */
-const PASSO_CARATTERE = 45;
+const PASSO_CARATTERE = 80;
 /* Le parole della didascalia partono più distanziate: sono meno e più larghe. */
-const PASSO_PAROLA = 70;
+const PASSO_PAROLA = 115;
 /* Durata del singolo giro: il vecchio esce in alto mentre il nuovo sale. */
-const GIRO = 550;
+const GIRO = 780;
 /*
   La didascalia parte quando il numero sta per finire, non dopo: si accavallano
   di poco e il riquadro sembra un movimento solo invece di due.
 */
-const ANTICIPO = 150;
+const ANTICIPO = 220;
 
 /*
   Nel Figma i simboli accanto alla cifra sono in corpo ridotto: «+700k» ha il
