@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import { ReactLenis, type LenisRef } from "lenis/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,6 +15,45 @@ gsap.registerPlugin(ScrollTrigger);
 */
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const lenisRef = useRef<LenisRef>(null);
+  const pathname = usePathname();
+  /* Indietro/Avanti: quella posizione va ripristinata, non azzerata. */
+  const daCronologia = useRef(false);
+
+  useEffect(() => {
+    const segna = () => {
+      daCronologia.current = true;
+    };
+    window.addEventListener("popstate", segna);
+    return () => window.removeEventListener("popstate", segna);
+  }, []);
+
+  /*
+    Ritorno in cima al cambio pagina.
+
+    Lenis non legge la posizione dal browser: ne tiene una sua e la riapplica
+    a ogni fotogramma. Quando Next apre una pagina nuova e riporta il browser
+    in cima, Lenis al giro dopo rimette il valore di prima, e la pagina nuova
+    si apre nel punto in cui si era lasciata quella vecchia. Capita solo
+    quando il suo fotogramma cade dopo l'azzeramento di Next — ed è per
+    questo che si presenta a intermittenza e non a ogni passaggio.
+
+    Non basta scrivere sul browser: va detto a LENIS, che è quello che
+    comanda. Senza animazione perché non è un movimento da mostrare, e
+    forzato perché deve valere anche mentre è fermo.
+
+    Due eccezioni, dove restare in cima sarebbe sbagliato:
+    — c'è un'ancora nell'indirizzo (i «/#metodo» del menu): lì si deve
+      scendere alla sezione;
+    — si è arrivati con Indietro o Avanti: quella posizione va ripristinata.
+  */
+  useEffect(() => {
+    if (daCronologia.current) {
+      daCronologia.current = false;
+      return;
+    }
+    if (window.location.hash) return;
+    lenisRef.current?.lenis?.scrollTo(0, { immediate: true, force: true });
+  }, [pathname]);
 
   useEffect(() => {
     const update = (time: number) => {
