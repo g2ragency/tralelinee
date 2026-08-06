@@ -105,11 +105,73 @@ html {
   animation: scorri-dx linear infinite;
 }
 
+/*
+  Riquadri social: il contenuto ruota verso l'alto un pezzo per volta.
+
+  Il vecchio esce dal bordo alto mentre il nuovo sale da sotto; il ritardo
+  crescente, che scrive il componente, fa attraversare il movimento da
+  sinistra a destra invece di farlo scattare tutto insieme.
+
+  `both` per il riempimento: prima che scatti il proprio ritardo il pezzo
+  nuovo deve stare già fuori (altrimenti lampeggia al posto giusto e poi
+  scende), e il vecchio deve restare fuori dopo, invece di ricomparire.
+*/
+@keyframes sale-dentro {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sale-fuori {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+.animate-sale-dentro {
+  animation: sale-dentro cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-sale-fuori {
+  animation: sale-fuori cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+  La linetta che si riempie: è lei a decidere quando si cambia contenuto, e
+  la durata è la stessa del contenuto a schermo. Lineare di proposito — è un
+  tempo che passa, non un movimento da ammorbidire.
+*/
+@keyframes riempi {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.animate-riempi {
+  animation: riempi linear both;
+}
+
 /* Chi ha chiesto meno animazioni non deve subire movimenti decorativi. */
 @media (prefers-reduced-motion: reduce) {
   .animate-entra,
   .animate-scorri-sx,
-  .animate-scorri-dx {
+  .animate-scorri-dx,
+  .animate-sale-dentro,
+  .animate-sale-fuori,
+  .animate-riempi {
     animation: none;
   }
 }

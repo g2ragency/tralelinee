@@ -95,6 +95,7 @@ export function SectionForm({
               groupBy={f.groupBy}
               groupLabel={f.groupLabel}
               groupHint={f.groupHint}
+              groupFields={f.groupFields}
             />
           );
         }

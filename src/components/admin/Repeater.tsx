@@ -117,6 +117,7 @@ export function Repeater({
   groupBy,
   groupLabel = "Riquadro",
   groupHint,
+  groupFields,
 }: {
   name: string;
   label: string;
@@ -127,6 +128,7 @@ export function Repeater({
   groupBy?: string;
   groupLabel?: string;
   groupHint?: string;
+  groupFields?: FieldSpec[];
 }) {
   /*
     Chiave vuota = elemento per conto suo: gliene si assegna una all'ingresso,
@@ -145,7 +147,12 @@ export function Repeater({
     });
   });
 
-  const visibili = groupBy ? fields.filter((f) => f.name !== groupBy) : fields;
+  /* Fuori dai singoli contenuti: la chiave del gruppo (la assegna groupBy) e i
+     campi che descrivono il riquadro, che stanno nella sua intestazione. */
+  const diGruppo = new Set([groupBy, ...(groupFields ?? []).map((f) => f.name)]);
+  const visibili = groupBy
+    ? fields.filter((f) => !diGruppo.has(f.name))
+    : fields;
 
   const nuovo = (): Item =>
     Object.fromEntries(
@@ -292,12 +299,28 @@ export function Repeater({
     return String(n);
   };
 
+  /*
+    Un campo del riquadro si compila una volta ma nei dati sta su ogni
+    contenuto: qui lo si scrive su tutti quelli del gruppo, così l'elenco
+    resta piatto e chi legge lo trova sul primo.
+  */
+  const aggiornaGruppo = (chiave: string, campo: string, valore: string) =>
+    setItems((prev) =>
+      prev.map((it) =>
+        it[groupBy] === chiave ? { ...it, [campo]: valore } : it,
+      ),
+    );
+
   const aggiungiAlGruppo = (gi: number) => {
     const g = gruppi[gi];
     const dopo = g.indici[g.indici.length - 1] + 1;
+    // Il contenuto nuovo eredita i campi del riquadro: sono suoi anche loro.
+    const daRiquadro = Object.fromEntries(
+      (groupFields ?? []).map((f) => [f.name, items[g.indici[0]][f.name] ?? ""]),
+    );
     setItems((prev) => [
       ...prev.slice(0, dopo),
-      { ...nuovo(), [groupBy]: g.chiave },
+      { ...nuovo(), ...daRiquadro, [groupBy]: g.chiave },
       ...prev.slice(dopo),
     ]);
   };
@@ -324,6 +347,22 @@ export function Repeater({
               setItems((prev) =>
                 prev.filter((it) => it[groupBy] !== g.chiave),
               ),
+          )}
+
+          {/* Campi del riquadro: una volta sola, in cima, prima dei contenuti
+              che si alternano. Nei social è il nome del canale, che resta
+              fermo mentre numero e didascalia ruotano. */}
+          {groupFields && groupFields.length > 0 && (
+            <Campi
+              fields={groupFields}
+              item={items[g.indici[0]]}
+              indice={g.indici[0]}
+              nome={name}
+              projectId={projectId}
+              aggiorna={(_, campo, valore) =>
+                aggiornaGruppo(g.chiave, campo, valore)
+              }
+            />
           )}
 
           {g.indici.map((i, pos) => (

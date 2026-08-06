@@ -45,6 +45,13 @@ export type FieldSpec = {
       groupBy?: string;
       groupLabel?: string;
       groupHint?: string;
+      /*
+        Campi che descrivono il RIQUADRO e non il singolo contenuto: si
+        compilano una volta sola in cima al gruppo e il valore viene scritto
+        su tutti i suoi elementi. I dati restano piatti — chi legge prende il
+        valore dal primo contenuto del riquadro — così `raggruppa` non cambia.
+      */
+      groupFields?: FieldSpec[];
     }
 );
 
@@ -67,7 +74,6 @@ const GRUPPO_HINT =
 const CAMPI_BOX: FieldSpec[] = [
   /* Nascosto dal form: il riquadro di appartenenza lo assegna `groupBy`. */
   { name: "box", label: "Riquadro", type: "text" },
-  { name: "etichetta", label: "Testo sopra il numero", type: "text" },
   {
     name: "numero",
     label: "Numero",
@@ -75,6 +81,15 @@ const CAMPI_BOX: FieldSpec[] = [
     hint: "I simboli + − % sono resi in corpo più piccolo, come nel design.",
   },
   { name: "didascalia", label: "Testo sotto il numero", type: "text" },
+];
+
+/*
+  Il testo in cima descrive il riquadro, non il singolo contenuto: nei social
+  è il nome del canale, e resta fermo mentre numero e didascalia si alternano.
+  Per questo si scrive una volta sola.
+*/
+const CAMPI_RIQUADRO: FieldSpec[] = [
+  { name: "etichetta", label: "Testo sopra il numero", type: "text" },
 ];
 
 export const SCHEMAS: Record<string, SectionSchema> = {
@@ -141,6 +156,7 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
+        groupFields: CAMPI_RIQUADRO,
         groupBy: "box",
         groupLabel: "Riquadro",
         groupHint: GRUPPO_HINT,
@@ -164,6 +180,7 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         type: "repeater",
         itemLabel: "Contenuto",
         fields: CAMPI_BOX,
+        groupFields: CAMPI_RIQUADRO,
         groupBy: "box",
         groupLabel: "Riquadro",
         groupHint: GRUPPO_HINT,
