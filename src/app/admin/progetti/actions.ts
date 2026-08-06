@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isSuperAdmin } from "@/lib/auth";
 import { sanitizeBySchema } from "@/lib/sections/sanitize";
-import { arrayFields, getSchema } from "@/lib/sections/schema";
+import { contenutoDaForm } from "@/lib/sections/contenuto";
 
 /*
   Azioni del builder. I controlli qui servono all'interfaccia: la barriera
@@ -160,36 +160,26 @@ export async function updateSection(formData: FormData) {
   const kind = String(formData.get("kind"));
   if (!id) return;
 
-  /*
-    Si prendono SOLO i campi dichiarati nello schema, non tutto il form:
-    Next inietta campi propri (es. $ACTION_ID_…) che altrimenti finirebbero
-    nel jsonb, e una lista chiusa evita di archiviare chiavi arbitrarie.
-  */
-  const ammessi = getSchema(kind)?.fields.map((f) => f.name) ?? [];
-  const content: Record<string, unknown> = {};
-  for (const nome of ammessi) {
-    const v = formData.get(nome);
-    if (v !== null) content[nome] = typeof v === "string" ? v : String(v);
-  }
+  const supabase = await createClient();
 
-  // Elenchi (immagini, voci ripetibili) arrivano come JSON: riportarli ad
-  // array, altrimenti il renderer riceverebbe una stringa.
-  for (const campo of arrayFields(kind)) {
-    if (typeof content[campo] === "string") {
-      try {
-        const parsed = JSON.parse(content[campo] as string);
-        content[campo] = Array.isArray(parsed) ? parsed : [];
-      } catch {
-        content[campo] = [];
-      }
-    }
-  }
+  /*
+    Serve il contenuto già archiviato: i campi con `showIf` non sono a schermo
+    quando la condizione non vale, quindi non arrivano nel form, e vanno
+    conservati invece che cancellati. Il perché in dettaglio sta in
+    `contenutoDaForm`.
+  */
+  const { data: attuale } = await supabase
+    .from("project_sections")
+    .select("content")
+    .eq("id", id)
+    .maybeSingle();
+
+  const content = contenutoDaForm(kind, formData, attuale?.content);
 
   // Unico punto in cui l'HTML entra in archivio: qui va sanificato,
   // compresi i campi rich text annidati nei repeater.
   const pulito = sanitizeBySchema(kind, content);
 
-  const supabase = await createClient();
   await supabase
     .from("project_sections")
     .update({ content: pulito })

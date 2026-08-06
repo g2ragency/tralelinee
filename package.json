@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types src/lib/sanitize.test.ts && node --experimental-strip-types src/lib/sections/griglia.test.ts"
+    "test": "node --experimental-strip-types src/lib/sanitize.test.ts && node --experimental-strip-types src/lib/sections/griglia.test.ts && node --experimental-strip-types src/lib/sections/contenuto.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.3",
