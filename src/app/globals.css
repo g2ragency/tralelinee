@@ -115,25 +115,27 @@ html {
   `both` per il riempimento: prima che scatti il proprio ritardo il pezzo
   nuovo deve stare già fuori (altrimenti lampeggia al posto giusto e poi
   scende), e il vecchio deve restare fuori dopo, invece di ricomparire.
+
+  Niente trasparenza: i pezzi non sfumano, escono e basta — a sparire ci
+  pensa il bordo del contenitore. Vecchio e nuovo si spostano insieme, della
+  stessa quantità e nello stesso verso, quindi restano sempre esatti a
+  un'altezza di distanza: non si sovrappongono mai, girano come un rullo.
+  Con la trasparenza il passaggio era morbido ma il taglio non si leggeva.
 */
 @keyframes sale-dentro {
   from {
-    opacity: 0;
     transform: translateY(100%);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes sale-fuori {
   from {
-    opacity: 1;
     transform: translateY(0);
   }
   to {
-    opacity: 0;
     transform: translateY(-100%);
   }
 }

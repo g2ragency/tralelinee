@@ -12,12 +12,12 @@ const PASSO_CARATTERE = 80;
 /* Le parole della didascalia partono più distanziate: sono meno e più larghe. */
 const PASSO_PAROLA = 115;
 /* Durata del singolo giro: il vecchio esce in alto mentre il nuovo sale. */
-const GIRO = 780;
+const GIRO = 860;
 /*
   La didascalia parte quando il numero sta per finire, non dopo: si accavallano
   di poco e il riquadro sembra un movimento solo invece di due.
 */
-const ANTICIPO = 220;
+const ANTICIPO = 430;
 
 /*
   Nel Figma i simboli accanto alla cifra sono in corpo ridotto: «+700k» ha il
@@ -294,7 +294,10 @@ function Box({
           pezzi={numero}
           precedenti={numeroPrima}
           passo={PASSO_CARATTERE}
-          coda="pb-[0.06em] -mb-[0.06em]"
+          /* Nessuno spazio di grazia sul numero: l'altezza di riga a 1,2
+             contiene gia' la virgola di «41,6%», e ogni pixel lasciato qui e'
+             un pixel di cifra che sbanda sulla didascalia mentre sale. */
+          coda=""
           className="text-[56px] font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px]"
           classePezzo={(p) =>
             p.simbolo
