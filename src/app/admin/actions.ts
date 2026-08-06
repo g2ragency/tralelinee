@@ -27,6 +27,40 @@ export async function setApproved(formData: FormData) {
   revalidatePath("/admin/accessi");
 }
 
+/*
+  Nomina (o revoca) un altro super admin.
+
+  Le RLS consentono l'aggiornamento di `profiles` al solo super admin, quindi
+  un utente normale non può auto-nominarsi nemmeno chiamando l'azione a mano:
+  il database rifiuterebbe la scrittura. Qui il controllo serve a fermarlo
+  prima, con un errore leggibile.
+
+  Chi viene nominato è anche approvato: un super admin non approvato passerebbe
+  da /admin ma verrebbe rimbalzato fuori da /portfolio, cioè un accesso a metà
+  che non vuole nessuno.
+*/
+export async function setSuperAdmin(formData: FormData) {
+  await assertAdmin();
+  const id = String(formData.get("id"));
+  const promuovi = formData.get("super_admin") === "true";
+
+  // Stesso principio della revoca di approvazione: non ci si toglie da soli
+  // l'unico ruolo che permette di rientrare.
+  const me = await getProfile();
+  if (me?.id === id) return;
+
+  const supabase = await createClient();
+  await supabase
+    .from("profiles")
+    .update(
+      promuovi
+        ? { role: "super_admin", approved: true }
+        : { role: "user" },
+    )
+    .eq("id", id);
+  revalidatePath("/admin/accessi");
+}
+
 export async function addToWhitelist(formData: FormData) {
   await assertAdmin();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();

@@ -4,9 +4,11 @@ import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import {
   setApproved,
+  setSuperAdmin,
   addToWhitelist,
   removeFromWhitelist,
 } from "@/app/admin/actions";
+import { BottoneConferma } from "@/components/admin/BottoneConferma";
 
 export const metadata = { title: "Accessi — Tra le linee" };
 
@@ -100,17 +102,41 @@ export default async function AccessiPage() {
                   <span className="ml-3 text-[14px] text-grey">super admin</span>
                 )}
               </span>
+              {/* Su sé stessi niente comandi: né togliersi l'accesso né
+                  togliersi il ruolo, altrimenti ci si chiude fuori. */}
               {u.id !== me.id && (
-                <form action={setApproved}>
-                  <input type="hidden" name="id" value={u.id} />
-                  <input type="hidden" name="approved" value="false" />
-                  <button
-                    type="submit"
-                    className="border border-grey px-4 py-2 text-[16px] text-grey"
-                  >
-                    Revoca
-                  </button>
-                </form>
+                <div className="flex shrink-0 items-center gap-3">
+                  <form action={setSuperAdmin}>
+                    <input type="hidden" name="id" value={u.id} />
+                    <input
+                      type="hidden"
+                      name="super_admin"
+                      value={u.role === "super_admin" ? "false" : "true"}
+                    />
+                    <BottoneConferma
+                      domanda={
+                        u.role === "super_admin"
+                          ? `Togliere a ${u.email} il ruolo di super admin? Manterrà l'accesso al portfolio, ma non potrà più modificare i progetti.`
+                          : `Nominare ${u.email} super admin?\n\nPotrà creare, modificare e ELIMINARE qualsiasi progetto, approvare o revocare utenti e nominare altri super admin.\n\nDaglielo solo se ti fidi come ti fidi di te stesso.`
+                      }
+                      className="border border-grey px-4 py-2 text-[16px] text-grey"
+                    >
+                      {u.role === "super_admin"
+                        ? "Rimuovi super admin"
+                        : "Nomina super admin"}
+                    </BottoneConferma>
+                  </form>
+                  <form action={setApproved}>
+                    <input type="hidden" name="id" value={u.id} />
+                    <input type="hidden" name="approved" value="false" />
+                    <button
+                      type="submit"
+                      className="border border-grey px-4 py-2 text-[16px] text-grey"
+                    >
+                      Revoca
+                    </button>
+                  </form>
+                </div>
               )}
             </li>
           ))}
