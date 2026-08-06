@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# indice locale di tokensave: si rigenera, non si versiona
+.tokensave/
