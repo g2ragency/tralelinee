@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { BottoneInvio } from "@/components/admin/BottoneInvio";
 import { getSchema, type FieldSpec } from "@/lib/sections/schema";
 import { updateSection } from "@/app/admin/progetti/actions";
 import { FileUpload } from "./FileUpload";
@@ -183,12 +184,11 @@ export function SectionForm({
         );
       })}
 
-      <button
-        type="submit"
+      <BottoneInvio
         className="self-start border border-foreground px-5 py-2 text-[16px]"
       >
         Salva sezione
-      </button>
+      </BottoneInvio>
     </form>
   );
 }

@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import { BottoneInvio } from "@/components/admin/BottoneInvio";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -77,12 +78,11 @@ export default async function BuilderPage({
               name="published"
               value={progetto.published ? "false" : "true"}
             />
-            <button
-              type="submit"
+            <BottoneInvio
               className="border border-foreground px-4 py-2 text-[16px]"
             >
               {progetto.published ? "Ritira" : "Pubblica"}
-            </button>
+            </BottoneInvio>
           </form>
           {progetto.published && (
             <Link
@@ -191,12 +191,11 @@ export default async function BuilderPage({
               className="border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
             />
           </label>
-          <button
-            type="submit"
+          <BottoneInvio
             className="self-start border border-foreground px-5 py-2 text-[16px]"
           >
             Salva
-          </button>
+          </BottoneInvio>
         </form>
       </section>
 
@@ -226,12 +225,11 @@ export default async function BuilderPage({
                 </option>
               ))}
             </select>
-            <button
-              type="submit"
+            <BottoneInvio
               className="border border-foreground px-5 py-2 text-[16px]"
             >
               Aggiungi sezione
-            </button>
+            </BottoneInvio>
           </form>
         )}
 
@@ -265,14 +263,13 @@ export default async function BuilderPage({
                         value={progetto.id}
                       />
                       <input type="hidden" name="direction" value="up" />
-                      <button
-                        type="submit"
+                      <BottoneInvio
                         disabled={i === 0}
-                        aria-label="Sposta su"
+                        ariaLabel="Sposta su"
                         className="border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
                       >
                         ↑
-                      </button>
+                      </BottoneInvio>
                     </form>
                     <form action={moveSection}>
                       <input type="hidden" name="id" value={s.id} />
@@ -282,14 +279,13 @@ export default async function BuilderPage({
                         value={progetto.id}
                       />
                       <input type="hidden" name="direction" value="down" />
-                      <button
-                        type="submit"
+                      <BottoneInvio
                         disabled={i === sezioni.length - 1}
-                        aria-label="Sposta giù"
+                        ariaLabel="Sposta giù"
                         className="border border-grey px-3 py-1 text-[16px] text-grey disabled:opacity-30"
                       >
                         ↓
-                      </button>
+                      </BottoneInvio>
                     </form>
                     <form action={setSectionVisible}>
                       <input type="hidden" name="id" value={s.id} />
@@ -303,12 +299,11 @@ export default async function BuilderPage({
                         name="visible"
                         value={s.visible ? "false" : "true"}
                       />
-                      <button
-                        type="submit"
+                      <BottoneInvio
                         className="border border-grey px-3 py-1 text-[16px] text-grey"
                       >
                         {s.visible ? "Nascondi" : "Mostra"}
-                      </button>
+                      </BottoneInvio>
                     </form>
                     <form action={deleteSection}>
                       <input type="hidden" name="id" value={s.id} />
@@ -317,12 +312,12 @@ export default async function BuilderPage({
                         name="project_id"
                         value={progetto.id}
                       />
-                      <button
-                        type="submit"
+                      <BottoneInvio
+                        domanda={`Eliminare la sezione «${schema?.label ?? s.kind}»? Il suo contenuto non è recuperabile.`}
                         className="px-3 py-1 text-[16px] text-grey underline"
                       >
                         Elimina
-                      </button>
+                      </BottoneInvio>
                     </form>
                   </div>
                   </div>
@@ -345,12 +340,12 @@ export default async function BuilderPage({
       <section className="mt-20 border-t border-grey/40 pt-8">
         <form action={deleteProject}>
           <input type="hidden" name="id" value={progetto.id} />
-          <button
-            type="submit"
+          <BottoneInvio
+            domanda={`Eliminare definitivamente «${progetto.title}» e tutte le sue ${sezioni.length} sezioni?\n\nNon si torna indietro: testi e impostazioni vanno persi.`}
             className="text-[16px] text-grey underline"
           >
             Elimina questo progetto e tutte le sue sezioni
-          </button>
+          </BottoneInvio>
         </form>
       </section>
     </main>

@@ -8,7 +8,7 @@ import {
   addToWhitelist,
   removeFromWhitelist,
 } from "@/app/admin/actions";
-import { BottoneConferma } from "@/components/admin/BottoneConferma";
+import { BottoneInvio } from "@/components/admin/BottoneInvio";
 
 export const metadata = { title: "Accessi — Tra le linee" };
 
@@ -73,12 +73,11 @@ export default async function AccessiPage() {
                 <form action={setApproved}>
                   <input type="hidden" name="id" value={u.id} />
                   <input type="hidden" name="approved" value="true" />
-                  <button
-                    type="submit"
+                  <BottoneInvio
                     className="border border-foreground px-4 py-2 text-[16px]"
                   >
                     Approva
-                  </button>
+                  </BottoneInvio>
                 </form>
               </li>
             ))}
@@ -113,7 +112,7 @@ export default async function AccessiPage() {
                       name="super_admin"
                       value={u.role === "super_admin" ? "false" : "true"}
                     />
-                    <BottoneConferma
+                    <BottoneInvio
                       domanda={
                         u.role === "super_admin"
                           ? `Togliere a ${u.email} il ruolo di super admin? Manterrà l'accesso al portfolio, ma non potrà più modificare i progetti.`
@@ -124,17 +123,16 @@ export default async function AccessiPage() {
                       {u.role === "super_admin"
                         ? "Rimuovi super admin"
                         : "Nomina super admin"}
-                    </BottoneConferma>
+                    </BottoneInvio>
                   </form>
                   <form action={setApproved}>
                     <input type="hidden" name="id" value={u.id} />
                     <input type="hidden" name="approved" value="false" />
-                    <button
-                      type="submit"
+                    <BottoneInvio
                       className="border border-grey px-4 py-2 text-[16px] text-grey"
                     >
                       Revoca
-                    </button>
+                    </BottoneInvio>
                   </form>
                 </div>
               )}
@@ -161,12 +159,11 @@ export default async function AccessiPage() {
             placeholder="nome@azienda.it"
             className="flex-1 border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
           />
-          <button
-            type="submit"
+          <BottoneInvio
             className="border border-foreground px-5 py-2 text-[16px]"
           >
             Aggiungi
-          </button>
+          </BottoneInvio>
         </form>
 
         <ul className="mt-6 border-t border-grey/40">
@@ -180,12 +177,11 @@ export default async function AccessiPage() {
               </span>
               <form action={removeFromWhitelist}>
                 <input type="hidden" name="email" value={w.email} />
-                <button
-                  type="submit"
+                <BottoneInvio
                   className="text-[16px] text-grey underline"
                 >
                   Rimuovi
-                </button>
+                </BottoneInvio>
               </form>
             </li>
           ))}

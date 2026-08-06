@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { BottoneInvio } from "@/components/admin/BottoneInvio";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -46,12 +47,11 @@ export default async function ProgettiPage() {
           placeholder="Titolo del nuovo progetto"
           className="flex-1 border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
         />
-        <button
-          type="submit"
+        <BottoneInvio
           className="border border-foreground px-5 py-2 text-[16px]"
         >
           Crea
-        </button>
+        </BottoneInvio>
       </form>
 
       {progetti.length === 0 ? (
@@ -89,12 +89,11 @@ export default async function ProgettiPage() {
                     name="published"
                     value={p.published ? "false" : "true"}
                   />
-                  <button
-                    type="submit"
+                  <BottoneInvio
                     className="border border-grey px-4 py-2 text-[16px] text-grey"
                   >
                     {p.published ? "Ritira" : "Pubblica"}
-                  </button>
+                  </BottoneInvio>
                 </form>
                 <Link
                   href={`/admin/progetti/${p.id}`}
