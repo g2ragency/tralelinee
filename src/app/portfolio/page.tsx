@@ -41,7 +41,7 @@ export default async function PortfolioPage({
   const profile = await getProfile();
   if (!profile) {
     return (
-      <main className="flex min-h-svh items-center px-6 py-32 xl:px-10">
+      <main className="flex min-h-svh items-center px-[10px] py-32 xl:px-10">
         <div className="max-w-[720px]">
           <h1 className="text-[40px] leading-[1.02] tracking-[-1.6px]">
             Profilo non trovato
@@ -65,7 +65,7 @@ export default async function PortfolioPage({
 
   if (!profile.approved) {
     return (
-      <main className="flex min-h-svh items-center px-6 py-32 xl:px-10">
+      <main className="flex min-h-svh items-center px-[10px] py-32 xl:px-10">
         <div className="max-w-[720px]">
           <p className="text-[24px] font-medium leading-[0.933] tracking-[-0.72px] text-label">
             Richiesta ricevuta

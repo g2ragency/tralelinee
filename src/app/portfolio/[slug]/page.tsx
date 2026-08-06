@@ -106,7 +106,7 @@ export default async function CaseStudyPage({
       padding laterale del sito (40px), ~70px sotto l'header — alto 70px su
       desktop e 58px su mobile — e 60px fra intestazione e primo blocco.
     */
-    <main className="min-h-svh px-6 pb-32 pt-[128px] xl:px-10 xl:pt-[140px]">
+    <main className="min-h-svh px-[10px] pb-32 pt-[128px] xl:px-10 xl:pt-[140px]">
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
           blocco, così non vanno ricompilati per ogni case study.
           Figma: 86px e 52px, interlinea 120%, spaziatura -4%. */}
