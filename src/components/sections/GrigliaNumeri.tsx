@@ -17,7 +17,7 @@ const GIRO = 860;
   La didascalia parte quando il numero sta per finire, non dopo: si accavallano
   di poco e il riquadro sembra un movimento solo invece di due.
 */
-const ANTICIPO = 430;
+const ANTICIPO = 620;
 
 /*
   Nel Figma i simboli accanto alla cifra sono in corpo ridotto: «+700k» ha il
@@ -94,20 +94,40 @@ function Rotante({
     ritardoBase: number,
   ) => (
     <span className="whitespace-pre">
-      {lista.map((p, i) => (
-        <span
-          key={i}
-          className={`inline-block ${classePezzo?.(p) ?? ""} ${
-            verso === "entra" ? "animate-sale-dentro" : "animate-sale-fuori"
-          }`}
-          style={{
-            animationDelay: `${ritardoBase + i * passo}ms`,
-            animationDuration: `${GIRO}ms`,
-          }}
-        >
-          {p.ch === " " ? " " : p.ch}
-        </span>
-      ))}
+      {lista.map((p, i) => {
+        const ridotto = classePezzo?.(p) ?? "";
+        return (
+          /*
+            Il corpo ridotto sta DENTRO, non su questo span.
+
+            `translateY(100%)` si misura sulla scatola del pezzo che si muove:
+            col corpo ridotto addosso, il «+» era alto 60px invece dei 125 del
+            contenitore, quindi si spostava di 60 e non usciva mai — restava a
+            metà strada e se ne vedevano due, il vecchio e il nuovo. Tenendo
+            qui il corpo della riga la scatola è alta quanto il taglio e il
+            pezzo lo oltrepassa davvero; il glifo piccolo lo disegna lo span
+            interno, appoggiato alla stessa linea di base di prima.
+          */
+          <span
+            key={i}
+            className={`inline-block ${
+              verso === "entra" ? "animate-sale-dentro" : "animate-sale-fuori"
+            }`}
+            style={{
+              animationDelay: `${ritardoBase + i * passo}ms`,
+              animationDuration: `${GIRO}ms`,
+            }}
+          >
+            {ridotto ? (
+              <span className={ridotto}>{p.ch === " " ? " " : p.ch}</span>
+            ) : p.ch === " " ? (
+              " "
+            ) : (
+              p.ch
+            )}
+          </span>
+        );
+      })}
     </span>
   );
 
@@ -256,12 +276,20 @@ function Box({
                 */}
                 <span
                   key={`${k}-${attivo}`}
+                  /*
+                    Le linette raccontano a che punto siamo: quelle gia' viste
+                    restano piene, quella in corso si riempie, quelle dopo sono
+                    vuote. Tornando alla prima si svuotano tutte e il giro
+                    ricomincia.
+                  */
                   className={`block h-full rounded-full bg-foreground ${
-                    k === attivo && !fermo
-                      ? "origin-left animate-riempi"
-                      : k === attivo
-                        ? "w-full"
-                        : "w-0"
+                    k < attivo
+                      ? "w-full"
+                      : k === attivo && !fermo
+                        ? "origin-left animate-riempi"
+                        : k === attivo
+                          ? "w-full"
+                          : "w-0"
                   }`}
                   style={
                     k === attivo && !fermo
