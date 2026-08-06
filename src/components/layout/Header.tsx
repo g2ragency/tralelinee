@@ -102,6 +102,14 @@ export function Header() {
   const sezione = useSezioneAttiva(inHome);
   const areaAttiva = !inHome && /^\/(portfolio|admin)/.test(pathname);
 
+  /*
+    Le voci del menu puntano a sezioni della home. Da un'altra pagina un
+    «#metodo» da solo cerca quell'ancora nella pagina corrente, dove non
+    esiste, e il clic non porta da nessuna parte: fuori dalla home diventa
+    «/#metodo», cioè vai alla home e poi scendi a quella sezione.
+  */
+  const indirizzo = (href: string) => (inHome ? href : `/${href}`);
+
   // Blocca lo scroll del body quando il menu è aperto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -132,7 +140,10 @@ export function Header() {
         <ul className="flex items-center gap-[30px] text-[18px] font-medium leading-none tracking-[-0.36px]">
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
-              <VoceMenu href={item.href} attiva={sezione === item.href}>
+              <VoceMenu
+                href={indirizzo(item.href)}
+                attiva={sezione === item.href}
+              >
                 {item.label}
               </VoceMenu>
             </li>
@@ -195,7 +206,7 @@ export function Header() {
             {NAV_ITEMS.map((item) => (
               <li key={item.href} className="border-t border-grey/40 last:border-b">
                 <a
-                  href={item.href}
+                  href={indirizzo(item.href)}
                   onClick={() => setMenuOpen(false)}
                   className="block py-2 text-[36px] font-light leading-[61px] tracking-[-1.44px]"
                 >
