@@ -129,6 +129,23 @@ body {
 }
 
 /*
+  Spessore di OGNI sottolineatura: 5% del corpo del testo.
+
+  In `em` e non in pixel, così una voce a 18px e un titolo a 52px restano in
+  proporzione fra loro senza doverlo ricalcolare a mano ogni volta; il valore
+  automatico del browser invece resta quasi uguale al crescere del corpo, e
+  sotto un titolo grande sembra un filo.
+
+  `:where` per tenere la specificità a zero: una singola utility Tailwind
+  (`decoration-*`) può ancora avere l'ultima parola dove serve un'eccezione.
+  La linea disegnata al passaggio del mouse segue la stessa regola, ma in
+  `LineaHover`: non è una sottolineatura, è un elemento.
+*/
+:where(*) {
+  text-decoration-thickness: 0.05em;
+}
+
+/*
   Schede del portfolio: rientrano scalate al cambio di filtro. Il ritardo è a
   gradini invece che per indice perché con tante schede la coda finirebbe per
   entrare troppo dopo; oltre la sesta partono tutte insieme.

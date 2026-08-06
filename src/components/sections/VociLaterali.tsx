@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { LineaHover } from "@/components/LineaHover";
 
 type Voce = { titolo: string; testo: string };
 
@@ -131,9 +132,11 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
           <button
             type="button"
             onClick={() => setEspansa((v) => !v)}
-            className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] underline underline-offset-[6px] xl:text-[30px] xl:tracking-[-1.2px]"
+            /* Sottolineatura solo al passaggio del mouse, come le voci di
+               menu: da fermo il comando non deve gridare. */
+            className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
           >
-            {espansa ? "Chiudi −" : "Leggi di più +"}
+            <LineaHover>{espansa ? "Chiudi −" : "Leggi di più +"}</LineaHover>
           </button>
         )}
       </div>
