@@ -11,6 +11,30 @@ export type AuthState = { error?: string; message?: string };
   Server Action: girano solo sul server, quindi le credenziali non passano
   mai dal bundle client.
 */
+
+/*
+  Un errore di RETE non è una password sbagliata.
+
+  Se il database non risponde, `signInWithPassword` fallisce come fallirebbe
+  con le credenziali errate — e rispondere «Email o password non corretti»
+  manda la persona a cambiarsi una password che era giusta. È successo: il
+  progetto Supabase è diventato irraggiungibile e il sito continuava a dare
+  la colpa a chi provava a entrare.
+
+  Il messaggio sulle credenziali resta volutamente generico — non diciamo se
+  l'indirizzo esista — ma solo quando è davvero quello il problema.
+*/
+function reteCaduta(error: { message?: string; status?: number }) {
+  const testo = (error.message ?? "").toLowerCase();
+  return (
+    testo.includes("fetch failed") ||
+    testo.includes("failed to fetch") ||
+    testo.includes("network") ||
+    error.status === 0 ||
+    (error.status ?? 0) >= 500
+  );
+}
+
 export async function login(
   _prev: AuthState,
   formData: FormData,
@@ -22,8 +46,20 @@ export async function login(
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
-  // Messaggio volutamente generico: non riveliamo se l'email esiste.
-  if (error) return { error: "Email o password non corretti." };
+  if (error) {
+    if (reteCaduta(error)) {
+      console.error("[login] database irraggiungibile", {
+        status: error.status,
+        message: error.message,
+      });
+      return {
+        error:
+          "Non riusciamo a raggiungere il servizio in questo momento. Non è la tua password: riprova fra poco.",
+      };
+    }
+    // Volutamente generico: non riveliamo se l'email esiste.
+    return { error: "Email o password non corretti." };
+  }
 
   revalidatePath("/", "layout");
   redirect("/portfolio");
