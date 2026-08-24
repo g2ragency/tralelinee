@@ -29,6 +29,35 @@ export async function login(
   redirect("/portfolio");
 }
 
+/*
+  Perché la registrazione può fallire, detto per davvero.
+
+  Prima rispondeva sempre «Registrazione non riuscita. Riprova.»: chi la
+  leggeva non poteva farci niente e chi doveva ripararla non sapeva da dove
+  partire. I motivi veri sono pochi e nessuno è un segreto — l'unica cosa che
+  non va rivelata è se un indirizzo è già registrato, e a quella pensa già
+  Supabase, che in quel caso risponde come se fosse andata bene.
+
+  Il motivo finisce anche nei log del server: a schermo ci sta una frase, nei
+  log ci sta il codice, e sono due pubblici diversi.
+*/
+function perche(error: { message?: string; code?: string; status?: number }) {
+  const codice = error.code ?? "";
+  const testo = (error.message ?? "").toLowerCase();
+
+  if (codice === "over_email_send_rate_limit" || error.status === 429)
+    return "Troppi tentativi in poco tempo. Riprova fra un'ora.";
+  if (codice === "weak_password" || testo.includes("password"))
+    return "Password troppo debole: usa almeno 8 caratteri, meglio se lunga.";
+  if (codice === "email_address_invalid" || testo.includes("invalid email"))
+    return "Questo indirizzo email non sembra valido.";
+  if (testo.includes("signups not allowed") || testo.includes("disabled"))
+    return "Le registrazioni sono chiuse al momento.";
+  if (testo.includes("database error"))
+    return "Non siamo riusciti a creare l'account. Segnalacelo: è un problema nostro, non tuo.";
+  return "Registrazione non riuscita: " + (error.message ?? "motivo sconosciuto");
+}
+
 export async function signup(
   _prev: AuthState,
   formData: FormData,
@@ -48,14 +77,20 @@ export async function signup(
     options: { emailRedirectTo: `${origin}/auth/confirm` },
   });
 
-  if (error) return { error: "Registrazione non riuscita. Riprova." };
+  if (error) {
+    console.error("[signup] fallita", {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+    return { error: perche(error) };
+  }
 
   return {
     message:
       "Ti abbiamo inviato una email di conferma. Dopo averla confermata, la richiesta passa in approvazione.",
   };
 }
-
 /*
   Recupero password, primo tempo: si chiede l'email e Supabase manda un link.
 
