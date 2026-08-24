@@ -13,6 +13,7 @@ export default function LoginPage() {
         cta="Accedi"
         altroTesto="Non hai ancora un accesso?"
         altroLink="/registrati"
+        conRecupero
         altroLabel="Richiedi accesso al portfolio"
       />
     </AuthShell>

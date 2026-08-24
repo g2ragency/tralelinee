@@ -11,7 +11,12 @@ import type { ReactNode } from "react";
   radice: un layout figlio può aggiungere, non togliere. Header e footer
   restano Server Component, questo componente riceve solo il risultato.
 */
-const SENZA_CORNICE = ["/login", "/registrati"];
+const SENZA_CORNICE = [
+  "/login",
+  "/registrati",
+  "/recupera-password",
+  "/nuova-password",
+];
 
 export function Chrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();

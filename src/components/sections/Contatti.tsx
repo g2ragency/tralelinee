@@ -29,7 +29,7 @@ export function Contatti() {
       <a
         href="/registrati"
         /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */
-        className="mt-10 inline-flex items-center justify-center self-start border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
+        className="mt-10 inline-flex items-center justify-center self-start rounded-[10px] border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
       >
         {/* Il Figma mobile chiama il pulsante «Contattaci», il desktop
             «Richiedi portfolio». `display:none` toglie la voce nascosta anche
