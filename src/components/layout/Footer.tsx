@@ -32,7 +32,15 @@ export function Footer() {
       {/* Diatype Medium, ls -4%: 12px lh 110% su mobile, 14px lh 93.3% da
           desktop (Figma 1230:2279/2280) */}
       <div className="flex items-center justify-between gap-4 text-[12px] font-medium leading-[1.1] tracking-[-0.04em] xl:text-[14px] xl:leading-[0.933]">
-        <p>©2025 Tra le linee All Rights Reserved</p>
+        {/*
+          L'anno lo scrive la data, non le mani: a Capodanno il footer si
+          aggiorna da solo invece di restare indietro finché qualcuno se ne
+          accorge. Lo legge il server al momento del render — per le pagine
+          statiche vuol dire al momento della build, quindi un sito lasciato
+          fermo a cavallo di un anno mostrerebbe ancora quello vecchio: basta
+          un rilascio qualsiasi a rimetterlo in pari.
+        */}
+        <p>©{new Date().getFullYear()} Tra le linee All Rights Reserved</p>
         <Link href="/privacy-policy">
           Privacy Policy
         </Link>

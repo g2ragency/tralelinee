@@ -108,7 +108,11 @@ export function ElencoProgetti({
                 onClick={(e) => scegli(e, c.chiave)}
                 aria-current={attiva === c.chiave ? "page" : undefined}
                 className={`transition-colors duration-200 hover:text-foreground ${
-                  attiva === c.chiave ? "text-foreground underline" : ""
+                  attiva === c.chiave
+                    ? /* 6px come le altre sottolineature del sito: attaccata
+                         al testo la riga sembrava parte delle lettere */
+                      "text-foreground underline underline-offset-[6px]"
+                    : ""
                 }`}
               >
                 {c.label}
