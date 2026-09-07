@@ -109,13 +109,16 @@ export default async function CaseStudyPage({
     <main className="min-h-svh px-[10px] pb-32 pt-[128px] xl:px-10 xl:pt-[140px]">
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
           blocco, così non vanno ricompilati per ogni case study.
-          Figma: 86px e 52px, interlinea 120%, spaziatura -4%. */}
+          Figma: 86px e 52px, spaziatura -4%. Interlinea a 1 e non 1,2: tutto lo
+          spazio fra il titolo e l'anno veniva da lì — metà sotto il titolo e
+          metà sopra l'anno, 13,8px in tutto da desktop — e il design li vuole
+          vicini. */}
       <header>
-        <h1 className="text-[44px] leading-[1.2] tracking-[-1.76px] xl:text-[86px] xl:tracking-[-3.44px]">
+        <h1 className="text-[44px] leading-none tracking-[-1.76px] xl:text-[86px] xl:tracking-[-3.44px]">
           {progetto.title}
         </h1>
         {progetto.year && (
-          <p className="text-[28px] leading-[1.2] tracking-[-1.12px] text-grey xl:text-[52px] xl:tracking-[-2.08px]">
+          <p className="text-[28px] leading-none tracking-[-1.12px] text-grey xl:text-[52px] xl:tracking-[-2.08px]">
             {progetto.year}
           </p>
         )}

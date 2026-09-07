@@ -7,6 +7,7 @@
 */
 import { ChiSiamo } from "@/components/sections/ChiSiamo";
 import { Metodo } from "@/components/sections/Metodo";
+import { Clienti } from "@/components/sections/Clienti";
 import { Capabilities } from "@/components/sections/Capabilities";
 import { Contatti } from "@/components/sections/Contatti";
 
@@ -32,6 +33,9 @@ export default function Home() {
       <Metodo />
 
       {/* Capabilities — digit sticky 01→06 (A4/A5) */}
+      {/* Clienti: fila di loghi che scorre (A8) */}
+      <Clienti />
+
       <Capabilities />
 
       {/* Contatti */}

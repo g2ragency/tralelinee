@@ -38,10 +38,46 @@ const diatype = localFont({
   fallback: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 });
 
+const DESCRIZIONE =
+  "Agenzia di comunicazione cross mediale e interdisciplinare specializzata in sistemi di influenza integrati.";
+
+/*
+  Metadati condivisi da tutte le pagine.
+
+  `metadataBase` non e' un dettaglio: senza, Next scrive l'indirizzo
+  dell'anteprima in forma relativa, e chi legge la pagina da fuori — WhatsApp,
+  LinkedIn, Slack — non ha modo di risolverlo e non mostra nulla. Si prende
+  dall'indirizzo che Vercel espone, con il dominio finale come ripiego.
+
+  L'immagine di anteprima e' quella del sito precedente: 1080x721.
+*/
+const ORIGINE = process.env.NEXT_PUBLIC_SITE_URL
+  ? process.env.NEXT_PUBLIC_SITE_URL
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://tralelinee.com";
+
 export const metadata: Metadata = {
-  title: "Tra le linee",
-  description:
-    "Agenzia di comunicazione cross mediale e interdisciplinare specializzata in sistemi di influenza integrati.",
+  metadataBase: new URL(ORIGINE),
+  title: {
+    default: "Tra le linee",
+    template: "%s",
+  },
+  description: DESCRIZIONE,
+  openGraph: {
+    title: "Tra le linee",
+    description: DESCRIZIONE,
+    siteName: "Tra le linee",
+    locale: "it_IT",
+    type: "website",
+    images: [{ url: "/anteprima-social.jpg", width: 1080, height: 721 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tra le linee",
+    description: DESCRIZIONE,
+    images: ["/anteprima-social.jpg"],
+  },
 };
 
 export default function RootLayout({
