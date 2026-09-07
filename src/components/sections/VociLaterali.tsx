@@ -136,7 +136,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
                menu: da fermo il comando non deve gridare. */
             className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
           >
-            <LineaHover>{espansa ? "Chiudi −" : "Leggi di più +"}</LineaHover>
+            <LineaHover spessore="h-px xl:h-[2px]">{espansa ? "Chiudi −" : "Leggi di più +"}</LineaHover>
           </button>
         )}
       </div>

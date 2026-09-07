@@ -14,16 +14,23 @@ import { useRef, type MouseEvent, type ReactNode } from "react";
   Sta fuori da VoceMenu perché non è solo roba di menu: la usa anche il
   «Leggi di più», che è un bottone e non un link.
 
-  Spessore 5% del corpo del testo, come tutte le sottolineature del sito:
-  in `em`, così una voce a 18px e una a 30px restano in proporzione senza
-  doverlo ricalcolare a mano.
+  Spessore: il 5% del corpo, ma arrotondato al pixel intero.
+
+  In `em` la linea finisce sotto il pixel — 0,9px a 18 e 1,5px a 30 — e il
+  browser la spalma su piu' righe con i bordi sfumati: misurato [49, 196,
+  196, 49] a zoom 1,25 e [98, 196, 196, 98] a 1,5. Quelle righe deboli
+  cambiano la grossezza APPARENTE a seconda dello zoom e di dove cade la
+  linea, ed e' cio' che si nota. Un valore intero si disegna sempre uguale.
 */
 export function LineaHover({
   sempre,
+  spessore = "h-px",
   children,
 }: {
   /* Linea sempre disegnata (voce attiva): il mouse non la ritira. */
   sempre?: boolean;
+  /* 5% del corpo arrotondato: 1px fino a 29px di testo, 2px da 30 in su. */
+  spessore?: string;
   children: ReactNode;
 }) {
   const linea = useRef<HTMLSpanElement>(null);
@@ -48,7 +55,7 @@ export function LineaHover({
         ref={linea}
         aria-hidden
         style={{ transform: sempre ? "scaleX(1)" : "scaleX(0)" }}
-        className="pointer-events-none absolute -bottom-[0.2em] left-0 h-[0.05em] w-full origin-left bg-current transition-transform duration-300 ease-out motion-reduce:transition-none"
+        className={`pointer-events-none absolute -bottom-[0.2em] left-0 w-full origin-left bg-current transition-transform duration-300 ease-out motion-reduce:transition-none ${spessore}`}
       />
     </span>
   );
