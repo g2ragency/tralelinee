@@ -66,7 +66,7 @@ function Riga({ urls, verso }: { urls: string[]; verso: "sinistra" | "destra" })
                   parita' di tetto un marchio si vedeva tre volte piu' piccolo
                   di un altro.
                 */
-                className="max-h-[44px] w-auto shrink-0 object-contain xl:max-h-[64px]"
+                className="max-h-[38px] w-auto shrink-0 object-contain xl:max-h-[56px]"
               />
             ))}
           </div>
