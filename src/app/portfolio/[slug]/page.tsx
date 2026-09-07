@@ -107,13 +107,25 @@ export default async function CaseStudyPage({
       desktop e 58px su mobile — e 60px fra intestazione e primo blocco.
     */
     <main className="min-h-svh px-[10px] pb-32 pt-[128px] xl:px-10 xl:pt-[140px]">
+      {/*
+        Uscita anche in cima, non solo in fondo: chi apre un progetto e capisce
+        subito che non e' quello che cercava non deve scorrere tutta la pagina
+        per tornare indietro. Stesso testo e stesso stile del link di coda.
+      */}
+      <Link
+        href="/portfolio"
+        className="inline-block text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
+      >
+        &larr; Torna all&rsquo;indice
+      </Link>
+
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
           blocco, così non vanno ricompilati per ogni case study.
           Figma: 86px e 52px, spaziatura -4%. Interlinea a 1 e non 1,2: tutto lo
           spazio fra il titolo e l'anno veniva da lì — metà sotto il titolo e
           metà sopra l'anno, 13,8px in tutto da desktop — e il design li vuole
           vicini. */}
-      <header>
+      <header className="mt-10 xl:mt-14">
         <h1 className="text-[44px] leading-none tracking-[-1.76px] xl:text-[86px] xl:tracking-[-3.44px]">
           {progetto.title}
         </h1>

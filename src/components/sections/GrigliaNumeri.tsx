@@ -25,6 +25,15 @@ const ANTICIPO = 620;
   grandi (la «k» di 700k), quindi la regola guarda i simboli, non i non-numeri.
 */
 const SIMBOLI = "+\\-−–%<>~≈";
+
+/*
+  Glifi che riempiono molto piu' del «+» il proprio corpo, e a parita' di
+  misura sembrano molto piu' grandi: il «+» copre meta' del suo corpo (25px su
+  50), il «%» quasi tre quarti (36px su 50). Non e' ne' il corpo ne' il font:
+  e' il disegno del glifo. Per farli leggere uguali si da' a questi un corpo
+  ridotto: 50 x 25/36 = 35px, e 27 x 25/36 = 19px da mobile.
+*/
+const PIENI = new Set(["%"]);
 const inizioSimbolo = new RegExp(`^[${SIMBOLI}]`);
 
 const spezza = (valore: string) =>
@@ -39,10 +48,10 @@ const spezza = (valore: string) =>
   scattare tutto insieme.
 */
 function caratteri(valore: string) {
-  const out: { ch: string; simbolo: boolean }[] = [];
+  const out: { ch: string; simbolo: boolean; pieno?: boolean }[] = [];
   for (const pezzo of spezza(valore)) {
     const simbolo = inizioSimbolo.test(pezzo);
-    for (const ch of pezzo) out.push({ ch, simbolo });
+    for (const ch of pezzo) out.push({ ch, simbolo, pieno: PIENI.has(ch) });
   }
   return out;
 }
@@ -70,8 +79,8 @@ function Rotante({
   className,
   classePezzo,
 }: {
-  pezzi: { ch: string; simbolo?: boolean }[];
-  precedenti: { ch: string; simbolo?: boolean }[] | null;
+  pezzi: { ch: string; simbolo?: boolean; pieno?: boolean }[];
+  precedenti: { ch: string; simbolo?: boolean; pieno?: boolean }[] | null;
   passo: number;
   /* Attesa prima del primo pezzo: serve a far partire la didascalia mentre
      il numero sta finendo, invece che insieme a lui. */
@@ -86,10 +95,10 @@ function Rotante({
   /* Cambia a ogni contenuto: rimonta gli span e fa ripartire le animazioni. */
   chiave: number;
   className?: string;
-  classePezzo?: (p: { simbolo?: boolean }) => string;
+  classePezzo?: (p: { simbolo?: boolean; pieno?: boolean }) => string;
 }) {
   const riga = (
-    lista: { ch: string; simbolo?: boolean }[],
+    lista: { ch: string; simbolo?: boolean; pieno?: boolean }[],
     verso: "entra" | "esce",
     ritardoBase: number,
   ) => (
@@ -328,10 +337,14 @@ function Box({
           coda=""
           className="text-[56px] font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px]"
           classePezzo={(p) =>
-            p.simbolo
-              ? /* tracking ripetuto: in em va ricalcolato sul corpo ridotto */
-                "text-[27px] tracking-[-0.04em] xl:text-[50px]"
-              : ""
+            !p.simbolo
+              ? ""
+              : p.pieno
+                ? /* glifo che riempie il corpo: corpo ridotto per pareggiare
+                     l'inchiostro con quello del + */
+                  "text-[19px] tracking-[-0.04em] xl:text-[35px]"
+                : /* tracking ripetuto: in em va ricalcolato sul corpo ridotto */
+                  "text-[27px] tracking-[-0.04em] xl:text-[50px]"
           }
         />
         {slide.didascalia && (
