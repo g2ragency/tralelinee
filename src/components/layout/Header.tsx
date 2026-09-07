@@ -18,6 +18,11 @@ const NAV_ITEMS = [
   { label: "Metodo", mobileLabel: "Metodo", href: "#metodo" },
   { label: "Capabilities", mobileLabel: "Servizi", href: "#capabilities" },
   { label: "Contatti", mobileLabel: "Contatti", href: "#contatti" },
+  /* L'unica voce che porta a una PAGINA e non a una sezione della home:
+     da qui in giu' va trattata diversamente in tre punti — non si
+     prefissa con la home, non si cerca come ancora nel documento, e la
+     sua evidenziazione guarda l'indirizzo invece dello scorrimento. */
+  { label: "Portfolio", mobileLabel: "Portfolio", href: "/portfolio" },
 ];
 
 /*
@@ -54,7 +59,9 @@ function useSezioneAttiva(attivo: boolean) {
 
   useEffect(() => {
     if (!attivo) return;
-    const sezioni = NAV_ITEMS.map((i) => document.querySelector(i.href)).filter(
+    const sezioni = NAV_ITEMS.filter((i) => i.href.startsWith("#"))
+      .map((i) => document.querySelector(i.href))
+      .filter(
       (el): el is Element => !!el,
     );
     if (sezioni.length === 0) return;
@@ -82,7 +89,7 @@ export function Header() {
   const pathname = usePathname();
   const inHome = pathname === "/";
   const sezione = useSezioneAttiva(inHome);
-  const areaAttiva = !inHome && /^\/(portfolio|admin)/.test(pathname);
+  const areaAttiva = !inHome && /^\/(account|admin)/.test(pathname);
 
   /*
     Le voci del menu puntano a sezioni della home. Da un'altra pagina un
@@ -90,7 +97,8 @@ export function Header() {
     esiste, e il clic non porta da nessuna parte: fuori dalla home diventa
     «/#metodo», cioè vai alla home e poi scendi a quella sezione.
   */
-  const indirizzo = (href: string) => (inHome ? href : `/${href}`);
+  const indirizzo = (href: string) =>
+    href.startsWith("#") && !inHome ? `/${href}` : href;
 
   // Blocca lo scroll del body quando il menu è aperto
   useEffect(() => {
@@ -124,20 +132,25 @@ export function Header() {
             <li key={item.href}>
               <VoceMenu
                 href={indirizzo(item.href)}
-                attiva={sezione === item.href}
+                attiva={
+                  item.href.startsWith("#")
+                    ? sezione === item.href
+                    : pathname.startsWith(item.href)
+                }
               >
                 {item.label}
               </VoceMenu>
             </li>
           ))}
-          {/* Accesso: mostrato solo a stato noto, per non lampeggiare */}
-          {loggato !== null && (
+          {/*
+            Solo a chi e' entrato, e solo a stato noto per non far lampeggiare
+            la voce sbagliata. A chi non e' entrato non si mostra nulla: l'invito
+            ad accedere sta nella pagina del portfolio, dove serve davvero.
+          */}
+          {loggato && (
             <li className="border-l border-grey/40 pl-[30px]">
-              <VoceMenu
-                href={loggato ? "/portfolio" : "/login"}
-                attiva={areaAttiva}
-              >
-                {loggato ? "Area riservata" : "Accedi"}
+              <VoceMenu href="/account" attiva={areaAttiva}>
+                Account
               </VoceMenu>
             </li>
           )}
@@ -196,14 +209,14 @@ export function Header() {
                 </a>
               </li>
             ))}
-            {loggato !== null && (
+            {loggato && (
               <li className="border-t border-grey/40 last:border-b">
                 <Link
-                  href={loggato ? "/portfolio" : "/login"}
+                  href="/account"
                   onClick={() => setMenuOpen(false)}
                   className="block py-2 text-[36px] font-light leading-[61px] tracking-[-1.44px]"
                 >
-                  {loggato ? "Area riservata" : "Accedi"}
+                  Account
                 </Link>
               </li>
             )}

@@ -46,7 +46,9 @@ export function ElencoProgetti({
   schede: Scheda[];
   categorie: Categoria[];
   iniziale: string;
-  azioni: ReactNode;
+  /* Comandi di servizio: oggi vivono in /account, quindi qui di solito
+     non arriva nulla. Resta il posto per un comando legato all'ELENCO. */
+  azioni?: ReactNode;
 }) {
   const [attiva, setAttiva] = useState(iniziale);
   const [uscita, setUscita] = useState(false);
@@ -172,9 +174,11 @@ export function ElencoProgetti({
         )}
       </div>
 
-      <div className="mt-16 xl:absolute xl:right-0 xl:top-[10px] xl:mt-0">
-        {azioni}
-      </div>
+      {azioni && (
+        <div className="mt-16 xl:absolute xl:right-0 xl:top-[10px] xl:mt-0">
+          {azioni}
+        </div>
+      )}
     </div>
   );
 }

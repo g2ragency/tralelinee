@@ -11,7 +11,14 @@ import { NextResponse, type NextRequest } from "next/server";
   data access layer, come raccomanda la doc di Next: il proxy gira su ogni
   richiesta, comprese quelle di prefetch, quindi niente query pesanti qui.
 */
-const PROTETTE = ["/portfolio", "/admin"];
+/*
+  L'ELENCO del portfolio non e' protetto: chi non e' entrato ci arriva dal
+  menu e trova l'invito ad accedere, che e' piu' utile di un rimbalzo al
+  login. Protette sono le PAGINE dei progetti — da qui la barra finale, che
+  esclude «/portfolio» e comprende «/portfolio/qualcosa» — l'area
+  amministrativa e la pagina dell'account.
+*/
+const PROTETTE = ["/portfolio/", "/admin", "/account"];
 
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

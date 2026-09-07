@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
@@ -35,8 +34,14 @@ export default async function PortfolioPage({
   // Distinzione importante: "non loggato" e "profilo non leggibile" sono due
   // casi diversi. Trattarli entrambi con un redirect al login creava un
   // rimbalzo infinito quando la sessione c'era ma la riga profiles no.
+  /*
+    Chi non e' entrato NON viene rimbalzato al login: la voce «Portfolio» sta
+    nel menu ed e' visibile a tutti, quindi qui ci si arriva di proposito. Un
+    rimbalzo lascerebbe su una pagina di accesso senza spiegare perche'; qui
+    invece si dice cosa manca e si danno le due strade per ottenerlo.
+  */
   const user = await getUser();
-  if (!user) redirect("/login?next=/portfolio");
+  if (!user) return <Cancello />;
 
   const profile = await getProfile();
   if (!profile) {
@@ -118,21 +123,39 @@ export default async function PortfolioPage({
         schede={schede}
         categorie={CATEGORIE}
         iniziale={attiva}
-        azioni={
-          <div className="flex items-center gap-5 text-[16px] tracking-[-0.04em] text-grey">
-            {profile.role === "super_admin" && (
-              <Link href="/admin">
-                Amministrazione
-              </Link>
-            )}
-            <form action={logout}>
-              <button type="submit">
-                Esci
-              </button>
-            </form>
-          </div>
-        }
       />
+    </main>
+  );
+}
+
+/*
+  Invito ad accedere. Stesse misure della pagina: chi arriva deve avere la
+  sensazione di essere ARRIVATO da qualche parte, non di essere stato fermato.
+*/
+function Cancello() {
+  return (
+    <main className="flex min-h-svh flex-col justify-center px-[10px] pb-32 pt-[108px] xl:px-10 xl:pt-[160px]">
+      <h1 className="max-w-[760px] text-[34px] leading-none tracking-[-0.04em] xl:text-[52px]">
+        Devi accedere per vedere il portfolio
+      </h1>
+      <p className="mt-6 max-w-[560px] text-[18px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[24px]">
+        I progetti sono riservati: l&rsquo;accesso si richiede una volta e vale
+        per sempre.
+      </p>
+      <div className="mt-12 flex flex-wrap items-center gap-4">
+        <Link
+          href="/login"
+          className="rounded-[10px] border border-foreground px-6 py-3 text-[18px] leading-none tracking-[-0.04em] xl:text-[24px]"
+        >
+          Accedi
+        </Link>
+        <Link
+          href="/registrati"
+          className="rounded-[10px] border border-grey px-6 py-3 text-[18px] leading-none tracking-[-0.04em] text-grey xl:text-[24px]"
+        >
+          Richiedi il portfolio
+        </Link>
+      </div>
     </main>
   );
 }
