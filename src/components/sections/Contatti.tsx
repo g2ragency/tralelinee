@@ -31,11 +31,9 @@ export function Contatti() {
         /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */
         className="mt-10 inline-flex items-center justify-center self-start rounded-[10px] border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
       >
-        {/* Il Figma mobile chiama il pulsante «Contattaci», il desktop
-            «Richiedi portfolio». `display:none` toglie la voce nascosta anche
-            dallo screen reader, che quindi ne legge una sola. */}
-        <span className="xl:hidden">Contattaci</span>
-        <span className="hidden xl:inline">Richiedi portfolio</span>
+        {/* Stessa voce ovunque: il Figma mobile diceva «Contattaci», ma due
+            nomi per lo stesso comando confondono e basta. */}
+        Richiedi portfolio
       </a>
       {/* Light 18px lh 100% ls -4% su mobile, 24px da desktop */}
       <address className="mt-20 flex text-[18px] font-light not-italic leading-none tracking-[-0.04em] xl:mt-[319px] xl:justify-end xl:text-right xl:text-[24px] xl:font-normal">

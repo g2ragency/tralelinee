@@ -241,7 +241,7 @@ export function Capabilities() {
             01
           </p>
         </div>
-        <div className="flex flex-col gap-16 xl:gap-[420px]">
+        <div className="flex flex-col gap-[120px] xl:gap-[420px]">
           {SECTIONS.map((section, i) => (
             <CapSection
               key={section.num}

@@ -55,11 +55,18 @@ function Riga({ urls, verso }: { urls: string[]; verso: "sinistra" | "destra" })
                 key={i}
                 src={url}
                 alt=""
-                /* Tetto, non altezza fissa: ogni logo resta della misura con
-                   cui è stato preparato, e solo quelli troppo alti vengono
-                   ricondotti. Così il bilanciamento fra i marchi lo decide
-                   chi carica i file. */
-                className="max-h-[32px] w-auto shrink-0 object-contain xl:max-h-[44px]"
+                /*
+                  Tetto in altezza, non misura fissa: i marchi hanno proporzioni
+                  diverse e uno stesso tetto li tiene in riga.
+
+                  Perche' il tetto funzioni le immagini vanno RITAGLIATE sul
+                  proprio inchiostro: con un margine trasparente attorno, il
+                  tetto lo si spende per il vuoto — misurato, fra i loghi dei
+                  clienti si andava dal 36% al 97% di inchiostro, cioe' a
+                  parita' di tetto un marchio si vedeva tre volte piu' piccolo
+                  di un altro.
+                */
+                className="max-h-[44px] w-auto shrink-0 object-contain xl:max-h-[64px]"
               />
             ))}
           </div>

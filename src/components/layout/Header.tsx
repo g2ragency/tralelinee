@@ -179,7 +179,7 @@ export function Header() {
         aria-label="Menu mobile"
         aria-hidden={!menuOpen}
       >
-          <div className="flex items-center justify-between px-5 py-5">
+          <div className="flex items-center justify-between px-[10px] py-[18px]">
             <ExpandLogo />
             <button
               type="button"
@@ -197,13 +197,13 @@ export function Header() {
             </button>
           </div>
 
-          <ul className="mt-[100px] px-5">
+          <ul className="mt-[60px] px-[10px]">
             {NAV_ITEMS.map((item) => (
               <li key={item.href} className="border-t border-grey/40 last:border-b">
                 <a
                   href={indirizzo(item.href)}
                   onClick={() => setMenuOpen(false)}
-                  className="block py-2 text-[36px] font-light leading-[61px] tracking-[-1.44px]"
+                  className="block py-[10px] text-[36px] font-light leading-[1.2] tracking-[-1.44px]"
                 >
                   {item.mobileLabel}
                 </a>
@@ -214,7 +214,7 @@ export function Header() {
                 <Link
                   href="/account"
                   onClick={() => setMenuOpen(false)}
-                  className="block py-2 text-[36px] font-light leading-[61px] tracking-[-1.44px]"
+                  className="block py-[10px] text-[36px] font-light leading-[1.2] tracking-[-1.44px]"
                 >
                   Account
                 </Link>
@@ -222,7 +222,7 @@ export function Header() {
             )}
           </ul>
 
-          <div className="mt-auto px-5 pb-8">
+          <div className="mt-auto px-[10px] pb-8">
             <ThemeSwitch />
           </div>
       </nav>
