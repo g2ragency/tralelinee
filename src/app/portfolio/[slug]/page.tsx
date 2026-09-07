@@ -95,10 +95,22 @@ export default async function CaseStudyPage({
     .order("position");
   const tutti = elenco ?? [];
   const corrente = tutti.findIndex((p) => p.slug === slug);
-  const prossimo =
-    tutti.length > 1 && corrente !== -1
-      ? tutti[(corrente + 1) % tutti.length]
-      : null;
+  /*
+    Gli altri, nell'ordine in cui li si incontrerebbe continuando da qui: da
+    dopo il corrente fino in fondo, poi da capo. Il corrente resta fuori per
+    costruzione, quindi il link non rimanda mai alla pagina che si sta gia'
+    leggendo.
+
+    Un progetto in BOZZA non sta nell'elenco dei pubblicati — lo vede solo un
+    super admin in anteprima — e li' la ricerca dava -1. Prima quel -1 valeva
+    «non c'e' un prossimo» e il link spariva anche con altri progetti
+    pubblicati a disposizione: da una bozza si parte semplicemente dal primo.
+  */
+  const altri =
+    corrente === -1
+      ? tutti
+      : [...tutti.slice(corrente + 1), ...tutti.slice(0, corrente)];
+  const prossimo = altri[0] ?? null;
 
   return (
     /*
