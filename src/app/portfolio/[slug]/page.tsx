@@ -88,12 +88,21 @@ export default async function CaseStudyPage({
   const haIntro = sezioni.some((s) => s.kind === "intro");
   /* Da mobile: 50px sopra il paragrafo dell'Intro, 45 fra tutti gli altri
      blocchi. Da desktop lo stacco e' sempre lo stesso. */
+  /*
+    Stacchi da mobile (da desktop e' sempre 95). La fila che segue la griglia
+    dei numeri le resta attaccata: sono la stessa infografica, e il Figma le
+    da' lo stesso gap delle righe interne. I blocchi che aprono con un titolo
+    proprio prendono 50, gli altri 45. Classi scritte per intero: Tailwind non
+    genera quelle costruite a runtime.
+  */
+  const TITOLATI = new Set(["intro", "voci", "loghi", "social", "conclusioni"]);
   const stacco = (kind?: string, precedente?: string) =>
-    /* La fila che segue la griglia dei numeri le sta attaccata: sono la stessa
-       infografica, e il Figma le da' lo stesso gap delle righe interne. */
     precedente === "griglia"
       ? "mt-[10px] xl:mt-[95px]"
-      : kind === "intro" || precedente === "voci"
+      : /* Sotto l'Intro il Figma vuole 45, non 50: e' l'unico titolato che
+           non allarga anche sotto di se'. */
+        TITOLATI.has(kind ?? "") ||
+          (TITOLATI.has(precedente ?? "") && precedente !== "intro")
         ? "mt-[50px] xl:mt-[95px]"
         : "mt-[45px] xl:mt-[95px]";
 
@@ -185,11 +194,7 @@ export default async function CaseStudyPage({
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo terrebbe in cache oltre la
               validità. */}
-          <img
-            src={copertina}
-            alt=""
-            className="h-full w-full object-cover"
-          />
+          <img src={copertina} alt="" className="h-full w-full object-cover" />
         </figure>
       )}
 
@@ -202,9 +207,7 @@ export default async function CaseStudyPage({
            e il blocco che la segue vale lo stesso stacco delle sezioni. */
         <div
           className={
-            copertina
-              ? stacco(sezioni[0]?.kind)
-              : "mt-[46px] xl:mt-[60px]"
+            copertina ? stacco(sezioni[0]?.kind) : "mt-[46px] xl:mt-[60px]"
           }
         >
           {sezioni.map((s, i) => {
@@ -215,7 +218,8 @@ export default async function CaseStudyPage({
               così la sequenza si legge come una griglia sola invece che come
               sezioni staccate.
             */
-            const attaccato = IMMAGINI.has(s.kind) && IMMAGINI.has(sezioni[i - 1]?.kind);
+            const attaccato =
+              IMMAGINI.has(s.kind) && IMMAGINI.has(sezioni[i - 1]?.kind);
             return (
               <div
                 key={s.id}
@@ -236,14 +240,9 @@ export default async function CaseStudyPage({
 
       {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
       <nav className="mt-[45px] flex xl:mt-[95px] items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
-        <Link href="/portfolio">
-          ← Torna all&rsquo;indice
-        </Link>
+        <Link href="/portfolio">← Torna all&rsquo;indice</Link>
         {prossimo && (
-          <Link
-            href={`/portfolio/${prossimo.slug}`}
-            className="text-right"
-          >
+          <Link href={`/portfolio/${prossimo.slug}`} className="text-right">
             Guarda il prossimo{" "}
             {progetto.category === "portfolio" ? "progetto" : "Case Study"} →
           </Link>

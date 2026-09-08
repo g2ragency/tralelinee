@@ -85,7 +85,7 @@ export function Loghi({ titolo, righe }: { titolo: string; righe: string[][] }) 
       {titolo && (
         /* Figma: Regular 30px, interlinea 120%, spaziatura -4%, centrato,
            68px sopra le righe */
-        <p className="pb-[68px] text-center text-[22px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
+        <p className="pb-[60px] text-center text-[22px] xl:pb-[68px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
           {titolo}
         </p>
       )}

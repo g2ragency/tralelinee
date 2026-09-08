@@ -261,7 +261,13 @@ function Box({
       /* Figma: #1B1B1B, raggio 20px (15 da mobile), padding 28px 30px
          (20px da mobile: a riquadro largo 180px, 30 per lato si mangiavano
          un terzo della riga). */
-      className="flex flex-col overflow-hidden rounded-[15px] bg-box p-[20px] xl:rounded-[20px] xl:px-[30px] xl:py-[28px]"
+      className={`flex flex-col overflow-hidden rounded-[15px] bg-box p-[20px] xl:rounded-[20px] xl:px-[30px] xl:py-[28px] ${
+        /* Da mobile i riquadri affiancati sono ~180x240: minimo, non
+           proporzione fissa, cosi' con un'etichetta lunga crescono invece di
+           stringere il numero. Quelli social stanno da soli su una riga e
+           l'altezza gliela da' il contenuto. */
+        variante === "sopra" ? "min-h-[240px] xl:min-h-0" : ""
+      }`}
     >
       {/* Niente spazio riservato: un riquadro con un solo contenuto fa salire
           il titolo al posto delle linette. */}
@@ -337,16 +343,22 @@ function Box({
              contiene gia' la virgola di «41,6%», e ogni pixel lasciato qui e'
              un pixel di cifra che sbanda sulla didascalia mentre sale. */
           coda=""
-          className="text-[46px] font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px]"
+          className={`font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px] ${
+            variante === "sopra" ? "text-[46px]" : "text-[82px]"
+          }`}
           classePezzo={(p) =>
             !p.simbolo
               ? ""
               : p.pieno
                 ? /* glifo che riempie il corpo: corpo ridotto per pareggiare
                      l'inchiostro con quello del + */
-                  "text-[17px] tracking-[-0.04em] xl:text-[35px]"
+                  variante === "sopra"
+                  ? "text-[17px] tracking-[-0.04em] xl:text-[35px]"
+                  : "text-[35px] tracking-[-0.04em] xl:text-[35px]"
                 : /* tracking ripetuto: in em va ricalcolato sul corpo ridotto */
-                  "text-[24px] tracking-[-0.04em] xl:text-[50px]"
+                  variante === "sopra"
+                  ? "text-[24px] tracking-[-0.04em] xl:text-[50px]"
+                  : "text-[50px] tracking-[-0.04em] xl:text-[50px]"
           }
         />
         {slide.didascalia && (
@@ -361,7 +373,7 @@ function Box({
               0,
               (numero.length - 1) * PASSO_CARATTERE + GIRO - ANTICIPO,
             )}
-            className="text-[22px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]"
+            className="text-[18px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px]"
           />
         )}
       </div>
@@ -386,7 +398,11 @@ export function FilaBox({
 
   return (
     <div
-      className={`grid gap-[10px] xl:gap-[14px] ${boxes.length > 1 ? "grid-cols-2" : ""} ${COLONNE[Math.min(boxes.length, 4)]}`}
+      className={`grid gap-[10px] xl:gap-[14px] ${
+        /* Due per riga da mobile, ma i social uno per riga: sono banner,
+           non numeri. */
+        boxes.length > 1 && variante === "sopra" ? "grid-cols-2" : ""
+      } ${COLONNE[Math.min(boxes.length, 4)]}`}
     >
       {boxes.map((slides, i) => (
         <Box

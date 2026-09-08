@@ -97,7 +97,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
      elenco di pulsanti. È il caso del blocco «Conclusioni». */
   const unica = voci.length === 1;
   const corpoTitolo =
-    "text-[34px] leading-[1.2] tracking-[-1.36px] xl:text-[52px] xl:tracking-[-2.08px]";
+    "leading-[1.2] tracking-[-1.36px] xl:text-[52px] xl:tracking-[-2.08px]";
 
   return (
     <>
@@ -147,10 +147,14 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
           in mezzo: sta a poco meno di metà della larghezza utile e cresce con
           la finestra, senza scatti ai breakpoint. */}
       <section
-        className={`${unica ? "grid" : "hidden xl:grid"} gap-8 xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0`}
+        className={`${unica ? "grid" : "hidden xl:grid"} gap-[22px] xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0`}
       >
         {unica ? (
-          <h2 className={`${corpoTitolo} max-w-[560px]`}>{voci[0].titolo}</h2>
+          /* Conclusioni: titolo 26px da mobile, 22px sopra il testo (il gap
+           della section) */
+          <h2 className={`${corpoTitolo} max-w-[560px] text-[26px]`}>
+            {voci[0].titolo}
+          </h2>
         ) : (
           /* Voci: attiva bianca e sottolineata, le altre grigie; hover a bianco */
           <ul className="flex flex-col gap-1">
@@ -160,7 +164,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
                   type="button"
                   onClick={() => scegli(i)}
                   aria-current={i === attiva}
-                  className={`${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
+                  className={`${corpoTitolo} text-[34px] text-left transition-colors duration-200 hover:text-foreground ${
                     i === attiva
                       ? "text-foreground underline decoration-solid underline-offset-[6px]"
                       : "text-grey"
@@ -182,7 +186,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
                 overflow: "hidden",
               }}
               /* Corpo 30px grigio, attacchi in grassetto bianchi */
-              className="text-[20px] leading-[1.2] tracking-[-0.8px] text-grey transition-[max-height] duration-500 ease-out motion-reduce:transition-none xl:text-[30px] xl:tracking-[-1.2px]"
+              className="text-[14px] leading-[1.2] tracking-[-0.03em] text-grey transition-[max-height] duration-500 ease-out motion-reduce:transition-none xl:text-[30px] xl:tracking-[-1.2px]"
             >
               {/* La chiave rimonta il testo al cambio voce, così l'animazione
                 di entrata riparte invece di sostituirlo di scatto. */}
@@ -208,7 +212,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
               onClick={() => setEspansa((v) => !v)}
               /* Sottolineatura solo al passaggio del mouse, come le voci di
                menu: da fermo il comando non deve gridare. */
-              className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
+              className="mt-6 text-[14px] leading-[1.2] tracking-[-0.03em] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
             >
               <LineaHover spessore="h-px xl:h-[2px]">
                 {espansa ? "Chiudi −" : "Leggi di più +"}
