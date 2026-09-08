@@ -258,8 +258,10 @@ function Box({
 
   return (
     <article
-      /* Figma: #1B1B1B, raggio 20px (15 da mobile), padding 28px 30px */
-      className="flex flex-col overflow-hidden rounded-[15px] bg-box px-[30px] py-[28px] xl:rounded-[20px]"
+      /* Figma: #1B1B1B, raggio 20px (15 da mobile), padding 28px 30px
+         (20px da mobile: a riquadro largo 180px, 30 per lato si mangiavano
+         un terzo della riga). */
+      className="flex flex-col overflow-hidden rounded-[15px] bg-box p-[20px] xl:rounded-[20px] xl:px-[30px] xl:py-[28px]"
     >
       {/* Niente spazio riservato: un riquadro con un solo contenuto fa salire
           il titolo al posto delle linette. */}

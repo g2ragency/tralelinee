@@ -283,7 +283,7 @@ function GrigliaRender({ content }: { content: SectionContent }) {
         <div
           /* 30px, interlinea 120%, spaziatura -4%, GRIGIO1; il grassetto
              non ingrossa, schiarisce — l'enfasi qui è di colore. */
-          className="rounded-[15px] bg-box px-[30px] py-[28px] text-[18px] leading-[1.2] tracking-[-0.04em] text-grey xl:rounded-[20px] xl:text-[30px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-normal [&_strong]:text-foreground"
+          className="rounded-[15px] bg-box p-[20px] text-[18px] xl:px-[30px] xl:py-[28px] leading-[1.2] tracking-[-0.04em] text-grey xl:rounded-[20px] xl:text-[30px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-normal [&_strong]:text-foreground"
           dangerouslySetInnerHTML={{ __html: testo }}
         />
       )}
