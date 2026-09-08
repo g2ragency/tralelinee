@@ -1,15 +1,11 @@
-"use client";
-
-import { useRef } from "react";
 import { EvidenziaScroll } from "@/components/EvidenziaScroll";
 
 /*
-  A6 — Metodo. Desktop: accordion su hover (max-height 0→scrollHeight +
-  opacity; la linea verticale a sinistra è alta quanto la riga e si estende
-  con il contenuto). Mobile (Figma 1230:2619): carosello con frecce
-  prev/next, un item per volta con descrizione sempre visibile.
-  Copy verbatim dal componente Figma ACCORDION METODO (1230:2429) e
-  intro dal sito live.
+  A6 — Metodo. Intro a piena schermata, poi i quattro punti in quattro
+  schede: 2x2 da desktop, una sotto l'altra da mobile.
+  Le schede hanno sostituito l'accordion su hover: il testo ora sta sempre a
+  vista, quindi non serve piu' ne' l'apertura ne' il carosello mobile.
+  Copy dal sito live; intro verbatim.
 */
 const ITEMS = [
   {
@@ -36,59 +32,19 @@ const INTRO = [
   "Integriamo gli strumenti dello speculative design nei servizi di comunicazione tradizionale, creando un ecosistema ibrido di soluzioni editoriali, relazionali, istituzionali e comunicative. Il risultato è un metodo che unisce concretezza operativa e visione innovativa, trasformando ogni progetto in un'opportunità di crescita.",
 ];
 
-function Row({ title, desc }: { title: string; desc: string }) {
-  const bodyRef = useRef<HTMLDivElement>(null);
-
-  const toggle = (open: boolean) => {
-    const el = bodyRef.current;
-    if (!el) return;
-    el.style.maxHeight = open ? el.scrollHeight + "px" : "0px";
-    el.style.opacity = open ? "1" : "0";
-  };
-
-  return (
-    <div
-      className="relative pl-4"
-      tabIndex={0}
-      onMouseEnter={() => toggle(true)}
-      onMouseLeave={() => toggle(false)}
-      onFocus={() => toggle(true)}
-      onBlur={() => toggle(false)}
-    >
-      <span
-        aria-hidden
-        className="absolute inset-y-0 left-0 w-[5px] bg-foreground"
-      />
-      {/* Regular, lh 93.3%, ls -4%: 26px su mobile come la descrizione di
-          sezione, 52px da desktop */}
-      <h3 className="text-[26px] font-normal leading-[0.933] tracking-[-0.04em] xl:text-[52px]">
-        {title}
-      </h3>
-      <div
-        ref={bodyRef}
-        className="max-h-0 overflow-hidden opacity-0 transition-[max-height,opacity] duration-400 ease-out"
-      >
-        <p className="max-w-[862px] pt-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] text-grey xl:pt-5 xl:text-[30px]">
-          {desc}
-        </p>
-      </div>
-    </div>
-  );
-}
+/* Etichetta di sezione, uguale sopra l'intro e a lato delle schede. */
+const ETICHETTA =
+  "text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]";
 
 export function Metodo() {
   return (
-    /* Due schermate a ogni misura: etichetta+intro e le quattro voci. */
+    /* Due schermate a ogni misura: etichetta+intro e le quattro schede. */
     <>
       <section
         id="metodo"
         className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
       >
-        {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da
-            desktop; spaziatura -4%, GRIGIO1 */}
-        <p className="mb-[10px] text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-20 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
-          Metodo
-        </p>
+        <p className={`mb-[10px] xl:mb-20 ${ETICHETTA}`}>Metodo</p>
 
         {/* Intro: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%,
             allineata a sinistra; si accende con lo scroll */}
@@ -98,17 +54,37 @@ export function Metodo() {
         />
       </section>
 
-      {/* Le quattro voci: schermata a sé. La descrizione si apre al passaggio
-          del mouse e, su touch, al tocco — `tabIndex` rende la riga
-          focalizzabile, quindi il focus fa da equivalente dell'hover. */}
       <section
         aria-label="Metodo — i quattro punti"
         className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
       >
-        <div className="flex max-w-[901px] flex-col gap-6 xl:gap-9">
-          {ITEMS.map((it) => (
-            <Row key={it.title} {...it} />
-          ))}
+        {/* Da desktop l'etichetta sta a sinistra delle schede, non sopra. */}
+        <div className="xl:grid xl:grid-cols-[220px_1fr]">
+          <p className={`mb-[10px] xl:mb-0 ${ETICHETTA}`}>Metodo</p>
+
+          {/* Figma: schede 15px di raggio, fondo GRIGIO2, 20px di padding
+              interno e 20px fra riga e riga; da mobile in colonna a 12px. */}
+          <ol className="grid gap-[12px] xl:grid-cols-2 xl:gap-[20px]">
+            {ITEMS.map((it, i) => (
+              <li key={it.title} className="rounded-[15px] bg-box p-[20px]">
+                {/* Pallino numerato 25x25, numero 14px: resta uguale a ogni
+                    misura, e' gia' la taglia minima. */}
+                <span
+                  aria-hidden
+                  className="flex h-[25px] w-[25px] items-center justify-center rounded-full bg-grey text-[14px] leading-none tracking-[-0.04em] text-white"
+                >
+                  {i + 1}
+                </span>
+                {/* 20px di stacco fra pallino, titolo e descrizione. */}
+                <h3 className="pt-[20px] text-[18px] font-normal leading-none tracking-[-0.04em] xl:text-[24px]">
+                  {it.title}
+                </h3>
+                <p className="pt-[20px] text-[14px] leading-[1.4] tracking-[-0.04em] text-grey xl:text-[16px]">
+                  {it.desc}
+                </p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
     </>
