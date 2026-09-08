@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { signedUrl } from "@/lib/media";
-import { getRenderer } from "@/lib/sections/render";
+import { SchedaDati, getRenderer } from "@/lib/sections/render";
 import type { SectionContent } from "@/lib/sections/schema";
 
 type Sezione = {
@@ -81,6 +81,17 @@ export default async function CaseStudyPage({
   const copertina = await signedUrl(progetto.cover_path);
 
   /*
+    Da mobile la scheda dati sale sotto il titolo, sopra la prima immagine: il
+    paragrafo dell'Intro resta dov'e', sotto. Vale per qualunque progetto,
+    che l'immagine venga dalla copertina o da un blocco.
+  */
+  const haIntro = sezioni.some((s) => s.kind === "intro");
+  /* Da mobile: 50px sopra il paragrafo dell'Intro, 45 fra tutti gli altri
+     blocchi. Da desktop lo stacco e' sempre lo stesso. */
+  const stacco = (kind?: string) =>
+    kind === "intro" ? "mt-[50px]" : "mt-[45px]";
+
+  /*
     Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
     di ritrovarsi senza uscita. Resta dentro la stessa categoria, altrimenti da
     un portfolio si finirebbe su un case study (e viceversa) senza preavviso.
@@ -148,6 +159,14 @@ export default async function CaseStudyPage({
         )}
       </header>
 
+      {haIntro && (
+        <SchedaDati
+          industry={progetto.industry}
+          services={progetto.services}
+          className="mt-[44px] grid grid-cols-2 xl:hidden"
+        />
+      )}
+
       {/*
         La copertina apre la pagina, oltre a essere la card dell'elenco: chi
         compila la carica una volta e la ritrova in tutti e due i posti. Prima
@@ -156,7 +175,7 @@ export default async function CaseStudyPage({
         Stesse misure del blocco Media: 16:9, angoli 30px.
       */}
       {copertina && (
-        <figure className="mt-[60px] aspect-video w-full overflow-hidden rounded-[30px] bg-box">
+        <figure className="mt-[46px] aspect-video w-full overflow-hidden rounded-[30px] bg-box xl:mt-[60px]">
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo terrebbe in cache oltre la
               validità. */}
@@ -175,7 +194,13 @@ export default async function CaseStudyPage({
       ) : (
         /* 60px dall'intestazione, o dalla copertina se c'è: fra un'immagine
            e il blocco che la segue vale lo stesso stacco delle sezioni. */
-        <div className={copertina ? "mt-[95px]" : "mt-[60px]"}>
+        <div
+          className={
+            copertina
+              ? `${stacco(sezioni[0]?.kind)} xl:mt-[95px]`
+              : "mt-[46px] xl:mt-[60px]"
+          }
+        >
           {sezioni.map((s, i) => {
             const Render = getRenderer(s.kind)!;
             /*
@@ -188,7 +213,13 @@ export default async function CaseStudyPage({
             return (
               <div
                 key={s.id}
-                className={i === 0 ? "" : attaccato ? "mt-[20px]" : "mt-[95px]"}
+                className={
+                  i === 0
+                    ? ""
+                    : attaccato
+                      ? "mt-[20px]"
+                      : `${stacco(s.kind)} xl:mt-[95px]`
+                }
               >
                 <Render content={s.content} project={progetto} />
               </div>
@@ -198,7 +229,7 @@ export default async function CaseStudyPage({
       )}
 
       {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
-      <nav className="mt-[95px] flex items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
+      <nav className="mt-[45px] flex xl:mt-[95px] items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
         <Link href="/portfolio">
           ← Torna all&rsquo;indice
         </Link>

@@ -168,9 +168,48 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
 }
 
 /*
+  Scheda dati del progetto (Industry / Servizi).
+
+  Sta qui dentro nel blocco Intro da desktop, ma da mobile il Figma la vuole
+  in cima alla pagina — sopra l'immagine, mentre il paragrafo resta sotto — e
+  la pagina la rimonta li'. Un elemento non si puo' rendere in due punti,
+  quindi ce ne sono due e ognuna si mostra alla propria misura.
+  Figma: 18px Medium da desktop, 14px Medium su due colonne da mobile;
+  interlinea 120%, spaziatura -4%.
+*/
+export function SchedaDati({
+  industry,
+  services,
+  className,
+}: {
+  industry: string | null;
+  services: string | null;
+  className: string;
+}) {
+  const voci = [
+    { label: "Industry", value: industry },
+    { label: "Servizi", value: services },
+  ].filter((v) => v.value);
+  if (voci.length === 0) return null;
+
+  return (
+    <dl
+      className={`gap-x-[20px] text-[14px] font-medium leading-[1.2] tracking-[-0.04em] xl:text-[18px] ${className}`}
+    >
+      {voci.map((v) => (
+        <div key={v.label} className="xl:mb-6">
+          <dt className="text-grey">{v.label}</dt>
+          <dd>{v.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/*
   Intro — due colonne: scheda dati (dal progetto) e paragrafo.
-  Figma: etichette e valori 18px Medium, paragrafo 30px Regular,
-  entrambi interlinea 120% e spaziatura -4%.
+  Figma: paragrafo 30px Regular da desktop, 14px Medium da mobile,
+  interlinea 120% e spaziatura -4%.
 */
 function IntroRender({
   content,
@@ -184,22 +223,14 @@ function IntroRender({
     .map((p) => p.trim())
     .filter(Boolean);
 
-  const voci = [
-    { label: "Industry", value: project.industry },
-    { label: "Servizi", value: project.services },
-  ].filter((v) => v.value);
-
   return (
     /* Figma: colonna dati 288px, paragrafo allineato al bordo destro */
-    <section className="grid gap-10 xl:grid-cols-[288px_1fr] xl:gap-0">
-      <dl className="text-[18px] font-medium leading-[1.2] tracking-[-0.72px]">
-        {voci.map((v) => (
-          <div key={v.label} className="mb-6">
-            <dt className="text-grey">{v.label}</dt>
-            <dd>{v.value}</dd>
-          </div>
-        ))}
-      </dl>
+    <section className="grid xl:grid-cols-[288px_1fr]">
+      <SchedaDati
+        industry={project.industry}
+        services={project.services}
+        className="hidden xl:block"
+      />
 
       {/* Senza stacco i paragrafi si leggevano come uno solo: il ritorno a
           capo da solo non basta a farli vedere separati. */}
@@ -207,7 +238,7 @@ function IntroRender({
         {paragrafi.map((p, i) => (
           <p
             key={i}
-            className="text-[20px] leading-[1.2] tracking-[-0.8px] xl:text-[30px] xl:tracking-[-1.2px]"
+            className="text-[14px] font-medium leading-[1.2] tracking-[-0.04em] xl:text-[30px] xl:font-normal"
           >
             {p}
           </p>
