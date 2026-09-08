@@ -56,7 +56,7 @@ async function MediaRender({ content }: { content: SectionContent }) {
   const alt = s(content.alt);
   const cornice =
     /* Nero2 quando non c'è ancora un'immagine, come i riquadri del carosello */
-    "relative w-full overflow-hidden rounded-[30px] bg-box aspect-video";
+    "relative w-full overflow-hidden rounded-[15px] bg-box aspect-video xl:rounded-[30px]";
 
   if (tipo === "video_embed") {
     const src = embedUrl(s(content.embed));
@@ -153,7 +153,7 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
       {celle.map((url, i) => (
         <div
           key={i}
-          className={`w-full overflow-hidden rounded-[30px] bg-box ${f.aspetto}`}
+          className={`w-full overflow-hidden rounded-[15px] bg-box xl:rounded-[30px] ${f.aspetto}`}
         >
           {url && (
             /* eslint-disable-next-line @next/next/no-img-element --

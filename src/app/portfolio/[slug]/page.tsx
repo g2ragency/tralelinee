@@ -88,8 +88,8 @@ export default async function CaseStudyPage({
   const haIntro = sezioni.some((s) => s.kind === "intro");
   /* Da mobile: 50px sopra il paragrafo dell'Intro, 45 fra tutti gli altri
      blocchi. Da desktop lo stacco e' sempre lo stesso. */
-  const stacco = (kind?: string) =>
-    kind === "intro" ? "mt-[50px]" : "mt-[45px]";
+  const stacco = (kind?: string, precedente?: string) =>
+    kind === "intro" || precedente === "voci" ? "mt-[50px]" : "mt-[45px]";
 
   /*
     Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
@@ -175,7 +175,7 @@ export default async function CaseStudyPage({
         Stesse misure del blocco Media: 16:9, angoli 30px.
       */}
       {copertina && (
-        <figure className="mt-[46px] aspect-video w-full overflow-hidden rounded-[30px] bg-box xl:mt-[60px]">
+        <figure className="mt-[46px] aspect-video w-full overflow-hidden rounded-[15px] bg-box xl:mt-[60px] xl:rounded-[30px]">
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo terrebbe in cache oltre la
               validità. */}
@@ -218,7 +218,7 @@ export default async function CaseStudyPage({
                     ? ""
                     : attaccato
                       ? "mt-[20px]"
-                      : `${stacco(s.kind)} xl:mt-[95px]`
+                      : `${stacco(s.kind, sezioni[i - 1]?.kind)} xl:mt-[95px]`
                 }
               >
                 <Render content={s.content} project={progetto} />

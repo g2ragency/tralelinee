@@ -66,7 +66,7 @@ export function Carosello({ urls }: { urls: string[] }) {
         snap disattivato durante il trascinamento: con snap obbligatorio attivo
         il browser riaggancia a ogni frame e il trascinamento risulta a scatti.
       */
-      className={`-mx-6 flex gap-[18px] overflow-x-auto scroll-pl-6 px-6 pb-2 xl:-mx-10 xl:scroll-pl-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+      className={`-mx-[10px] flex gap-[12px] overflow-x-auto scroll-pl-[10px] px-[10px] pb-2 xl:gap-[18px] xl:-mx-10 xl:scroll-pl-10 xl:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
         trascina
           ? "cursor-grabbing select-none"
           : "cursor-grab snap-x snap-mandatory"
@@ -77,7 +77,7 @@ export function Carosello({ urls }: { urls: string[] }) {
           key={i}
           /* Fondo dei riquadri = Nero2, il colore del profilo per le
              superfici, non un grigio trasparente qualsiasi. */
-          className="aspect-[596/760] w-[clamp(260px,calc((100%-18px)/1.15),680px)] shrink-0 snap-start overflow-hidden rounded-[30px] bg-box xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)]"
+          className="aspect-[268/300] w-[268px] shrink-0 snap-start overflow-hidden rounded-[15px] bg-box xl:aspect-[596/760] xl:w-[clamp(260px,calc((100%-18px)/2.2),680px)] xl:rounded-[30px]"
         >
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo cacherebbe oltre la validità. */}

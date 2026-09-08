@@ -23,8 +23,37 @@ type Voce = { titolo: string; testo: string };
 const RIGHE_CHIUSE = 12;
 const ALTEZZA_CHIUSA = `${RIGHE_CHIUSE * 1.2}em`;
 
+/*
+  Il «+» del Figma (22x22, tratto 1px): da aperto resta la sola orizzontale,
+  cioe' il «-». Una sola icona invece di due file, la differenza e' un tratto.
+*/
+function PiuMeno({ aperto }: { aperto: boolean }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      aria-hidden
+      className="shrink-0"
+    >
+      <path d="M0 11.0015H22" stroke="currentColor" strokeMiterlimit="10" />
+      <path
+        d="M11.001 0V22.0011"
+        stroke="currentColor"
+        strokeMiterlimit="10"
+        className={`transition-opacity duration-200 motion-reduce:transition-none ${
+          aperto ? "opacity-0" : "opacity-100"
+        }`}
+      />
+    </svg>
+  );
+}
+
 export function VociLaterali({ voci }: { voci: Voce[] }) {
   const [attiva, setAttiva] = useState(0);
+  /* Fisarmonica da mobile: tutte chiuse all'apertura della pagina. */
+  const [apertaMobile, setApertaMobile] = useState<number | null>(null);
   const [espansa, setEspansa] = useState(false);
   const [tronca, setTronca] = useState(false);
   /*
@@ -71,75 +100,123 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
     "text-[34px] leading-[1.2] tracking-[-1.36px] xl:text-[52px] xl:tracking-[-2.08px]";
 
   return (
-    /* Colonna del testo: il Figma dà 468px su base 1440, ma nella pagina
-       lasciava troppo vuoto in mezzo. Sta a poco meno di metà della larghezza
-       utile e cresce con la finestra, senza scatti ai breakpoint. */
-    <section className="grid gap-8 xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0">
-      {unica ? (
-        <h2 className={`${corpoTitolo} max-w-[560px]`}>{voci[0].titolo}</h2>
-      ) : (
-        /* Voci: attiva bianca e sottolineata, le altre grigie; hover a bianco */
-        <ul className="flex flex-col gap-1">
-          {voci.map((v, i) => (
-            <li key={i}>
-              <button
-                type="button"
-                onClick={() => scegli(i)}
-                aria-current={i === attiva}
-                className={`${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
-                  i === attiva
-                    ? "text-foreground underline decoration-solid underline-offset-[6px]"
-                    : "text-grey"
-                }`}
-              >
-                {v.titolo}
-              </button>
-            </li>
-          ))}
+    <>
+      {/*
+        Da mobile le voci sono una fisarmonica: riga col titolo e il «+», e il
+        testo che si apre sotto. Non le due colonne rimpicciolite, che
+        costringevano a scegliere una voce per leggerne il testo.
+        Figma: titoli 26px interlinea 80%, linee 1px GRIGIO1 sopra e sotto,
+        12px di aria fra titolo e linea.
+        L'apertura anima `grid-template-rows` da 0fr a 1fr: e' l'unico modo di
+        animare verso un'altezza automatica senza misurarla a mano.
+      */}
+      {!unica && (
+        <ul className="border-t border-grey xl:hidden">
+          {voci.map((v, i) => {
+            const apertoQui = apertaMobile === i;
+            return (
+              <li key={i} className="border-b border-grey">
+                <button
+                  type="button"
+                  onClick={() => setApertaMobile(apertoQui ? null : i)}
+                  aria-expanded={apertoQui}
+                  className="flex w-full items-center justify-between gap-4 py-[12px] text-left text-[26px] leading-[0.8] tracking-[-0.04em] text-grey"
+                >
+                  <span>{v.titolo}</span>
+                  <PiuMeno aperto={apertoQui} />
+                </button>
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${
+                    apertoQui ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <div
+                      className="pb-[12px] text-[14px] font-medium leading-[1.2] tracking-[-0.04em] text-grey [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-bold [&_strong]:text-foreground"
+                      dangerouslySetInnerHTML={{ __html: v.testo }}
+                    />
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
+      {/* Da desktop restano le due colonne: voci a sinistra, testo a destra.
+          Il Figma dà 468px su base 1440, ma nella pagina lasciava troppo vuoto
+          in mezzo: sta a poco meno di metà della larghezza utile e cresce con
+          la finestra, senza scatti ai breakpoint. */}
+      <section
+        className={`${unica ? "grid" : "hidden xl:grid"} gap-8 xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0`}
+      >
+        {unica ? (
+          <h2 className={`${corpoTitolo} max-w-[560px]`}>{voci[0].titolo}</h2>
+        ) : (
+          /* Voci: attiva bianca e sottolineata, le altre grigie; hover a bianco */
+          <ul className="flex flex-col gap-1">
+            {voci.map((v, i) => (
+              <li key={i}>
+                <button
+                  type="button"
+                  onClick={() => scegli(i)}
+                  aria-current={i === attiva}
+                  className={`${corpoTitolo} text-left transition-colors duration-200 hover:text-foreground ${
+                    i === attiva
+                      ? "text-foreground underline decoration-solid underline-offset-[6px]"
+                      : "text-grey"
+                  }`}
+                >
+                  {v.titolo}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <div className="xl:ml-auto xl:w-full">
-        <div className="relative">
-          <div
-            ref={testoRef}
-            style={{
-              maxHeight: espansa ? `${altezzaPiena}px` : ALTEZZA_CHIUSA,
-              overflow: "hidden",
-            }}
-            /* Corpo 30px grigio, attacchi in grassetto bianchi */
-            className="text-[20px] leading-[1.2] tracking-[-0.8px] text-grey transition-[max-height] duration-500 ease-out motion-reduce:transition-none xl:text-[30px] xl:tracking-[-1.2px]"
-          >
-            {/* La chiave rimonta il testo al cambio voce, così l'animazione
-                di entrata riparte invece di sostituirlo di scatto. */}
+        <div className="xl:ml-auto xl:w-full">
+          <div className="relative">
             <div
-              key={attiva}
-              className="animate-entra [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-bold [&_strong]:text-foreground"
-              dangerouslySetInnerHTML={{ __html: voce.testo }}
-            />
+              ref={testoRef}
+              style={{
+                maxHeight: espansa ? `${altezzaPiena}px` : ALTEZZA_CHIUSA,
+                overflow: "hidden",
+              }}
+              /* Corpo 30px grigio, attacchi in grassetto bianchi */
+              className="text-[20px] leading-[1.2] tracking-[-0.8px] text-grey transition-[max-height] duration-500 ease-out motion-reduce:transition-none xl:text-[30px] xl:tracking-[-1.2px]"
+            >
+              {/* La chiave rimonta il testo al cambio voce, così l'animazione
+                di entrata riparte invece di sostituirlo di scatto. */}
+              <div
+                key={attiva}
+                className="animate-entra [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-bold [&_strong]:text-foreground"
+                dangerouslySetInnerHTML={{ __html: voce.testo }}
+              />
+            </div>
+
+            {/* Sfumatura sull'ultima parte del testo troncato */}
+            {tronca && !espansa && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-b from-transparent to-background"
+              />
+            )}
           </div>
 
-          {/* Sfumatura sull'ultima parte del testo troncato */}
-          {tronca && !espansa && (
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-b from-transparent to-background"
-            />
+          {tronca && (
+            <button
+              type="button"
+              onClick={() => setEspansa((v) => !v)}
+              /* Sottolineatura solo al passaggio del mouse, come le voci di
+               menu: da fermo il comando non deve gridare. */
+              className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
+            >
+              <LineaHover spessore="h-px xl:h-[2px]">
+                {espansa ? "Chiudi −" : "Leggi di più +"}
+              </LineaHover>
+            </button>
           )}
         </div>
-
-        {tronca && (
-          <button
-            type="button"
-            onClick={() => setEspansa((v) => !v)}
-            /* Sottolineatura solo al passaggio del mouse, come le voci di
-               menu: da fermo il comando non deve gridare. */
-            className="mt-6 text-[20px] leading-[1.2] tracking-[-0.8px] text-[#C4C4C4] xl:text-[30px] xl:tracking-[-1.2px]"
-          >
-            <LineaHover spessore="h-px xl:h-[2px]">{espansa ? "Chiudi −" : "Leggi di più +"}</LineaHover>
-          </button>
-        )}
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
