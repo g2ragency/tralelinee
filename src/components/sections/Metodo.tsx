@@ -1,29 +1,34 @@
+"use client";
+
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { EvidenziaScroll } from "@/components/EvidenziaScroll";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /*
   A6 — Metodo. Intro a piena schermata, poi i quattro punti in quattro
   schede: 2x2 da desktop, una sotto l'altra da mobile.
   Le schede hanno sostituito l'accordion su hover: il testo ora sta sempre a
   vista, quindi non serve piu' ne' l'apertura ne' il carosello mobile.
-  Copy dal sito live; intro verbatim.
 */
 const ITEMS = [
   {
     title: "Anticipazione Strategica",
-    desc: "Immaginare scenari futuri per aiutare clienti, istituzioni o brand a posizionarsi prima che accadano i cambiamenti",
+    desc: "Analizziamo segnali emergenti, trasformazioni sociali e dinamiche di contesto per individuare in anticipo rischi, opportunità e possibili scenari evolutivi. Trasformiamo l’osservazione del presente in una visione strategica capace di orientare decisioni, posizionamento e azioni future.",
   },
   {
     title: "Issue Shaping",
-    desc: "Costruisci mondi futuri e fai in modo che il tuo cliente plasmi il dibattito",
+    desc: "Interveniamo sulla costruzione e sull’evoluzione dei temi rilevanti per organizzazioni, istituzioni e comunità. Definiamo argomenti, linguaggi e priorità in grado di portare una questione all’interno del dibattito pubblico, rafforzandone la rilevanza e orientandone la comprensione.",
   },
   {
     title: "Creazione di nuovi frame culturali",
-    desc: "Nuovi modi di pensare problemi consolidati (es. lavoro, benessere, identità) e creare un “campo semantico” dove il cliente è già leader",
+    desc: "Progettiamo nuove chiavi di lettura attraverso cui interpretare fenomeni complessi e cambiamenti in corso. Costruiamo narrazioni, concetti e riferimenti culturali capaci di modificare la percezione di un tema, ampliarne il significato e generare nuove possibilità di azione.",
   },
   {
-    // Live aggiornato dopo il Figma: "Attivazione", non "Stimolazione"
-    title: "Attivazione delle policy",
-    desc: "Elaborare concept utili a influenzare chi scrive norme e regolamenti.",
+    title: "Stimolazione delle policy",
+    desc: "Trasformiamo visioni, analisi e proposte in percorsi concreti di interlocuzione e cambiamento. Favoriamo il coinvolgimento degli stakeholder, la costruzione del consenso e l’attivazione dei decisori, creando le condizioni affinché un tema possa tradursi in iniziative, strumenti e politiche pubbliche.",
   },
 ];
 
@@ -37,6 +42,33 @@ const ETICHETTA =
   "text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]";
 
 export function Metodo() {
+  const schede = useRef<HTMLOListElement>(null);
+
+  /*
+    Le schede entrano salendo, una dopo l'altra, quando la fila arriva in
+    vista. E' l'apparizione: il riempimento del testo, che e' un'altra cosa e
+    segue lo scroll carattere per carattere, lo fa EvidenziaScroll qui sotto.
+    `from` e non `to`: lo stato a riposo resta quello scritto nel markup, cosi'
+    senza JS — o con le animazioni ridotte — le schede si vedono e basta.
+  */
+  useLayoutEffect(() => {
+    const root = schede.current;
+    if (!root) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(root.children, {
+        opacity: 0,
+        y: 28,
+        duration: 0.7,
+        ease: "power2.out",
+        stagger: 0.12,
+        scrollTrigger: { trigger: root, start: "top 85%" },
+      });
+    }, root);
+    return () => ctx.revert();
+  }, []);
+
   return (
     /* Due schermate a ogni misura: etichetta+intro e le quattro schede. */
     <>
@@ -64,7 +96,10 @@ export function Metodo() {
 
           {/* Figma: schede 15px di raggio, fondo GRIGIO2, 20px di padding
               interno e 20px fra riga e riga; da mobile in colonna a 12px. */}
-          <ol className="grid gap-[12px] xl:grid-cols-2 xl:gap-[20px]">
+          <ol
+            ref={schede}
+            className="grid gap-[12px] xl:grid-cols-2 xl:gap-[20px]"
+          >
             {ITEMS.map((it, i) => (
               <li key={it.title} className="rounded-[15px] bg-box p-[20px]">
                 {/* Pallino numerato 25x25, numero 14px: resta uguale a ogni
@@ -79,9 +114,16 @@ export function Metodo() {
                 <h3 className="pt-[20px] text-[18px] font-normal leading-none tracking-[-0.04em] xl:text-[24px]">
                   {it.title}
                 </h3>
-                <p className="pt-[20px] text-[14px] leading-[1.4] tracking-[-0.04em] text-grey xl:text-[16px]">
-                  {it.desc}
-                </p>
+                {/*
+                  Il testo si accende con lo scroll come l'intro. Qui pero' il
+                  colore pieno e' il GRIGIO1 della descrizione, non il bianco:
+                  EvidenziaScroll anima l'opacita', quindi il punto d'arrivo
+                  lo decide la classe.
+                */}
+                <EvidenziaScroll
+                  paragrafi={[it.desc]}
+                  classeP="pt-[20px] text-[14px] leading-[1.4] tracking-[-0.04em] text-grey xl:text-[16px]"
+                />
               </li>
             ))}
           </ol>
