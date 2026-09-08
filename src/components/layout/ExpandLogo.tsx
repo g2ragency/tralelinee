@@ -42,6 +42,15 @@ export function ExpandLogo({ compatto }: { compatto?: boolean }) {
       x: apri ? 0 : -10,
       duration: apri ? 0.8 : 0.6,
       ease: apri ? "power2.out" : "power2.in",
+      /*
+        La chiusura deve UCCIDERE l'apertura, non corrercele accanto.
+        Entrando e uscendo in fretta restavano vive tutte e due: la chiusura
+        (0,6s) finiva per prima, poi l'apertura (0,8s) continuava a scrivere
+        la larghezza per gli ultimi decimi e la lettera restava aperta a
+        meta' — il logo bloccato a «| T | LE | L |» finche' non lo si
+        ripassava col mouse.
+      */
+      overwrite: true,
     });
   };
 

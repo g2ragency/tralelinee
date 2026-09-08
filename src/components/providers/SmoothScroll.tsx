@@ -80,8 +80,34 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       if (Math.abs(nuova - altezza) < 2) return;
       altezza = nuova;
       clearTimeout(attesa);
-      // a valle della transizione (gli accordion animano ~300-500ms)
-      attesa = setTimeout(() => ScrollTrigger.refresh(), 250);
+      /*
+        Un refresh non deve MUOVERE la pagina: ricalcola e basta.
+        ScrollTrigger la posizione prova a rimetterla da se', ma dopo un
+        cambio pagina quella che rimette e' la posizione della pagina
+        VECCHIA. Aprendo il portfolio da meta' home si finiva in fondo, nel
+        footer: 7729px chiesti su una pagina che ne e' lunga 861, quindi
+        tutto in giu'. Si fotografa prima e si rimette solo se e' cambiata.
+        (a valle della transizione: gli accordion animano ~300-500ms)
+      */
+      attesa = setTimeout(() => {
+        const prima = window.scrollY;
+        ScrollTrigger.refresh();
+        /*
+          Il controllo va al fotogramma dopo, non subito: ScrollTrigger muove
+          la finestra e l'evento `scroll` che ne segue arriva in coda: Lenis
+          lo legge e ci si riallinea. Correggendo subito, quell'evento
+          arriverebbe DOPO la correzione e rimetterebbe la posizione
+          sbagliata.
+        */
+        requestAnimationFrame(() => {
+          if (Math.abs(window.scrollY - prima) > 1) {
+            lenisRef.current?.lenis?.scrollTo(prima, {
+              immediate: true,
+              force: true,
+            });
+          }
+        });
+      }, 250);
     });
     ro.observe(document.body);
 
