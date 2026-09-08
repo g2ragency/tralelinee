@@ -89,7 +89,13 @@ export default async function CaseStudyPage({
   /* Da mobile: 50px sopra il paragrafo dell'Intro, 45 fra tutti gli altri
      blocchi. Da desktop lo stacco e' sempre lo stesso. */
   const stacco = (kind?: string, precedente?: string) =>
-    kind === "intro" || precedente === "voci" ? "mt-[50px]" : "mt-[45px]";
+    /* La fila che segue la griglia dei numeri le sta attaccata: sono la stessa
+       infografica, e il Figma le da' lo stesso gap delle righe interne. */
+    precedente === "griglia"
+      ? "mt-[10px] xl:mt-[95px]"
+      : kind === "intro" || precedente === "voci"
+        ? "mt-[50px] xl:mt-[95px]"
+        : "mt-[45px] xl:mt-[95px]";
 
   /*
     Prossimo progetto: si gira in tondo, così l'ultimo riporta al primo invece
@@ -197,7 +203,7 @@ export default async function CaseStudyPage({
         <div
           className={
             copertina
-              ? `${stacco(sezioni[0]?.kind)} xl:mt-[95px]`
+              ? stacco(sezioni[0]?.kind)
               : "mt-[46px] xl:mt-[60px]"
           }
         >
@@ -218,7 +224,7 @@ export default async function CaseStudyPage({
                     ? ""
                     : attaccato
                       ? "mt-[20px]"
-                      : `${stacco(s.kind, sezioni[i - 1]?.kind)} xl:mt-[95px]`
+                      : stacco(s.kind, sezioni[i - 1]?.kind)
                 }
               >
                 <Render content={s.content} project={progetto} />

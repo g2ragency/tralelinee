@@ -277,13 +277,13 @@ function GrigliaRender({ content }: { content: SectionContent }) {
 
   return (
     /* Figma: 14px fra righe e colonne, riquadri #1B1B1B raggio 20px */
-    <section className="flex flex-col gap-[14px]">
+    <section className="flex flex-col gap-[10px] xl:gap-[14px]">
       <FilaBox boxes={sopra} variante="sopra" />
       {testo && (
         <div
           /* 30px, interlinea 120%, spaziatura -4%, GRIGIO1; il grassetto
              non ingrossa, schiarisce — l'enfasi qui è di colore. */
-          className="rounded-[20px] bg-box px-[30px] py-[28px] text-[20px] leading-[1.2] tracking-[-0.04em] text-grey xl:text-[30px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-normal [&_strong]:text-foreground"
+          className="rounded-[15px] bg-box px-[30px] py-[28px] text-[18px] leading-[1.2] tracking-[-0.04em] text-grey xl:rounded-[20px] xl:text-[30px] [&_a]:underline [&_p]:mt-[1.2em] [&_p:first-child]:mt-0 [&_strong]:font-normal [&_strong]:text-foreground"
           dangerouslySetInnerHTML={{ __html: testo }}
         />
       )}

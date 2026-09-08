@@ -31,7 +31,7 @@ const SIMBOLI = "+\\-−–%<>~≈";
   misura sembrano molto piu' grandi: il «+» copre meta' del suo corpo (25px su
   50), il «%» quasi tre quarti (36px su 50). Non e' ne' il corpo ne' il font:
   e' il disegno del glifo. Per farli leggere uguali si da' a questi un corpo
-  ridotto: 50 x 25/36 = 35px, e 27 x 25/36 = 19px da mobile.
+  ridotto: 50 x 25/36 = 35px, e 24 x 25/36 = 17px da mobile.
 */
 const PIENI = new Set(["%"]);
 const inizioSimbolo = new RegExp(`^[${SIMBOLI}]`);
@@ -258,8 +258,8 @@ function Box({
 
   return (
     <article
-      /* Figma: #1B1B1B, raggio 20px, padding 28px 30px */
-      className="flex flex-col overflow-hidden rounded-[20px] bg-box px-[30px] py-[28px]"
+      /* Figma: #1B1B1B, raggio 20px (15 da mobile), padding 28px 30px */
+      className="flex flex-col overflow-hidden rounded-[15px] bg-box px-[30px] py-[28px] xl:rounded-[20px]"
     >
       {/* Niente spazio riservato: un riquadro con un solo contenuto fa salire
           il titolo al posto delle linette. */}
@@ -335,16 +335,16 @@ function Box({
              contiene gia' la virgola di «41,6%», e ogni pixel lasciato qui e'
              un pixel di cifra che sbanda sulla didascalia mentre sale. */
           coda=""
-          className="text-[56px] font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px]"
+          className="text-[46px] font-light leading-[1.2] tracking-[-0.04em] xl:text-[104px]"
           classePezzo={(p) =>
             !p.simbolo
               ? ""
               : p.pieno
                 ? /* glifo che riempie il corpo: corpo ridotto per pareggiare
                      l'inchiostro con quello del + */
-                  "text-[19px] tracking-[-0.04em] xl:text-[35px]"
+                  "text-[17px] tracking-[-0.04em] xl:text-[35px]"
                 : /* tracking ripetuto: in em va ricalcolato sul corpo ridotto */
-                  "text-[27px] tracking-[-0.04em] xl:text-[50px]"
+                  "text-[24px] tracking-[-0.04em] xl:text-[50px]"
           }
         />
         {slide.didascalia && (
@@ -384,7 +384,7 @@ export function FilaBox({
 
   return (
     <div
-      className={`grid gap-[14px] sm:grid-cols-2 ${COLONNE[Math.min(boxes.length, 4)]}`}
+      className={`grid gap-[10px] xl:gap-[14px] ${boxes.length > 1 ? "grid-cols-2" : ""} ${COLONNE[Math.min(boxes.length, 4)]}`}
     >
       {boxes.map((slides, i) => (
         <Box
