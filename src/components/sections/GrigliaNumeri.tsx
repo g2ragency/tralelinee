@@ -266,7 +266,11 @@ function Box({
            proporzione fissa, cosi' con un'etichetta lunga crescono invece di
            stringere il numero. Quelli social stanno da soli su una riga e
            l'altezza gliela da' il contenuto. */
-        variante === "sopra" ? "min-h-[240px] xl:min-h-0" : ""
+        /* I social sono quadrati da mobile (Figma): l'aspetto e' un minimo,
+           non una gabbia — se il contenuto e' piu' alto il riquadro cresce. */
+        variante === "sopra"
+          ? "min-h-[240px] xl:min-h-0"
+          : "aspect-square xl:aspect-auto"
       }`}
     >
       {/* Niente spazio riservato: un riquadro con un solo contenuto fa salire

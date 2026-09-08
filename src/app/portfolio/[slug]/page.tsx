@@ -152,7 +152,7 @@ export default async function CaseStudyPage({
       */}
       <Link
         href="/portfolio"
-        className="inline-block text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
+        className="inline-block text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
       >
         &larr; Torna all&rsquo;indice
       </Link>
@@ -239,7 +239,7 @@ export default async function CaseStudyPage({
       )}
 
       {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
-      <nav className="mt-[45px] flex xl:mt-[95px] items-center justify-between gap-6 text-[18px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]">
+      <nav className="mt-[16px] flex items-center justify-between gap-6 text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:mt-[95px] xl:text-[24px]">
         <Link href="/portfolio">← Torna all&rsquo;indice</Link>
         {prossimo && (
           <Link href={`/portfolio/${prossimo.slug}`} className="text-right">
