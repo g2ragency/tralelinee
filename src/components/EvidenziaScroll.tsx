@@ -34,9 +34,20 @@ gsap.registerPlugin(ScrollTrigger);
 export function EvidenziaScroll({
   paragrafi,
   classeP,
+  inizio = "top 50%",
+  fine = "top 0%",
 }: {
   paragrafi: string[];
   classeP?: string;
+  /*
+    Dove comincia e dove finisce l'accensione, in posizione del blocco
+    rispetto alla finestra. I valori di partenza sono quelli dell'intro, che
+    occupa lo schermo intero: un blocco piu' piccolo, come le schede del
+    Metodo, deve finire piu' in alto — altrimenti la sezione se ne va prima
+    che il testo si sia acceso del tutto.
+  */
+  inizio?: string;
+  fine?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -61,14 +72,14 @@ export function EvidenziaScroll({
         stagger: { each: 0.15 },
         scrollTrigger: {
           trigger: root,
-          start: "top 50%",
-          end: "top 0%",
+          start: inizio,
+          end: fine,
           scrub: 0.6,
         },
       });
     }, root);
     return () => ctx.revert();
-  }, []);
+  }, [inizio, fine]);
 
   return (
     <div ref={ref}>

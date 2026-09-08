@@ -122,7 +122,9 @@ export function Metodo() {
                 */}
                 <EvidenziaScroll
                   paragrafi={[it.desc]}
-                  classeP="pt-[20px] text-[14px] leading-[1.4] tracking-[-0.04em] text-grey xl:text-[16px]"
+                  classeP="pt-[20px] text-[14px] leading-[1.4] tracking-[-0.04em] text-grey xl:text-[24px]"
+                  inizio="top 90%"
+                  fine="top 45%"
                 />
               </li>
             ))}
