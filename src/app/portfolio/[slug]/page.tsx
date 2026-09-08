@@ -143,8 +143,9 @@ export default async function CaseStudyPage({
       Misure dal Figma su base 1440: sezioni a piena larghezza dentro il
       padding laterale del sito (40px), ~70px sotto l'header — alto 70px su
       desktop e 58px su mobile — e 60px fra intestazione e primo blocco.
+      Da mobile sotto l'header sono 50px: 108 di padding meno i 58 dell'header.
     */
-    <main className="min-h-svh px-[10px] pb-32 pt-[128px] xl:px-10 xl:pt-[140px]">
+    <main className="min-h-svh px-[10px] pb-32 pt-[108px] xl:px-10 xl:pt-[140px]">
       {/*
         Uscita anche in cima, non solo in fondo: chi apre un progetto e capisce
         subito che non e' quello che cercava non deve scorrere tutta la pagina
@@ -152,7 +153,11 @@ export default async function CaseStudyPage({
       */}
       <Link
         href="/portfolio"
-        className="inline-block text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
+        /* `block w-fit` e non `inline-block`: da inline il link si appoggia
+           alla linea di base e si porta dietro l'interlinea della pagina,
+           quattro pixel che falsavano lo stacco sotto l'header. Il bersaglio
+           resta largo quanto il testo. */
+        className="block w-fit text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
       >
         &larr; Torna all&rsquo;indice
       </Link>
