@@ -10,6 +10,7 @@ import { Metodo } from "@/components/sections/Metodo";
 import { Clienti } from "@/components/sections/Clienti";
 import { Capabilities } from "@/components/sections/Capabilities";
 import { Contatti } from "@/components/sections/Contatti";
+import { RivelaRighe } from "@/components/RivelaRighe";
 
 export default function Home() {
   return (
@@ -19,11 +20,15 @@ export default function Home() {
       <section className="flex min-h-svh items-end px-[10px] pb-10 xl:px-10">
         {/* Figma: Regular 46px su mobile e 86px da desktop, lh 100%, ls -4%.
             Enfasi col colore: grigio #696969 / bianco #DFDFDF */}
-        <h1 className="max-w-[1100px] text-[46px] leading-none tracking-[-0.04em] text-grey xl:text-[86px]">
+        {/* Le righe salgono da dietro una maschera all'apertura della pagina;
+            l'enfasi resta quella fissa del colore. */}
+        <RivelaRighe
+          className="max-w-[1100px] text-[46px] leading-none tracking-[-0.04em] text-grey xl:text-[86px]"
+        >
           Il concetto di <span className="text-foreground">progresso </span>è un{" "}
           <span className="text-foreground">meccanismo protettivo</span> che ci
           difende dai terrori del futuro
-        </h1>
+        </RivelaRighe>
       </section>
 
       {/* Chi Siamo — scroll orizzontale pinnato (A3) */}

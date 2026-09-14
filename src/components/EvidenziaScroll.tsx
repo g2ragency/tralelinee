@@ -3,6 +3,7 @@
 import { Fragment, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { rivelaRighe } from "@/lib/rivela";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,9 +37,15 @@ export function EvidenziaScroll({
   classeP,
   inizio = "top 50%",
   fine = "top 0%",
+  rivela = false,
 }: {
   paragrafi: string[];
   classeP?: string;
+  /*
+    Prima dell'accensione, le righe entrano da dietro una maschera (vedi
+    lib/rivela). L'accensione parte a salita finita, sui nodi ripristinati.
+  */
+  rivela?: boolean;
   /*
     Dove comincia e dove finisce l'accensione, in posizione del blocco
     rispetto alla finestra. I valori di partenza sono quelli dell'intro, che
@@ -54,37 +61,61 @@ export function EvidenziaScroll({
   useLayoutEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const chars = root.querySelectorAll<HTMLElement>("[data-c]");
 
     // Chi ha chiesto meno animazioni legge il testo pieno, non uno spento.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      gsap.set(chars, { opacity: 1 });
+      gsap.set(root.querySelectorAll("[data-c]"), { opacity: 1 });
+      root
+        .querySelectorAll(".invisible")
+        .forEach((el) => el.classList.remove("invisible"));
       return;
     }
 
-    const ctx = gsap.context(() => {
-      gsap.to(chars, {
-        opacity: 1,
-        ease: "none",
-        // durata lunga rispetto al passo: il fronte di accensione resta
-        // morbido, ~13 caratteri in transizione invece di un interruttore
-        duration: 2,
-        stagger: { each: 0.15 },
-        scrollTrigger: {
-          trigger: root,
-          start: inizio,
-          end: fine,
-          scrub: 0.6,
-        },
+    /*
+      I caratteri si cercano quando si accende, non prima: dopo la salita
+      delle righe il DOM viene ripristinato e i nodi sono altri.
+    */
+    let ctx: gsap.Context | null = null;
+    const accendi = () => {
+      const chars = root.querySelectorAll<HTMLElement>("[data-c]");
+      ctx = gsap.context(() => {
+        gsap.to(chars, {
+          opacity: 1,
+          ease: "none",
+          // durata lunga rispetto al passo: il fronte di accensione resta
+          // morbido, ~13 caratteri in transizione invece di un interruttore
+          duration: 2,
+          stagger: { each: 0.15 },
+          scrollTrigger: {
+            trigger: root,
+            start: inizio,
+            end: fine,
+            scrub: 0.6,
+          },
+        });
+      }, root);
+    };
+
+    let fermaRivela: (() => void) | undefined;
+    if (rivela) {
+      fermaRivela = rivelaRighe([...root.querySelectorAll<HTMLElement>("p")], {
+        inVista: true,
+        alTermine: accendi,
       });
-    }, root);
-    return () => ctx.revert();
-  }, [inizio, fine]);
+    } else {
+      accendi();
+    }
+
+    return () => {
+      fermaRivela?.();
+      ctx?.revert();
+    };
+  }, [inizio, fine, rivela]);
 
   return (
     <div ref={ref}>
       {paragrafi.map((testo, i) => (
-        <p key={i} className={classeP}>
+        <p key={i} className={`${rivela ? "invisible " : ""}${classeP ?? ""}`}>
           {testo.split(" ").map((parola, j) => (
             <Fragment key={j}>
               {j > 0 && " "}

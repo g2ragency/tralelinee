@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ExpandLogo } from "./ExpandLogo";
+import { Logo } from "./Logo";
 import { VoceMenu } from "./VoceMenu";
 import { ThemeSwitch } from "@/components/ThemeToggle";
 import { createClient } from "@/lib/supabase/client";
@@ -122,7 +122,7 @@ export function Header() {
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[180%] bg-gradient-to-b from-background to-transparent"
       />
 
-      <ExpandLogo />
+      <Logo />
 
       {/* Menu desktop */}
       <nav className="hidden xl:block" aria-label="Principale">
@@ -146,9 +146,12 @@ export function Header() {
             Solo a chi e' entrato, e solo a stato noto per non far lampeggiare
             la voce sbagliata. A chi non e' entrato non si mostra nulla: l'invito
             ad accedere sta nella pagina del portfolio, dove serve davvero.
+            Separatore bianco e piu' alto della riga di testo (il grigio al 40%
+            non si vedeva): il padding lo allunga, il margine negativo lo
+            riassorbe cosi' la riga del menu non cresce.
           */}
           {loggato && (
-            <li className="border-l border-grey/40 pl-[30px]">
+            <li className="-my-[5px] border-l border-white py-[5px] pl-[30px]">
               <VoceMenu href="/account" attiva={areaAttiva}>
                 Account
               </VoceMenu>
@@ -180,7 +183,7 @@ export function Header() {
         aria-hidden={!menuOpen}
       >
           <div className="flex items-center justify-between px-[10px] py-[18px]">
-            <ExpandLogo />
+            <Logo />
             <button
               type="button"
               className="flex h-8 w-8 items-center justify-center"

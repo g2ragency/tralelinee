@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ExpandLogo } from "@/components/layout/ExpandLogo";
+import { Logo } from "@/components/layout/Logo";
 
 /*
   Cornice delle pagine di accesso: niente header — al suo posto un «Indietro»
@@ -27,7 +27,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
         </Link>
         <span className="pointer-events-none absolute inset-x-0 flex justify-center">
           <span className="pointer-events-auto">
-            <ExpandLogo compatto />
+            <Logo compatto />
           </span>
         </span>
       </div>

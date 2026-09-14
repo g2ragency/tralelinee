@@ -25,6 +25,7 @@ export function Contatti() {
           "Per istituzioni, imprese e organizzazioni che desiderano esplorare nuovi scenari, rafforzare il proprio posizionamento o attivare strategie di influenza culturale e comunicativa. Contattaci per avviare un dialogo e valutare insieme percorsi di collaborazione.",
         ]}
         classeP="text-left text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:text-[52px] xl:font-normal xl:leading-[1.02]"
+        rivela
       />
       <a
         href="/registrati"

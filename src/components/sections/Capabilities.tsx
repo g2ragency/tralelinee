@@ -93,7 +93,7 @@ const CapSection = forwardRef<HTMLDivElement, Cap>(function CapSection(
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div id={`cap-${num}`} ref={ref} className="scroll-mt-[130px]">
+    <div ref={ref}>
       <div>
         {/* Regular, ls -4%: 26px lh 93% su mobile, dove il numero precede il
             titolo senza parentesi; 52px da desktop, dove il numero sta nella
@@ -177,14 +177,20 @@ export function Capabilities() {
     if (!digit) return;
 
     const ctx = gsap.context(() => {
-      // UN solo numero: ogni sezione, quando la sua cima passa il centro
-      // dello schermo, aggiorna il testo del digit (01→06 e ritorno).
+      /*
+        UN solo numero: ogni sezione aggiorna il testo del digit (01→06 e
+        ritorno) quando il suo titolo arriva ALL'ALTEZZA del numero, che sta
+        fermo a 100px dall'alto — non quando passa la meta' dello schermo,
+        dove il numero cambiava con il titolo ancora mezzo schermo piu' giu'.
+        Il titolo e' il primo figlio del blocco, quindi la cima del blocco e'
+        la cima del titolo.
+      */
       sectionRefs.current.forEach((el, i) => {
         if (!el) return;
         ScrollTrigger.create({
           trigger: el,
-          start: "top center",
-          end: "bottom center",
+          start: "top 100px",
+          end: "bottom 100px",
           onEnter: () => (digit.textContent = SECTIONS[i].num),
           onEnterBack: () => (digit.textContent = SECTIONS[i].num),
         });
@@ -198,7 +204,7 @@ export function Capabilities() {
     <section id="capabilities" className="px-[10px] pb-24 xl:px-10 xl:pb-40">
       {/* Servizi col suo testo: schermata a sé, alta quanto la finestra.
           La pila con numeri e accordion scorre subito dopo. */}
-      <div className="flex min-h-svh max-w-[1265px] flex-col justify-center py-24 xl:py-28">
+      <div className="flex min-h-svh flex-col justify-center py-24 xl:py-28">
         {/* Etichetta: Medium 12px lh 110% su mobile, 24px lh 93.3% da desktop */}
         <p className="mb-[10px] text-[12px] font-medium leading-[1.1] tracking-[-0.04em] text-label xl:mb-6 xl:text-[24px] xl:leading-[0.933] xl:tracking-[-0.72px]">
           Servizi
@@ -211,23 +217,9 @@ export function Capabilities() {
             "Chiamati dalla vocazione agli scenari del futuro, plasmiamo il dibattito pubblico costruendo nuovi mondi narrativi. Il nostro obiettivo è creare cornici culturali dove istituzioni, corporate e professionisti possano affermarsi come leader di pensiero sviluppando concept in grado di ispirare politiche.",
           ]}
           classeP="text-left text-[26px] font-normal leading-[1.02] tracking-[-0.04em] xl:text-[52px]"
+          rivela
         />
       </div>
-
-      {/* Nav interna [01]-[06] con smooth scroll alle sezioni */}
-      <nav aria-label="Capabilities" className="mb-32 hidden grid-cols-6 gap-6 xl:grid">
-        {/* Nav interna: Heavy 14px, lh 93.3%, ls -4%; nome in GRIGIO1 */}
-        {SECTIONS.map(({ num, title }) => (
-          <a key={num} href={`#cap-${num}`} className="block">
-            <span className="block text-[14px] font-extrabold leading-[0.933] tracking-[-0.56px]">
-              [{num}]
-            </span>
-            <span className="mt-2 block max-w-[220px] text-[14px] font-medium leading-[0.933] tracking-[-0.56px] text-grey">
-              {title}
-            </span>
-          </a>
-        ))}
-      </nav>
 
       {/* Desktop: digit unico pinnato a sinistra + colonna sezioni a destra.
           Il numero è sticky per l'intera pila e il suo testo cambia 01→06. */}

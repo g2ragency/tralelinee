@@ -76,13 +76,14 @@ export function Metodo() {
         id="metodo"
         className="flex min-h-svh flex-col justify-center px-[10px] py-24 xl:px-10 xl:py-28"
       >
-        <p className={`mb-[10px] xl:mb-20 ${ETICHETTA}`}>Metodo</p>
+        <p className={`mb-[10px] xl:mb-6 ${ETICHETTA}`}>Metodo</p>
 
         {/* Intro: Regular 26px su mobile e 52px da desktop, lh 102%, ls -4%,
             allineata a sinistra; si accende con lo scroll */}
         <EvidenziaScroll
           paragrafi={INTRO}
           classeP="mt-[26px] text-left text-[26px] font-normal leading-[1.02] tracking-[-0.04em] first:mt-0 xl:mt-[52px] xl:text-[52px]"
+          rivela
         />
       </section>
 
