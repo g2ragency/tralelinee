@@ -56,12 +56,27 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   }, [pathname]);
 
   useEffect(() => {
+    /*
+      ScrollTrigger va aggiornato DENTRO il fotogramma di Lenis, non dopo.
+      L'aggancio si fa al primo fotogramma in cui l'istanza esiste: al
+      montaggio `lenisRef.current.lenis` non c'e' ancora (ReactLenis la crea
+      nel proprio effetto), e un `on` fatto qui fuori cadeva nel vuoto.
+      Senza aggancio ScrollTrigger si arrangiava con l'evento `scroll` del
+      browser, che arriva un paio di fotogrammi dopo: il numero 01-06 dei
+      servizi cambiava col titolo gia' 14px oltre il punto giusto.
+    */
+    let sgancia: (() => void) | null = null;
     const update = (time: number) => {
-      lenisRef.current?.lenis?.raf(time * 1000);
+      const lenis = lenisRef.current?.lenis;
+      if (!lenis) return;
+      if (!sgancia) {
+        lenis.on("scroll", ScrollTrigger.update);
+        sgancia = () => lenis.off("scroll", ScrollTrigger.update);
+      }
+      lenis.raf(time * 1000);
     };
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
-    lenisRef.current?.lenis?.on("scroll", ScrollTrigger.update);
 
     /*
       ScrollTrigger calcola le posizioni una volta e non si accorge se la
@@ -113,6 +128,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
 
     return () => {
       gsap.ticker.remove(update);
+      sgancia?.();
       ro.disconnect();
       clearTimeout(attesa);
     };
