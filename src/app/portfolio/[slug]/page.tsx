@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { signedUrl } from "@/lib/media";
+import { immaginiFirmate, MISURE } from "@/lib/media";
 import { SchedaDati, getRenderer } from "@/lib/sections/render";
 import type { SectionContent } from "@/lib/sections/schema";
 
@@ -78,7 +78,7 @@ export default async function CaseStudyPage({
     getRenderer(s.kind),
   );
 
-  const copertina = await signedUrl(progetto.cover_path);
+  const [copertina] = await immaginiFirmate([progetto.cover_path]);
 
   /*
     Da mobile la scheda dati sale sotto il titolo, sopra la prima immagine: il
@@ -199,7 +199,14 @@ export default async function CaseStudyPage({
           {/* eslint-disable-next-line @next/next/no-img-element --
               URL firmato a scadenza: next/image lo terrebbe in cache oltre la
               validità. */}
-          <img src={copertina} alt="" className="h-full w-full object-cover" />
+          <img
+            src={copertina.src}
+            srcSet={copertina.srcSet}
+            sizes={MISURE.piena}
+            alt=""
+            fetchPriority="high"
+            className="h-full w-full object-cover"
+          />
         </figure>
       )}
 

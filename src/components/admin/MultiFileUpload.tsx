@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAnteprime } from "./useAnteprime";
+import { caricaFile } from "./carica";
 
 /*
   Caricamento di più immagini (carosello, gallerie).
@@ -41,12 +42,8 @@ export function MultiFileUpload({
     setStato("carico");
     const nuovi: string[] = [];
     for (const file of files) {
-      const pulito = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
-      const destinazione = `progetti/${projectId}/${Date.now()}-${pulito}`;
-      const { error } = await supabase.storage
-        .from("portfolio-media")
-        .upload(destinazione, file, { upsert: false });
-      if (error) break;
+      const destinazione = await caricaFile(supabase, projectId, file);
+      if (!destinazione) break;
       nuovi.push(destinazione);
     }
     // Quelle già caricate restano anche se una successiva non è riuscita:

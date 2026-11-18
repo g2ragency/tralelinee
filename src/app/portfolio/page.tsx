@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { logout } from "@/app/auth/actions";
 import { createClient } from "@/lib/supabase/server";
-import { signedUrls } from "@/lib/media";
+import { immaginiFirmate } from "@/lib/media";
 import { ElencoProgetti } from "@/components/portfolio/ElencoProgetti";
 
 export const metadata = { title: "Portfolio — Tra le linee" };
@@ -108,12 +108,12 @@ export default async function PortfolioPage({
     .select("id, slug, title, client, cover_path, category")
     .order("position");
   const progetti = (data as Progetto[] | null) ?? [];
-  const covers = await signedUrls(progetti.map((p) => p.cover_path));
+  const covers = await immaginiFirmate(progetti.map((p) => p.cover_path));
   /*
     Le schede arrivano tutte al client, che filtra da solo: il portfolio è un
     elenco corto e il cambio di filtro non deve passare dalla rete.
   */
-  const schede = progetti.map((p, i) => ({ ...p, cover: covers[i] ?? null }));
+  const schede = progetti.map((p, i) => ({ ...p, cover: covers[i]?.src ?? null, coverSet: covers[i]?.srcSet ?? null }));
 
   return (
     /* Sotto l'header — alto 58px su mobile e 70px su desktop — 50px su

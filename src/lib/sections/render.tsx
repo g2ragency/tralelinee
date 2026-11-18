@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
-import { signedUrl, signedUrls } from "@/lib/media";
+import {
+  immaginiFirmate,
+  MISURE,
+  signedUrl,
+  signedUrls,
+  type Firmata,
+} from "@/lib/media";
 import { VociLaterali } from "@/components/sections/VociLaterali";
 import { Carosello } from "@/components/sections/Carosello";
 import { FilaBox } from "@/components/sections/GrigliaNumeri";
@@ -101,15 +107,19 @@ async function MediaRender({ content }: { content: SectionContent }) {
     );
   }
 
-  const src = await signedUrl(s(content.immagine) || null);
-  if (!src) return <figure className={cornice} aria-hidden />;
+  const [im] = await immaginiFirmate([s(content.immagine) || null]);
+  if (!im) return <figure className={cornice} aria-hidden />;
   return (
     <figure className={cornice}>
       {/* eslint-disable-next-line @next/next/no-img-element --
           URL firmato a scadenza: next/image lo metterebbe in cache oltre la
           validità, restituendo immagini rotte. */}
       <img
-        src={src}
+        src={im.src}
+        srcSet={im.srcSet}
+        sizes={MISURE.piena}
+        loading="lazy"
+        decoding="async"
         alt={alt}
         className="absolute inset-0 h-full w-full object-cover"
       />
@@ -155,12 +165,14 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
         (p): p is string => typeof p === "string",
       )
     : [];
-  const urls = (await signedUrls(paths)).filter((u): u is string => !!u);
+  const firmate = (await immaginiFirmate(paths)).filter(
+    (u): u is Firmata => !!u,
+  );
 
   // Senza immagini restano i riquadri vuoti, come nel blocco Media: si vede
   // il formato scelto mentre si monta la pagina.
-  const celle: (string | null)[] = urls.length
-    ? urls
+  const celle: (Firmata | null)[] = firmate.length
+    ? firmate
     : Array(f.doppio ? 2 : 1).fill(null);
 
   const libera = !f.aspetto;
@@ -168,24 +180,29 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
     <section
       className={`grid gap-[20px] ${f.doppio ? "grid-cols-2 items-start" : ""}`}
     >
-      {celle.map((url, i) => (
+      {celle.map((im, i) => (
         <div
           key={i}
           className={`w-full overflow-hidden rounded-[15px] bg-box xl:rounded-[30px] ${
-            libera ? (url ? "" : "aspect-video") : f.aspetto
+            libera ? (im?.w ? "" : "aspect-video") : f.aspetto
           }`}
+          /* Proporzione libera ma nota dal nome del file: il riquadro ha già
+             l'altezza giusta e la pagina non si allunga mentre si scorre. */
+          style={libera && im?.w && im.h ? { aspectRatio: `${im.w} / ${im.h}` } : undefined}
         >
-          {url && (
+          {im && (
             /* eslint-disable-next-line @next/next/no-img-element --
                URL firmato a scadenza: next/image lo terrebbe in cache oltre
                la validità. Lazy: una pagina portfolio ne ha anche trenta. */
             <img
-              src={url}
+              src={im.src}
+              srcSet={im.srcSet}
+              sizes={f.doppio ? MISURE.mezza : MISURE.piena}
               alt=""
               loading="lazy"
               decoding="async"
               className={
-                libera ? "block h-auto w-full" : "h-full w-full object-cover"
+                libera && !im.w ? "block h-auto w-full" : "h-full w-full object-cover"
               }
             />
           )}

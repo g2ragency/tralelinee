@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { eVideo, useAnteprime } from "./useAnteprime";
+import { caricaFile } from "./carica";
 
 /*
   Caricamento diretto dal browser al bucket privato.
@@ -49,15 +50,8 @@ export function FileUpload({
     }
 
     setStato("carico");
-    // Nome prevedibile ma non collidente; niente caratteri problematici.
-    const pulito = file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
-    const destinazione = `progetti/${projectId}/${Date.now()}-${pulito}`;
-
-    const { error } = await supabase.storage
-      .from("portfolio-media")
-      .upload(destinazione, file, { upsert: false });
-
-    if (error) {
+    const destinazione = await caricaFile(supabase, projectId, file);
+    if (!destinazione) {
       setStato("errore");
       return;
     }

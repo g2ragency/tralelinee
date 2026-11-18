@@ -16,6 +16,7 @@ export type Scheda = {
   client: string | null;
   category: string | null;
   cover: string | null;
+  coverSet?: string | null;
 };
 
 type Categoria = { chiave: string; label: string };
@@ -151,6 +152,8 @@ export function ElencoProgetti({
                        scadrebbe in cache. */
                     <img
                       src={p.cover}
+                      srcSet={p.coverSet ?? undefined}
+                      sizes="(min-width: 1280px) calc(50vw - 50px), calc(100vw - 20px)"
                       alt=""
                       className="aspect-[4/3] w-full rounded-[20px] object-cover"
                     />

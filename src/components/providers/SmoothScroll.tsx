@@ -8,6 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/* Posizioni per pagina, per la durata della scheda del browser. */
+const MEMORIA = "tralelinee:posizioni";
+
 /*
   A1 — smooth scroll globale con Lenis, guidato dal ticker GSAP così che
   ScrollTrigger e Lenis condividano lo stesso clock (necessario per le
@@ -18,13 +21,68 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   /* Indietro/Avanti: quella posizione va ripristinata, non azzerata. */
   const daCronologia = useRef(false);
+  /* Primo montaggio: un ricaricamento o un Indietro da un altro sito
+     ripristinano anche loro, un ingresso normale parte in cima. */
+  const primoGiro = useRef(true);
+
+  /*
+    Ripristino della posizione con Indietro/Avanti: lo facciamo noi.
+
+    Lasciato al browser non teneva: dopo l'Indietro la pagina si apriva al
+    punto giusto, ma un fotogramma dopo Lenis finiva lo scorrimento iniziato
+    sulla pagina VECCHIA, e ScrollTrigger, ricalcolando, rimetteva quella
+    posizione. Dalla home in cima si tornava a 1080px, cioè dove si era nel
+    portfolio; da un progetto lungo, nel footer. Misurato il 18/11 sullo
+    staging, con le chiamate registrate una per una.
+
+    Quindi: il browser non ripristina più (`manual`), la posizione di ogni
+    pagina si annota qui mentre si scorre, e tornandoci la si dice a Lenis.
+    La chiave è il percorso, senza la query: i filtri del portfolio non sono
+    pagine diverse.
+  */
+  const posizioni = useRef<Record<string, number>>({});
+  /* Pagina di cui si sta annotando la posizione: finché il percorso nella
+     barra non coincide (navigazione in corso) non si annota niente, o la
+     posizione della pagina vecchia finirebbe su quella nuova. */
+  const pagina = useRef<string | null>(null);
+  /*
+    Posizione da raggiungere. Si riapplica a ogni fotogramma finché la pagina
+    non è abbastanza lunga per arrivarci: le immagini si caricano mentre si
+    scende e una pagina lunga, appena riaperta, è più corta di com'era.
+    Si abbandona se chi legge scorre, o dopo qualche secondo.
+  */
+  const obiettivo = useRef<{ y: number; fino: number } | null>(null);
 
   useEffect(() => {
     const segna = () => {
       daCronologia.current = true;
     };
     window.addEventListener("popstate", segna);
-    return () => window.removeEventListener("popstate", segna);
+
+    window.history.scrollRestoration = "manual";
+    try {
+      posizioni.current = JSON.parse(sessionStorage.getItem(MEMORIA) ?? "{}");
+    } catch {
+      // sessione non disponibile (navigazione privata): si ricomincia vuoti
+    }
+    const salva = () => {
+      try {
+        sessionStorage.setItem(MEMORIA, JSON.stringify(posizioni.current));
+      } catch {}
+    };
+    // Chi tocca la pagina ha la precedenza sul ripristino.
+    const lascia = () => {
+      obiettivo.current = null;
+    };
+    const input = ["wheel", "touchstart", "keydown", "pointerdown"] as const;
+    input.forEach((e) => window.addEventListener(e, lascia, { passive: true }));
+    window.addEventListener("pagehide", salva);
+    return () => {
+      window.removeEventListener("popstate", segna);
+      input.forEach((e) => window.removeEventListener(e, lascia));
+      window.removeEventListener("pagehide", salva);
+      salva();
+    };
   }, []);
 
   /*
@@ -47,12 +105,28 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
     — si è arrivati con Indietro o Avanti: quella posizione va ripristinata.
   */
   useEffect(() => {
-    if (daCronologia.current) {
-      daCronologia.current = false;
+    const tipo = (
+      performance.getEntriesByType("navigation")[0] as
+        | PerformanceNavigationTiming
+        | undefined
+    )?.type;
+    const ripristina =
+      daCronologia.current ||
+      (primoGiro.current && (tipo === "reload" || tipo === "back_forward"));
+    daCronologia.current = false;
+    primoGiro.current = false;
+    pagina.current = pathname;
+
+    if (!ripristina && window.location.hash) {
+      obiettivo.current = null;
       return;
     }
-    if (window.location.hash) return;
-    lenisRef.current?.lenis?.scrollTo(0, { immediate: true, force: true });
+    const y = ripristina ? (posizioni.current[pathname] ?? 0) : 0;
+    obiettivo.current = { y, fino: performance.now() + 3000 };
+    // Subito, se Lenis c'è già: ferma anche lo scorrimento rimasto a metà
+    // dalla pagina di prima. Il resto lo fa il ticker, fotogramma per
+    // fotogramma.
+    lenisRef.current?.lenis?.scrollTo(y, { immediate: true, force: true });
   }, [pathname]);
 
   useEffect(() => {
@@ -66,12 +140,35 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       servizi cambiava col titolo gia' 14px oltre il punto giusto.
     */
     let sgancia: (() => void) | null = null;
+    const annota = ({ scroll }: { scroll: number }) => {
+      // Durante un ripristino le posizioni intermedie non contano.
+      if (obiettivo.current) return;
+      if (pagina.current && pagina.current === window.location.pathname) {
+        posizioni.current[pagina.current] = Math.round(scroll);
+      }
+    };
     const update = (time: number) => {
       const lenis = lenisRef.current?.lenis;
       if (!lenis) return;
       if (!sgancia) {
         lenis.on("scroll", ScrollTrigger.update);
-        sgancia = () => lenis.off("scroll", ScrollTrigger.update);
+        lenis.on("scroll", annota);
+        sgancia = () => {
+          lenis.off("scroll", ScrollTrigger.update);
+          lenis.off("scroll", annota);
+        };
+      }
+      const o = obiettivo.current;
+      if (o) {
+        // Si arriva al punto chiesto, o al più lontano possibile per ora.
+        const y = Math.min(o.y, lenis.limit);
+        if (Math.abs(lenis.scroll - y) > 1) {
+          lenis.scrollTo(y, { immediate: true, force: true });
+        }
+        const arrivato = lenis.limit >= o.y && Math.abs(lenis.scroll - o.y) <= 1;
+        if (arrivato || performance.now() > o.fino) {
+          obiettivo.current = null;
+        }
       }
       lenis.raf(time * 1000);
     };
