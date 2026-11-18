@@ -59,7 +59,14 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  if (!user && PROTETTE.some((p) => pathname.startsWith(p))) {
+  /*
+    Le chiamate delle Server Action non si rimandano al login: il browser
+    riceverebbe la pagina di login al posto della risposta e mostrerebbe un
+    errore generico. Le azioni controllano da sé chi le chiama (e il database
+    con le RLS), e a sessione scaduta rispondono con un avviso leggibile.
+  */
+  const azione = request.method === "POST" && request.headers.has("next-action");
+  if (!user && !azione && PROTETTE.some((p) => pathname.startsWith(p))) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
     login.searchParams.set("next", pathname);
