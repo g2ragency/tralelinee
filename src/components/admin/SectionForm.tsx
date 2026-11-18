@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BottoneInvio } from "@/components/admin/BottoneInvio";
+import { FormAzione } from "@/components/admin/FormAzione";
 import { getSchema, type FieldSpec } from "@/lib/sections/schema";
 import { updateSection } from "@/app/admin/progetti/actions";
 import { FileUpload } from "./FileUpload";
@@ -64,7 +65,7 @@ export function SectionForm({
     "border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground";
 
   return (
-    <form action={updateSection} className="mt-4 flex flex-col gap-4">
+    <FormAzione action={updateSection} className="mt-4 flex flex-col gap-4">
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="project_id" value={projectId} />
       <input type="hidden" name="kind" value={kind} />
@@ -139,6 +140,7 @@ export function SectionForm({
               defaultPath={valori[f.name]}
               accept={f.type === "video" ? "video/*" : "image/*"}
               label={f.label}
+              hint={f.hint}
             />
           );
         }
@@ -188,8 +190,8 @@ export function SectionForm({
       <BottoneInvio
         className="self-start border border-foreground px-5 py-2 text-[16px]"
       >
-        Salva sezione
+        Salva blocco
       </BottoneInvio>
-    </form>
+    </FormAzione>
   );
 }

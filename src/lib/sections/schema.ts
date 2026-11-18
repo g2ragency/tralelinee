@@ -94,8 +94,8 @@ const CAMPI_RIQUADRO: FieldSpec[] = [
 
 export const SCHEMAS: Record<string, SectionSchema> = {
   intro: {
-    label: "Intro",
-    hint: "Scheda dati a sinistra (letta dal progetto) e paragrafo a destra.",
+    label: "Apertura: dati del progetto e paragrafo",
+    hint: "A sinistra Industry e Servizi, presi dai dati del progetto qui sopra; a destra il paragrafo di presentazione.",
     fields: [
       {
         name: "testo",
@@ -108,8 +108,8 @@ export const SCHEMAS: Record<string, SectionSchema> = {
   },
 
   voci: {
-    label: "Testo con voci laterali",
-    hint: "Voci selezionabili a sinistra, ognuna col proprio testo a destra.",
+    label: "Testo a schede (titoli a sinistra)",
+    hint: "Titoli cliccabili a sinistra; ognuno mostra il proprio testo a destra. Es. «La sfida», «La strategia».",
     fields: [
       {
         name: "voci",
@@ -129,26 +129,17 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     ],
   },
 
-  conclusioni: {
-    label: "Conclusioni",
-    hint: "Titolo a sinistra, testo a destra con «Leggi di più» se è lungo.",
-    fields: [
-      { name: "titolo", label: "Titolo", type: "text", required: true },
-      { name: "testo", label: "Testo", type: "richtext" },
-    ],
-  },
-
   carosello: {
-    label: "Carosello immagini",
-    hint: "Card 30px di raggio, scorrimento orizzontale, 2,2 in vista su desktop.",
+    label: "Carosello di immagini",
+    hint: "Immagini in fila che scorrono di lato; da computer se ne vedono due e un pezzo della terza.",
     fields: [
       { name: "immagini", label: "Immagini", type: "images" },
     ],
   },
 
   griglia: {
-    label: "Griglia numeri",
-    hint: "Riquadri con i numeri e testo di raccordo sotto.",
+    label: "Numeri in evidenza",
+    hint: "Riquadri con un numero grande e la sua didascalia (visitatori, ospiti…), più un testo sotto.",
     fields: [
       {
         name: "sopra",
@@ -163,16 +154,16 @@ export const SCHEMAS: Record<string, SectionSchema> = {
       },
       {
         name: "testo",
-        label: "Testo di raccordo",
+        label: "Testo sotto i riquadri",
         type: "richtext",
-        hint: "Il grassetto mette in evidenza in bianco (nomi, cariche).",
+        hint: "Il grassetto si vede in bianco: serve per nomi e cariche.",
       },
     ],
   },
 
   social: {
-    label: "Riquadri social",
-    hint: "Riquadri con nome del canale, numero e didascalia; più contenuti per riquadro diventano un carosello.",
+    label: "Numeri dei social",
+    hint: "Un riquadro per canale (Instagram, Facebook…) con numero e didascalia. Più numeri nello stesso riquadro si alternano da soli.",
     fields: [
       {
         name: "riquadri",
@@ -189,8 +180,8 @@ export const SCHEMAS: Record<string, SectionSchema> = {
   },
 
   loghi: {
-    label: "Copertura stampa",
-    hint: "Due righe di loghi che scorrono all'infinito in senso opposto.",
+    label: "Loghi della stampa (scorrono)",
+    hint: "Una o due file di loghi che scorrono senza fine, in direzioni opposte.",
     fields: [
       { name: "titolo", label: "Titolo", type: "text" },
       {
@@ -209,8 +200,8 @@ export const SCHEMAS: Record<string, SectionSchema> = {
   },
 
   immagini: {
-    label: "Immagini",
-    hint: "Un formato per blocco. Più blocchi, spostabili con le frecce, compongono la sequenza della pagina.",
+    label: "Immagini (una o due per riga)",
+    hint: "Un formato per blocco. Per alternare formati diversi si aggiungono più blocchi e si mettono in ordine con le frecce.",
     fields: [
       {
         name: "formato",
@@ -221,24 +212,36 @@ export const SCHEMAS: Record<string, SectionSchema> = {
           quindi i formati affiancati sono larghi (1360 − 20) / 2 = 670.
         */
         options: [
-          { value: "16-9", label: "Piena larghezza 16:9 — 1360×765" },
-          { value: "fascia", label: "Fascia orizzontale — 1360×300" },
-          { value: "quadrate", label: "Due affiancate quadrate — 670×670" },
-          { value: "verticali", label: "Due affiancate verticali — 670×820" },
+          { value: "16-9", label: "Una per riga, 16:9 — 1360×765" },
+          { value: "alta", label: "Una per riga, alta — 1360×980" },
+          { value: "3-2", label: "Una per riga, 3:2 — 1360×907" },
+          { value: "2-1", label: "Una per riga, 2:1 — 1360×680" },
+          { value: "fascia", label: "Una per riga, fascia bassa — 1360×300" },
+          {
+            value: "originale",
+            label: "Una per riga, proporzione dell'immagine (nessun ritaglio)",
+          },
+          { value: "verticali-3-4", label: "Due per riga, verticali 3:4 — 670×894" },
+          { value: "verticali", label: "Due per riga, verticali — 670×820" },
+          { value: "quadrate", label: "Due per riga, quadrate — 670×670" },
+          {
+            value: "originale-doppie",
+            label: "Due per riga, proporzione dell'immagine (nessun ritaglio)",
+          },
         ],
       },
       {
         name: "immagini",
         label: "Immagini",
         type: "images",
-        hint: "I formati affiancati vanno a due per riga: con quattro immagini si ottengono due righe. L'ordine è quello dell'elenco.",
+        hint: "Nei formati «due per riga» quattro immagini fanno due righe. Le immagini vengono ritagliate al formato scelto, tranne in «proporzione dell'immagine». Misura consigliata: almeno il doppio di quella indicata (es. 2720 px di larghezza).",
       },
     ],
   },
 
   media: {
-    label: "Media",
-    hint: "Immagine o video a piena larghezza, angoli 30px, proporzione 16:9.",
+    label: "Video, o immagine singola 16:9",
+    hint: "Un video caricato o da YouTube/Vimeo, oppure una sola immagine, a tutta larghezza in formato 16:9.",
     fields: [
       {
         name: "tipo",
@@ -260,7 +263,17 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         name: "video",
         label: "File video",
         type: "video",
-        hint: "Resta nel bucket privato. Meglio restare sotto i 50MB.",
+        hint: "Lo vedono solo gli utenti approvati. Meglio restare sotto i 50 MB (MP4).",
+        showIf: { field: "tipo", equals: "video_file" },
+      },
+      {
+        name: "modo",
+        label: "Riproduzione",
+        type: "select",
+        options: [
+          { value: "comandi", label: "Con i comandi: parte quando lo si avvia" },
+          { value: "loop", label: "In loop, da solo e senza audio (animazioni)" },
+        ],
         showIf: { field: "tipo", equals: "video_file" },
       },
       {
@@ -277,7 +290,21 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         hint: "Opzionale, mostrata prima dell'avvio del video.",
         showIf: { field: "tipo", equals: "video_file" },
       },
-      { name: "alt", label: "Testo alternativo", type: "text" },
+      {
+        name: "alt",
+        label: "Descrizione per chi non vede l'immagine",
+        type: "text",
+        hint: "Letta dagli screen reader. Una frase breve su cosa si vede.",
+      },
+    ],
+  },
+
+  conclusioni: {
+    label: "Conclusioni (con «Leggi di più»)",
+    hint: "Titolo a sinistra, testo a destra. Se il testo è lungo compare «Leggi di più» per aprirlo tutto.",
+    fields: [
+      { name: "titolo", label: "Titolo", type: "text", required: true },
+      { name: "testo", label: "Testo", type: "richtext" },
     ],
   },
 };
@@ -286,11 +313,16 @@ export function getSchema(kind: string): SectionSchema | undefined {
   return SCHEMAS[kind];
 }
 
-/* Elenco per il menu "aggiungi sezione". */
+/*
+  Elenco per il menu «Aggiungi blocco», nell'ordine in cui di solito i blocchi
+  compaiono nella pagina (quello di SCHEMAS), non in ordine alfabetico.
+*/
 export function sectionOptions() {
-  return Object.entries(SCHEMAS)
-    .map(([kind, s]) => ({ kind, label: s.label, hint: s.hint }))
-    .sort((a, b) => a.label.localeCompare(b.label));
+  return Object.entries(SCHEMAS).map(([kind, s]) => ({
+    kind,
+    label: s.label,
+    hint: s.hint,
+  }));
 }
 
 /*

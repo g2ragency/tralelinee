@@ -7,6 +7,17 @@ import { FileUpload } from "./FileUpload";
 
 type Item = Record<string, string>;
 
+/*
+  Identità di un elemento finché la pagina resta aperta. Serve come key di
+  React: con l'indice, spostando una voce i campi controllati (titolo) si
+  scambiavano ma gli editor rich text, che leggono il valore solo all'avvio,
+  restavano fermi; scrivendo poi in uno di quelli il testo finiva sulla voce
+  sbagliata e l'altro andava perso. Non arriva in archivio.
+*/
+const K = "__k";
+let contatore = 0;
+const conChiave = (it: Item): Item => ({ ...it, [K]: String(++contatore) });
+
 const classeInput =
   "border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground";
 
@@ -136,14 +147,14 @@ export function Repeater({
     pagina continua a mostrarli separati.
   */
   const [items, setItems] = useState<Item[]>(() => {
-    if (!groupBy) return defaultItems;
+    if (!groupBy) return defaultItems.map(conChiave);
     const usate = new Set(defaultItems.map((it) => it[groupBy]).filter(Boolean));
     let n = 0;
     return defaultItems.map((it) => {
-      if (it[groupBy]) return it;
+      if (it[groupBy]) return conChiave(it);
       while (usate.has(String(++n)));
       usate.add(String(n));
-      return { ...it, [groupBy]: String(n) };
+      return conChiave({ ...it, [groupBy]: String(n) });
     });
   });
 
@@ -155,12 +166,12 @@ export function Repeater({
     : fields;
 
   const nuovo = (): Item =>
-    Object.fromEntries(
+    conChiave(Object.fromEntries(
       fields.map((f) => [
         f.name,
         f.type === "select" ? (f.options[0]?.value ?? "") : "",
       ]),
-    );
+    ));
 
   const aggiorna = (i: number, campo: string, valore: string) =>
     setItems((prev) =>
@@ -220,7 +231,11 @@ export function Repeater({
   );
 
   const hidden = (
-    <input type="hidden" name={name} value={JSON.stringify(items)} />
+    <input
+      type="hidden"
+      name={name}
+      value={JSON.stringify(items, (k, v) => (k === K ? undefined : v))}
+    />
   );
 
   /* ===== Senza raggruppamento: elenco piatto ===== */
@@ -232,7 +247,7 @@ export function Repeater({
 
         {items.map((item, i) => (
           <fieldset
-            key={i}
+            key={item[K]}
             className="flex flex-col gap-3 border border-grey/40 p-4"
           >
             {intestazione(
@@ -367,7 +382,7 @@ export function Repeater({
 
           {g.indici.map((i, pos) => (
             <fieldset
-              key={i}
+              key={items[i][K]}
               className="flex flex-col gap-3 border border-grey/40 p-4"
             >
               {intestazione(

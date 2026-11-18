@@ -2,7 +2,6 @@
 
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
 import { useState } from "react";
 
 /*
@@ -41,8 +40,10 @@ export function RichText({
         blockquote: false,
         codeBlock: false,
         horizontalRule: false,
+        // StarterKit 3 include già i link: aggiungerli a parte li registrava
+        // due volte (avviso «Duplicate extension names» nella console).
+        link: { openOnClick: false, autolink: false },
       }),
-      Link.configure({ openOnClick: false, autolink: false }),
     ],
     content: defaultValue ?? "",
     onUpdate: ({ editor }) => {

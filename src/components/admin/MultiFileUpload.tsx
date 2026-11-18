@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useAnteprime } from "./useAnteprime";
 
 /*
   Caricamento di più immagini (carosello, gallerie).
@@ -25,6 +26,7 @@ export function MultiFileUpload({
 }) {
   const [paths, setPaths] = useState<string[]>(defaultPaths ?? []);
   const [stato, setStato] = useState<"idle" | "carico" | "errore">("idle");
+  const anteprime = useAnteprime(paths);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
@@ -44,14 +46,13 @@ export function MultiFileUpload({
       const { error } = await supabase.storage
         .from("portfolio-media")
         .upload(destinazione, file, { upsert: false });
-      if (error) {
-        setStato("errore");
-        return;
-      }
+      if (error) break;
       nuovi.push(destinazione);
     }
+    // Quelle già caricate restano anche se una successiva non è riuscita:
+    // prima si perdevano tutte, pur essendo già nel bucket.
     setPaths((p) => [...p, ...nuovi]);
-    setStato("idle");
+    setStato(nuovi.length === files.length ? "idle" : "errore");
     e.target.value = "";
   }
 
@@ -85,7 +86,8 @@ export function MultiFileUpload({
         )}
         {stato === "errore" && (
           <span role="alert" className="text-[16px] text-grey">
-            Caricamento non riuscito. Riprova.
+            Caricamento non riuscito per una o più immagini. Riprova con
+            quelle mancanti.
           </span>
         )}
         <span className="text-[16px] text-grey">
@@ -102,8 +104,24 @@ export function MultiFileUpload({
               key={p}
               className="flex items-center justify-between gap-3 border border-grey/40 px-3 py-2"
             >
-              <span className="truncate text-[15px] text-grey">
-                {i + 1}. {p.split("/").pop()}
+              <span className="flex min-w-0 items-center gap-3">
+                <span className="w-6 shrink-0 text-right text-[15px] text-grey">
+                  {i + 1}.
+                </span>
+                {anteprime[p] ? (
+                  /* eslint-disable-next-line @next/next/no-img-element --
+                     URL firmato a scadenza, solo per l'anteprima. */
+                  <img
+                    src={anteprime[p]}
+                    alt=""
+                    className="h-14 w-20 shrink-0 bg-box object-cover"
+                  />
+                ) : (
+                  <span className="h-14 w-20 shrink-0 bg-box" aria-hidden />
+                )}
+                <span className="truncate text-[15px] text-grey">
+                  {p.split("/").pop()}
+                </span>
               </span>
               <span className="flex shrink-0 items-center gap-2">
                 <button

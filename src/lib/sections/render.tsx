@@ -80,14 +80,21 @@ async function MediaRender({ content }: { content: SectionContent }) {
       signedUrl(s(content.poster) || null),
     ]);
     if (!src) return null;
+    /* In loop: le animazioni del Figma (sigle, loop di marchio) girano da
+       sole come una GIF. Senza audio, altrimenti il browser non le avvia. */
+    const loop = s(content.modo) === "loop";
     return (
       <figure className={cornice}>
         <video
           src={src}
           poster={poster ?? undefined}
-          controls
+          controls={!loop}
+          autoPlay={loop}
+          muted={loop}
+          loop={loop}
           playsInline
-          preload="metadata"
+          preload={loop ? "auto" : "metadata"}
+          aria-label={alt || undefined}
           className="absolute inset-0 h-full w-full object-cover"
         />
       </figure>
@@ -117,11 +124,21 @@ async function MediaRender({ content }: { content: SectionContent }) {
   Le classi stanno scritte per intero perché Tailwind legge il sorgente: una
   costruita a pezzi (`aspect-[${x}]`) non finirebbe mai nel CSS.
 */
+/*
+  aspetto vuoto = proporzione dell'immagine stessa, senza ritaglio: copre le
+  tante misure isolate delle tavole senza un formato per ciascuna.
+*/
 const FORMATI: Record<string, { doppio: boolean; aspetto: string }> = {
   "16-9": { doppio: false, aspetto: "aspect-video" },
+  alta: { doppio: false, aspetto: "aspect-[1360/980]" },
+  "3-2": { doppio: false, aspetto: "aspect-[3/2]" },
+  "2-1": { doppio: false, aspetto: "aspect-[2/1]" },
   fascia: { doppio: false, aspetto: "aspect-[1360/300]" },
-  quadrate: { doppio: true, aspetto: "aspect-square" },
+  originale: { doppio: false, aspetto: "" },
+  "verticali-3-4": { doppio: true, aspetto: "aspect-[3/4]" },
   verticali: { doppio: true, aspetto: "aspect-[670/820]" },
+  quadrate: { doppio: true, aspetto: "aspect-square" },
+  "originale-doppie": { doppio: true, aspetto: "" },
 };
 
 /*
@@ -146,20 +163,31 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
     ? urls
     : Array(f.doppio ? 2 : 1).fill(null);
 
+  const libera = !f.aspetto;
   return (
     <section
-      className={`grid gap-[20px] ${f.doppio ? "grid-cols-2" : ""}`}
+      className={`grid gap-[20px] ${f.doppio ? "grid-cols-2 items-start" : ""}`}
     >
       {celle.map((url, i) => (
         <div
           key={i}
-          className={`w-full overflow-hidden rounded-[15px] bg-box xl:rounded-[30px] ${f.aspetto}`}
+          className={`w-full overflow-hidden rounded-[15px] bg-box xl:rounded-[30px] ${
+            libera ? (url ? "" : "aspect-video") : f.aspetto
+          }`}
         >
           {url && (
             /* eslint-disable-next-line @next/next/no-img-element --
                URL firmato a scadenza: next/image lo terrebbe in cache oltre
-               la validità. */
-            <img src={url} alt="" className="h-full w-full object-cover" />
+               la validità. Lazy: una pagina portfolio ne ha anche trenta. */
+            <img
+              src={url}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className={
+                libera ? "block h-auto w-full" : "h-full w-full object-cover"
+              }
+            />
           )}
         </div>
       ))}

@@ -9,6 +9,7 @@ import {
   removeFromWhitelist,
 } from "@/app/admin/actions";
 import { BottoneInvio } from "@/components/admin/BottoneInvio";
+import { FormAzione } from "@/components/admin/FormAzione";
 
 export const metadata = { title: "Accessi — Tra le linee" };
 
@@ -70,7 +71,7 @@ export default async function AccessiPage() {
                 <span className="text-[18px] tracking-[-0.72px]">
                   {u.email}
                 </span>
-                <form action={setApproved}>
+                <FormAzione action={setApproved} semplice>
                   <input type="hidden" name="id" value={u.id} />
                   <input type="hidden" name="approved" value="true" />
                   <BottoneInvio
@@ -78,7 +79,7 @@ export default async function AccessiPage() {
                   >
                     Approva
                   </BottoneInvio>
-                </form>
+                </FormAzione>
               </li>
             ))}
           </ul>
@@ -105,7 +106,7 @@ export default async function AccessiPage() {
                   togliersi il ruolo, altrimenti ci si chiude fuori. */}
               {u.id !== me.id && (
                 <div className="flex shrink-0 items-center gap-3">
-                  <form action={setSuperAdmin}>
+                  <FormAzione action={setSuperAdmin} semplice>
                     <input type="hidden" name="id" value={u.id} />
                     <input
                       type="hidden"
@@ -124,8 +125,8 @@ export default async function AccessiPage() {
                         ? "Rimuovi super admin"
                         : "Nomina super admin"}
                     </BottoneInvio>
-                  </form>
-                  <form action={setApproved}>
+                  </FormAzione>
+                  <FormAzione action={setApproved} semplice>
                     <input type="hidden" name="id" value={u.id} />
                     <input type="hidden" name="approved" value="false" />
                     <BottoneInvio
@@ -133,7 +134,7 @@ export default async function AccessiPage() {
                     >
                       Revoca
                     </BottoneInvio>
-                  </form>
+                  </FormAzione>
                 </div>
               )}
             </li>
@@ -151,7 +152,7 @@ export default async function AccessiPage() {
           automaticamente.
         </p>
 
-        <form action={addToWhitelist} className="mt-6 flex gap-3">
+        <FormAzione action={addToWhitelist} semplice className="mt-6 flex flex-wrap gap-3">
           <input
             type="email"
             name="email"
@@ -164,7 +165,7 @@ export default async function AccessiPage() {
           >
             Aggiungi
           </BottoneInvio>
-        </form>
+        </FormAzione>
 
         <ul className="mt-6 border-t border-grey/40">
           {whitelist?.map((w) => (
@@ -175,14 +176,14 @@ export default async function AccessiPage() {
               <span className="text-[18px] tracking-[-0.72px] text-grey">
                 {w.email}
               </span>
-              <form action={removeFromWhitelist}>
+              <FormAzione action={removeFromWhitelist} semplice>
                 <input type="hidden" name="email" value={w.email} />
                 <BottoneInvio
                   className="text-[16px] text-grey underline"
                 >
                   Rimuovi
                 </BottoneInvio>
-              </form>
+              </FormAzione>
             </li>
           ))}
         </ul>

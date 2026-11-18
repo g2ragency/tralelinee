@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 import { BottoneInvio } from "@/components/admin/BottoneInvio";
+import { FormAzione } from "@/components/admin/FormAzione";
 import Link from "next/link";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { createProject, setPublished } from "./actions";
+import { createProject, moveProject, setPublished } from "./actions";
 
 export const metadata = { title: "Progetti — Tra le linee" };
 
@@ -12,6 +13,7 @@ type Progetto = {
   slug: string;
   title: string;
   client: string | null;
+  category: string | null;
   published: boolean;
   updated_at: string;
 };
@@ -26,7 +28,7 @@ export default async function ProgettiPage() {
   const supabase = await createClient();
   const { data } = await supabase
     .from("projects")
-    .select("id, slug, title, client, published, updated_at")
+    .select("id, slug, title, client, category, published, updated_at")
     .order("position");
   const progetti = (data as Progetto[] | null) ?? [];
 
@@ -39,72 +41,106 @@ export default async function ProgettiPage() {
         Progetti
       </h1>
 
-      <form action={createProject} className="mt-10 flex max-w-[720px] gap-3">
-        <input
-          type="text"
-          name="title"
-          required
-          placeholder="Titolo del nuovo progetto"
-          className="flex-1 border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
-        />
-        <BottoneInvio
-          className="border border-foreground px-5 py-2 text-[16px]"
-        >
-          Crea
-        </BottoneInvio>
-      </form>
+      <FormAzione action={createProject} className="mt-10 flex max-w-[720px] flex-col gap-3">
+        <div className="flex gap-3">
+          <input
+            type="text"
+            name="title"
+            required
+            placeholder="Titolo del nuovo progetto"
+            className="min-w-0 flex-1 border border-grey bg-transparent px-4 py-2 text-[18px] outline-none focus:border-foreground"
+          />
+          <BottoneInvio className="border border-foreground px-5 py-2 text-[16px]">
+            Crea
+          </BottoneInvio>
+        </div>
+        <span className="text-[14px] text-grey">
+          Nasce come bozza: la vedono solo i super admin finché non la pubblichi.
+        </span>
+      </FormAzione>
 
       {progetti.length === 0 ? (
         <p className="mt-16 text-[18px] tracking-[-0.72px] text-grey">
           Nessun progetto. Creane uno per iniziare.
         </p>
       ) : (
-        <ul className="mt-12 border-t border-grey/40">
-          {progetti.map((p) => (
-            <li
-              key={p.id}
-              className="flex flex-wrap items-center justify-between gap-4 border-b border-grey/40 py-4"
-            >
-              <div>
-                <Link
-                  href={`/admin/progetti/${p.id}`}
-                  className="text-[24px] tracking-[-0.96px]"
-                >
-                  {p.title}
-                </Link>
-                <p className="mt-1 text-[16px] text-grey">
-                  {p.client ? `${p.client} · ` : ""}/{p.slug}
-                  {!p.published && (
-                    <span className="ml-3 border border-grey/60 px-2 py-0.5 text-[13px]">
-                      bozza
-                    </span>
-                  )}
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <form action={setPublished}>
-                  <input type="hidden" name="id" value={p.id} />
-                  <input
-                    type="hidden"
-                    name="published"
-                    value={p.published ? "false" : "true"}
-                  />
-                  <BottoneInvio
-                    className="border border-grey px-4 py-2 text-[16px] text-grey"
+        <>
+          <p className="mt-12 text-[16px] text-grey">
+            L&rsquo;ordine è quello dell&rsquo;elenco portfolio: si cambia con
+            le frecce.
+          </p>
+          <ul className="mt-4 border-t border-grey/40">
+            {progetti.map((p, i) => (
+              <li
+                key={p.id}
+                className="flex flex-wrap items-center justify-between gap-4 border-b border-grey/40 py-4"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col gap-1">
+                    <FormAzione action={moveProject} semplice>
+                      <input type="hidden" name="id" value={p.id} />
+                      <input type="hidden" name="direction" value="up" />
+                      <BottoneInvio
+                        disabled={i === 0}
+                        ariaLabel={`Sposta su «${p.title}»`}
+                        className="border border-grey px-2 text-[14px] text-grey disabled:opacity-30"
+                      >
+                        ↑
+                      </BottoneInvio>
+                    </FormAzione>
+                    <FormAzione action={moveProject} semplice>
+                      <input type="hidden" name="id" value={p.id} />
+                      <input type="hidden" name="direction" value="down" />
+                      <BottoneInvio
+                        disabled={i === progetti.length - 1}
+                        ariaLabel={`Sposta giù «${p.title}»`}
+                        className="border border-grey px-2 text-[14px] text-grey disabled:opacity-30"
+                      >
+                        ↓
+                      </BottoneInvio>
+                    </FormAzione>
+                  </div>
+                  <div>
+                    <Link
+                      href={`/admin/progetti/${p.id}`}
+                      className="text-[24px] tracking-[-0.96px]"
+                    >
+                      {p.title}
+                    </Link>
+                    <p className="mt-1 text-[16px] text-grey">
+                      {p.category === "portfolio" ? "Portfolio" : "Case study"}
+                      {p.client ? ` · ${p.client}` : ""} · /{p.slug}
+                      {!p.published && (
+                        <span className="ml-3 border border-grey/60 px-2 py-0.5 text-[13px]">
+                          bozza
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <FormAzione action={setPublished} semplice>
+                    <input type="hidden" name="id" value={p.id} />
+                    <input
+                      type="hidden"
+                      name="published"
+                      value={p.published ? "false" : "true"}
+                    />
+                    <BottoneInvio className="border border-grey px-4 py-2 text-[16px] text-grey">
+                      {p.published ? "Ritira" : "Pubblica"}
+                    </BottoneInvio>
+                  </FormAzione>
+                  <Link
+                    href={`/admin/progetti/${p.id}`}
+                    className="border border-foreground px-4 py-2 text-[16px]"
                   >
-                    {p.published ? "Ritira" : "Pubblica"}
-                  </BottoneInvio>
-                </form>
-                <Link
-                  href={`/admin/progetti/${p.id}`}
-                  className="border border-foreground px-4 py-2 text-[16px]"
-                >
-                  Modifica
-                </Link>
-              </div>
-            </li>
-          ))}
-        </ul>
+                    Modifica
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </main>
   );

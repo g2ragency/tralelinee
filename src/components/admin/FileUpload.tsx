@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { eVideo, useAnteprime } from "./useAnteprime";
 
 /*
   Caricamento diretto dal browser al bucket privato.
@@ -20,6 +21,7 @@ export function FileUpload({
   defaultPath,
   accept = "image/*",
   label,
+  hint,
   onChange,
 }: {
   name: string;
@@ -27,12 +29,14 @@ export function FileUpload({
   defaultPath?: string;
   accept?: string;
   label: string;
+  hint?: string;
   /* Se presente, il path risale al genitore (repeater) invece di finire nel
      FormData con un campo proprio. */
   onChange?: (path: string) => void;
 }) {
   const [path, setPath] = useState(defaultPath ?? "");
   const [stato, setStato] = useState<"idle" | "carico" | "errore">("idle");
+  const anteprima = useAnteprime(path && !eVideo(path) ? [path] : [])[path];
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -88,6 +92,15 @@ export function FileUpload({
         )}
         {path && stato === "idle" && (
           <>
+            {anteprima && (
+              /* eslint-disable-next-line @next/next/no-img-element --
+                 URL firmato a scadenza, solo per l'anteprima. */
+              <img
+                src={anteprima}
+                alt=""
+                className="h-14 w-20 bg-box object-cover"
+              />
+            )}
             <span className="max-w-[320px] truncate text-[16px] text-grey">
               {path.split("/").pop()}
             </span>
@@ -104,6 +117,7 @@ export function FileUpload({
           </>
         )}
       </div>
+      {hint && <span className="text-[14px] text-grey">{hint}</span>}
     </div>
   );
 }
