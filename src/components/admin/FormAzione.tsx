@@ -1,6 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  startTransition,
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Esito } from "@/lib/esito";
 
 /*
@@ -16,7 +23,15 @@ import type { Esito } from "@/lib/esito";
   sugli eventi, copre anche i campi nascosti che cambiano senza che nessuno
   scriva: le immagini appena caricate, le voci spostate con le frecce.
   Finché qualcosa resta in sospeso, chiudere la scheda chiede conferma.
+
+  Il form si invia da onSubmit e non con : con l'attributo
+  React 19 svuota i campi dopo ogni invio, e dopo un errore («indirizzo già
+  usato») si perdeva proprio quello che si era appena scritto. Lo stato di
+  attesa arriva a BottoneInvio da InvioInCorso, perché useFormStatus vede solo
+  gli invii fatti con l'attributo.
 */
+
+export const InvioInCorso = createContext<boolean | null>(null);
 
 const sospesi = new Set<symbol>();
 let ascoltoUscita = false;
@@ -49,7 +64,7 @@ export function FormAzione({
   children: React.ReactNode;
   semplice?: boolean;
 }) {
-  const [esito, formAction] = useActionState(action, undefined);
+  const [esito, formAction, pending] = useActionState(action, undefined);
   const ref = useRef<HTMLFormElement>(null);
   const base = useRef<string>("");
   const id = useRef(Symbol());
@@ -97,8 +112,17 @@ export function FormAzione({
   }, [esito, semplice]);
 
   return (
-    <form ref={ref} action={formAction} className={className}>
-      {children}
+    <form
+      ref={ref}
+      className={className}
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (pending) return;
+        const dati = new FormData(e.currentTarget);
+        startTransition(() => formAction(dati));
+      }}
+    >
+      <InvioInCorso.Provider value={pending}>{children}</InvioInCorso.Provider>
       {esito?.errore && (
         <p
           role="alert"

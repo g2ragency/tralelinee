@@ -1,6 +1,8 @@
 "use client";
 
+import { useContext } from "react";
 import { useFormStatus } from "react-dom";
+import { InvioInCorso } from "./FormAzione";
 
 /*
   Bottone di invio dell'area riservata: mostra che il clic è stato raccolto e,
@@ -33,7 +35,9 @@ export function BottoneInvio({
   ariaLabel?: string;
   children: React.ReactNode;
 }) {
-  const { pending } = useFormStatus();
+  // Dentro FormAzione lo stato arriva dal contesto, altrove dal form.
+  const daForm = useFormStatus().pending;
+  const pending = useContext(InvioInCorso) ?? daForm;
 
   return (
     <button
