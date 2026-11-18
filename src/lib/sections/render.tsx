@@ -10,6 +10,7 @@ import { VociLaterali } from "@/components/sections/VociLaterali";
 import { Carosello } from "@/components/sections/Carosello";
 import { FilaBox } from "@/components/sections/GrigliaNumeri";
 import { Loghi } from "@/components/sections/Loghi";
+import { VideoInVista } from "@/components/sections/VideoInVista";
 import { raggruppa } from "./griglia";
 import type { SectionContent } from "./schema";
 
@@ -89,6 +90,17 @@ async function MediaRender({ content }: { content: SectionContent }) {
     /* In loop: le animazioni del Figma (sigle, loop di marchio) girano da
        sole come una GIF. Senza audio, altrimenti il browser non le avvia. */
     const loop = s(content.modo) === "loop";
+    if (loop) {
+      return (
+        <figure className={cornice}>
+          <VideoInVista
+            src={src}
+            poster={poster ?? undefined}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </figure>
+      );
+    }
     return (
       <figure className={cornice}>
         <video
@@ -190,7 +202,17 @@ async function ImmaginiRender({ content }: { content: SectionContent }) {
              l'altezza giusta e la pagina non si allunga mentre si scorre. */
           style={libera && im?.w && im.h ? { aspectRatio: `${im.w} / ${im.h}` } : undefined}
         >
-          {im && (
+          {im?.video ? (
+            /* Un video al posto della foto: stessa cella, stesse
+               proporzioni, parte da solo quando si vede. */
+            <VideoInVista
+              src={im.src}
+              poster={im.poster}
+              className={
+                libera && !im.w ? "block h-auto w-full" : "h-full w-full object-cover"
+              }
+            />
+          ) : im && (
             /* eslint-disable-next-line @next/next/no-img-element --
                URL firmato a scadenza: next/image lo terrebbe in cache oltre
                la validità. Lazy: una pagina portfolio ne ha anche trenta. */

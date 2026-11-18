@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useAnteprime } from "./useAnteprime";
+import { eVideo, useAnteprime } from "./useAnteprime";
 import { caricaFile } from "./carica";
 
 /*
@@ -18,12 +18,14 @@ export function MultiFileUpload({
   defaultPaths,
   label,
   hint,
+  video = false,
 }: {
   name: string;
   projectId: string;
   defaultPaths?: string[];
   label: string;
   hint?: string;
+  video?: boolean;
 }) {
   const [paths, setPaths] = useState<string[]>(defaultPaths ?? []);
   const [stato, setStato] = useState<"idle" | "carico" | "errore">("idle");
@@ -69,10 +71,10 @@ export function MultiFileUpload({
 
       <div className="flex flex-wrap items-center gap-3">
         <label className="cursor-pointer border border-grey px-4 py-2 text-[16px]">
-          Aggiungi immagini
+          {video ? "Aggiungi immagini o video" : "Aggiungi immagini"}
           <input
             type="file"
-            accept="image/*"
+            accept={video ? "image/*,video/mp4,video/webm" : "image/*"}
             multiple
             onChange={onPick}
             className="hidden"
@@ -105,7 +107,14 @@ export function MultiFileUpload({
                 <span className="w-6 shrink-0 text-right text-[15px] text-grey">
                   {i + 1}.
                 </span>
-                {anteprime[p] ? (
+                {anteprime[p] && eVideo(p) ? (
+                  <video
+                    src={anteprime[p]}
+                    muted
+                    preload="metadata"
+                    className="h-14 w-20 shrink-0 bg-box object-cover"
+                  />
+                ) : anteprime[p] ? (
                   /* eslint-disable-next-line @next/next/no-img-element --
                      URL firmato a scadenza, solo per l'anteprima. */
                   <img

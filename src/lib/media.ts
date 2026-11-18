@@ -44,24 +44,54 @@ export function variante(path: string) {
   return { w, h, mezza, path: path.replace(MISURA, piccola) };
 }
 
-export type Firmata = { src: string; srcSet?: string; w?: number; h?: number };
+export type Firmata = {
+  src: string;
+  srcSet?: string;
+  w?: number;
+  h?: number;
+  /* Un video al posto della foto: si mostra con l'anteprima e parte da solo. */
+  video?: boolean;
+  poster?: string;
+};
+
+export const eVideo = (path: string) => /\.(mp4|webm|mov|m4v)$/i.test(path);
+
+/*
+  Un video «nome.w1920h1382.mp4» ha accanto l'anteprima
+  «nome.w1920h1382.poster.webp» (il primo fotogramma): stessa convenzione
+  delle foto, così la cella ha le proporzioni giuste prima che arrivi.
+*/
+function datiVideo(path: string) {
+  const m = path.match(/\.w(\d+)h(\d+)\.[a-z0-9]+$/i);
+  return {
+    w: m ? Number(m[1]) : undefined,
+    h: m ? Number(m[2]) : undefined,
+    poster: path.replace(/\.[a-z0-9]+$/i, ".poster.webp"),
+  };
+}
 
 /* Come `signedUrls`, ma con il `srcSet` quando la variante c'è. */
 export async function immaginiFirmate(
   paths: (string | null | undefined)[],
 ): Promise<(Firmata | null)[]> {
-  const varianti = paths.map((p) => (p ? variante(p) : null));
-  const firme = await signedUrls([...paths, ...varianti.map((v) => v?.path)]);
-  return paths.map((_, i) => {
+  const extra = paths.map((p) =>
+    !p ? undefined : eVideo(p) ? datiVideo(p).poster : variante(p)?.path,
+  );
+  const firme = await signedUrls([...paths, ...extra]);
+  return paths.map((p, i) => {
     const src = firme[i];
-    if (!src) return null;
-    const v = varianti[i];
-    const piccola = firme[paths.length + i];
+    if (!src || !p) return null;
+    const accanto = firme[paths.length + i] ?? undefined;
+    if (eVideo(p)) {
+      const d = datiVideo(p);
+      return { src, video: true, w: d.w, h: d.h, poster: accanto };
+    }
+    const v = variante(p);
     return {
       src,
       w: v?.w,
       h: v?.h,
-      srcSet: v && piccola ? `${piccola} ${v.mezza}w, ${src} ${v.w}w` : undefined,
+      srcSet: v && accanto ? `${accanto} ${v.mezza}w, ${src} ${v.w}w` : undefined,
     };
   });
 }

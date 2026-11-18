@@ -127,6 +127,7 @@ export function SectionForm({
               defaultPaths={iniziali}
               label={f.label}
               hint={f.hint}
+              video={f.video}
             />
           );
         }

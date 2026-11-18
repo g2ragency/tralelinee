@@ -21,7 +21,8 @@ export type FieldSpec = {
   | { type: "textarea" }
   | { type: "richtext" }
   | { type: "image" }
-  | { type: "images" }
+  /* video: il campo accetta anche MP4/WebM (solo dove il blocco li sa mostrare) */
+  | { type: "images"; video?: boolean }
   | { type: "video" }
   | { type: "url" }
   | { type: "number" }
@@ -232,9 +233,10 @@ export const SCHEMAS: Record<string, SectionSchema> = {
       },
       {
         name: "immagini",
-        label: "Immagini",
+        label: "Immagini e video",
         type: "images",
-        hint: "Nei formati «due per riga» quattro immagini fanno due righe. Le immagini vengono ritagliate al formato scelto, tranne in «proporzione dell'immagine». Misura consigliata: almeno il doppio di quella indicata (es. 2720 px di larghezza).",
+        video: true,
+        hint: "I video (MP4, meglio sotto i 10 MB) partono da soli, senza audio, quando sono sullo schermo. Nei formati «due per riga» quattro immagini fanno due righe. Le immagini vengono ritagliate al formato scelto, tranne in «proporzione dell'immagine». Misura consigliata: almeno il doppio di quella indicata (es. 2720 px di larghezza).",
       },
     ],
   },
