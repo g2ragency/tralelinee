@@ -1,4 +1,7 @@
+import { unstable_cache } from "next/cache";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
+import { isApproved } from "@/lib/auth";
 
 export const BUCKET = "portfolio-media";
 const SCADENZA = 60 * 60; // 1 ora
@@ -10,12 +13,7 @@ const SCADENZA = 60 * 60; // 1 ora
   render.
 */
 export async function signedUrl(path: string | null): Promise<string | null> {
-  if (!path) return null;
-  const supabase = await createClient();
-  const { data } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrl(path, SCADENZA);
-  return data?.signedUrl ?? null;
+  return (await signedUrls([path]))[0];
 }
 
 /*
@@ -103,20 +101,71 @@ export const MISURE = {
   scheda: "(min-width: 1280px) calc(50vw - 50px), calc(100vw - 20px)",
 };
 
+/*
+  Firme riusate per un'ora.
+
+  Una firma nuova a ogni apertura di pagina dava indirizzi sempre diversi, e
+  per il browser un indirizzo diverso è un file diverso: tornando su Samsara
+  riscaricava tutti i suoi 34 file, 6,1MB, senza usare la cache (misurato il
+  18/11). Qui la firma di un gruppo di file si fa una volta per ora e si
+  riusa per tutti; vale 2 ore, quindi chi la riceve alla fine dell'ora ne ha
+  ancora una. Supabase risponde con `Expires` uguale alla scadenza della
+  firma: il browser tiene il file senza chiedere finché la firma vale.
+
+  L'ora sta nella CHIAVE della cache e non nel `revalidate`: scaduto il
+  revalidate, Next servirebbe ancora una volta il valore vecchio mentre lo
+  rinnova, cioè un indirizzo che potrebbe essere già scaduto.
+
+  Riusare la firma fra utenti diversi richiede la chiave di servizio (dentro
+  la cache non ci sono i cookie di chi visita). Per questo il controllo
+  «utente approvato» sta qui sotto, prima della cache: il database non lo fa
+  più al momento della firma, ma nessun indirizzo esce per chi non è
+  approvato anche se una pagina se ne dimenticasse. I percorsi arrivano da
+  righe che l'utente ha potuto leggere, cioè già filtrate dalle RLS.
+*/
+const VALIDITÀ_FIRMA = 2 * 60 * 60;
+const UN_ORA = 60 * 60 * 1000;
+
+const firmeDellOra = unstable_cache(
+  async (paths: string[], ora: number): Promise<(string | null)[]> => {
+    void ora; // serve solo come chiave: cambia ogni ora, e con lei la firma
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const chiave = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!url || !chiave) return paths.map(() => null);
+    const servizio = createServiceClient(url, chiave, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data } = await servizio.storage
+      .from(BUCKET)
+      .createSignedUrls(paths, VALIDITÀ_FIRMA);
+    const mappa = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
+    return paths.map((p) => mappa.get(p) ?? null);
+  },
+  ["firme-portfolio-v1"],
+  { revalidate: 2 * 60 * 60 },
+);
+
 /* Versione in blocco: una sola andata per N immagini (es. una galleria). */
 export async function signedUrls(
   paths: (string | null | undefined)[],
 ): Promise<(string | null)[]> {
-  const validi = paths.filter((p): p is string => !!p);
+  const validi = [...new Set(paths.filter((p): p is string => !!p))].sort();
   if (validi.length === 0) return paths.map(() => null);
+  if (!(await isApproved())) return paths.map(() => null);
 
-  const supabase = await createClient();
-  const { data } = await supabase.storage
-    .from(BUCKET)
-    .createSignedUrls(validi, SCADENZA);
-
-  const mappa = new Map(
-    (data ?? []).map((d) => [d.path, d.signedUrl as string | null]),
-  );
-  return paths.map((p) => (p ? mappa.get(p) ?? null : null));
+  let firme: (string | null)[];
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    firme = await firmeDellOra(validi, Math.floor(Date.now() / UN_ORA));
+  } else {
+    // Senza chiave di servizio (es. un ambiente nuovo): firma con la sessione
+    // di chi visita, come prima. Funziona, solo senza cache.
+    const supabase = await createClient();
+    const { data } = await supabase.storage
+      .from(BUCKET)
+      .createSignedUrls(validi, SCADENZA);
+    const m = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
+    firme = validi.map((p) => m.get(p) ?? null);
+  }
+  const mappa = new Map(validi.map((p, i) => [p, firme[i]]));
+  return paths.map((p) => (p ? (mappa.get(p) ?? null) : null));
 }
