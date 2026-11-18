@@ -3,7 +3,7 @@
 import { Fragment, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { rivelaRighe } from "@/lib/rivela";
+import { rivelaParole } from "@/lib/rivela";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -72,20 +72,44 @@ export function EvidenziaScroll({
     }
 
     /*
-      I caratteri si cercano quando si accende, non prima: dopo la salita
-      delle righe il DOM viene ripristinato e i nodi sono altri.
+      GSAP non tocca i caratteri: fa avanzare un numero da 0 a 1 con lo
+      scroll (con la stessa morbidezza, scrub 0.6) e l'opacità di ognuno la
+      calcola `dipingi`, che scrive e basta.
+
+      Prima era un tween scaglionato sui caratteri: GSAP leggeva l'opacità
+      di partenza di ognuno alternando letture e scritture, e il browser
+      ricalcolava gli stili a ogni lettera — fino a 938 ricalcoli in un
+      fotogramma, 1,8 secondi di pagina ferma su un telefono medio (tracce
+      di Chrome, 18/11). La formula è quella dello scaglionamento di prima:
+      ogni carattere parte 0,15 dopo il precedente e dura 2, quindi ~13
+      caratteri sono in transizione insieme e il fronte resta morbido.
     */
+    const PASSO = 0.15;
+    const DURATA = 2;
+    const SPENTO = 0.471;
     let ctx: gsap.Context | null = null;
     const accendi = () => {
-      const chars = root.querySelectorAll<HTMLElement>("[data-c]");
+      const chars = [...root.querySelectorAll<HTMLElement>("[data-c]")];
+      const totale = (chars.length - 1) * PASSO + DURATA;
+      const scritte = new Float64Array(chars.length).fill(SPENTO);
+      const dipingi = (progresso: number) => {
+        const t = progresso * totale;
+        for (let i = 0; i < chars.length; i++) {
+          const locale = Math.min(1, Math.max(0, (t - i * PASSO) / DURATA));
+          // al millesimo: sotto non si vede, e si risparmiano scritture
+          const o = Math.round((SPENTO + (1 - SPENTO) * locale) * 1000) / 1000;
+          if (o !== scritte[i]) {
+            scritte[i] = o;
+            chars[i].style.opacity = String(o);
+          }
+        }
+      };
+      const stato = { p: 0 };
       ctx = gsap.context(() => {
-        gsap.to(chars, {
-          opacity: 1,
+        gsap.to(stato, {
+          p: 1,
           ease: "none",
-          // durata lunga rispetto al passo: il fronte di accensione resta
-          // morbido, ~13 caratteri in transizione invece di un interruttore
-          duration: 2,
-          stagger: { each: 0.15 },
+          onUpdate: () => dipingi(stato.p),
           scrollTrigger: {
             trigger: root,
             start: inizio,
@@ -98,8 +122,7 @@ export function EvidenziaScroll({
 
     let fermaRivela: (() => void) | undefined;
     if (rivela) {
-      fermaRivela = rivelaRighe([...root.querySelectorAll<HTMLElement>("p")], {
-        inVista: true,
+      fermaRivela = rivelaParole([...root.querySelectorAll<HTMLElement>("p")], {
         alTermine: accendi,
       });
     } else {
@@ -119,7 +142,10 @@ export function EvidenziaScroll({
           {testo.split(" ").map((parola, j) => (
             <Fragment key={j}>
               {j > 0 && " "}
-              <span className="whitespace-nowrap">
+              {/* inline-block perché la parola possa salire (transform);
+                  con nowrap era già un blocco unico, l'impaginazione non
+                  cambia. */}
+              <span data-parola className="inline-block whitespace-nowrap">
                 {[...parola].map((c, k) => (
                   <span key={k} data-c className="opacity-[0.471]">
                     {c}

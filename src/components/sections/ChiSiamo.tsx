@@ -68,7 +68,13 @@ export function ChiSiamo() {
           pin: true,
           // scrub morbido: la posizione insegue lo scroll in ~0.8s
           scrub: 0.8,
-          anticipatePin: 1,
+          /*
+            Niente anticipatePin: blocca la sezione in anticipo in base alla
+            velocità, utile quando ScrollTrigger arriva in ritardo sullo
+            scroll nativo. Qui lo aggiorna Lenis nello stesso fotogramma, e
+            l'anticipo diventava un salto: la sezione si fissava a 70px dalla
+            cima e scattava su di colpo (misurato fotogramma per fotogramma).
+          */
           end: () => "+=" + scrollLength(),
           invalidateOnRefresh: true,
           onToggle: (self) => setPinned(self.isActive),
