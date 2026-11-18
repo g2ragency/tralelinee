@@ -122,7 +122,7 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       return;
     }
     const y = ripristina ? (posizioni.current[pathname] ?? 0) : 0;
-    obiettivo.current = { y, fino: performance.now() + 3000 };
+    obiettivo.current = { y, fino: performance.now() + 5000 };
     // Subito, se Lenis c'è già: ferma anche lo scorrimento rimasto a metà
     // dalla pagina di prima. Il resto lo fa il ticker, fotogramma per
     // fotogramma.
@@ -160,12 +160,23 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       }
       const o = obiettivo.current;
       if (o) {
-        // Si arriva al punto chiesto, o al più lontano possibile per ora.
-        const y = Math.min(o.y, lenis.limit);
-        if (Math.abs(lenis.scroll - y) > 1) {
+        /*
+          Si arriva al punto chiesto, o al più lontano possibile per ora.
+          Altezza e posizione si leggono dal documento, non da Lenis: appena
+          cambiata pagina, il limite che Lenis tiene in memoria è ancora
+          quello della pagina di prima, e Lenis si credeva arrivato mentre il
+          browser l'aveva fermato molto più in alto.
+        */
+        const limite =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const y = Math.max(0, Math.min(o.y, limite));
+        if (Math.abs(window.scrollY - y) > 1) {
+          // Al contrario, tornando da una pagina corta il suo limite basso
+          // fermerebbe Lenis: prima si fa rimisurare la pagina.
+          lenis.resize();
           lenis.scrollTo(y, { immediate: true, force: true });
         }
-        const arrivato = lenis.limit >= o.y && Math.abs(lenis.scroll - o.y) <= 1;
+        const arrivato = limite >= o.y && Math.abs(window.scrollY - o.y) <= 1;
         if (arrivato || performance.now() > o.fino) {
           obiettivo.current = null;
         }
