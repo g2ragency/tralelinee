@@ -291,8 +291,11 @@ function IntroRender({
     .filter(Boolean);
 
   return (
-    /* Figma: colonna dati 288px, paragrafo allineato al bordo destro */
-    <section className="grid xl:grid-cols-[288px_1fr]">
+    /* Paragrafo da metà pagina, sulla stessa colonna del Testo a schede e
+       delle Conclusioni (19/11): due metà con 20px in mezzo, a 1440 parte da
+       730 come nel Figma. Prima era largo al massimo 693px e appoggiato a
+       destra, e su schermi larghi finiva lontano dagli altri testi. */
+    <section className="grid xl:grid-cols-2 xl:gap-x-[20px]">
       <SchedaDati
         industry={project.industry}
         services={project.services}
@@ -301,7 +304,7 @@ function IntroRender({
 
       {/* Senza stacco i paragrafi si leggevano come uno solo: il ritorno a
           capo da solo non basta a farli vedere separati. */}
-      <div className="xl:ml-auto xl:max-w-[693px] [&_p]:mt-[1.2em] [&_p:first-child]:mt-0">
+      <div className="[&_p]:mt-[1.2em] [&_p:first-child]:mt-0">
         {paragrafi.map((p, i) => (
           <p
             key={i}

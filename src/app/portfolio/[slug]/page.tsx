@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { LineaHover } from "@/components/LineaHover";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { immaginiFirmate, MISURE } from "@/lib/media";
@@ -137,6 +138,9 @@ export default async function CaseStudyPage({
       ? tutti
       : [...tutti.slice(corrente + 1), ...tutti.slice(0, corrente)];
   const prossimo = altri[0] ?? null;
+  /* Il precedente è l'ultimo dello stesso giro. Con un solo altro progetto
+     sarebbe lo stesso del successivo: lo si mostra una volta, a destra. */
+  const precedenteProgetto = altri.length > 1 ? altri[altri.length - 1] : null;
 
   return (
     /*
@@ -160,7 +164,9 @@ export default async function CaseStudyPage({
            resta largo quanto il testo. */
         className="block w-fit text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
       >
-        &larr; Torna al portfolio
+        {/* Sottolineato al passaggio del mouse (Veronika, 19/11), come le
+            voci del menu. */}
+        <LineaHover>&larr; Torna al portfolio</LineaHover>
       </Link>
 
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
@@ -251,13 +257,27 @@ export default async function CaseStudyPage({
         </div>
       )}
 
-      {/* Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4 */}
-      <nav className="mt-[16px] flex items-center justify-between gap-6 text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:mt-[95px] xl:text-[24px]">
-        <Link href="/portfolio">← Torna all&rsquo;indice</Link>
+      {/*
+        Progetto precedente a sinistra e successivo a destra, sulla stessa
+        riga, col loro titolo: come gli ospiti di Demarcazioni (Veronika,
+        19/11). Prima qui c'erano «Torna all'indice», doppione del link in
+        cima, e «Guarda il prossimo progetto».
+        Figma: 24px Regular, interlinea 120%, spaziatura -4%, #C4C4C4.
+      */}
+      <nav
+        aria-label="Altri progetti"
+        className="mt-[16px] flex items-start justify-between gap-6 text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:mt-[95px] xl:text-[24px]"
+      >
+        {precedenteProgetto ? (
+          <Link href={`/portfolio/${precedenteProgetto.slug}`} className="max-w-[48%]">
+            <LineaHover>← {precedenteProgetto.title}</LineaHover>
+          </Link>
+        ) : (
+          <span />
+        )}
         {prossimo && (
-          <Link href={`/portfolio/${prossimo.slug}`} className="text-right">
-            Guarda il prossimo{" "}
-            {progetto.category === "portfolio" ? "progetto" : "Case Study"} →
+          <Link href={`/portfolio/${prossimo.slug}`} className="max-w-[48%] text-right">
+            <LineaHover>{prossimo.title} →</LineaHover>
           </Link>
         )}
       </nav>

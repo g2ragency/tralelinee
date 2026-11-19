@@ -143,11 +143,13 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
         </ul>
       )}
       {/* Da desktop restano le due colonne: voci a sinistra, testo a destra.
-          Il Figma dà 468px su base 1440, ma nella pagina lasciava troppo vuoto
-          in mezzo: sta a poco meno di metà della larghezza utile e cresce con
-          la finestra, senza scatti ai breakpoint. */}
+          Il testo parte da metà pagina (Gabriele, 19/11): due metà uguali con
+          20px in mezzo, come le immagini affiancate, quindi a 1440 comincia a
+          730 come nel Figma e su schermi più larghi resta a metà invece di
+          scivolare verso destra (prima era largo al massimo 700px e
+          appoggiato al bordo destro). */}
       <section
-        className={`${unica ? "grid" : "hidden xl:grid"} gap-[22px] xl:grid-cols-[1fr_clamp(468px,43vw,700px)] xl:gap-0`}
+        className={`${unica ? "grid" : "hidden xl:grid"} gap-[22px] xl:grid-cols-2 xl:gap-x-[20px] xl:gap-y-0`}
       >
         {unica ? (
           /* Conclusioni: titolo 26px da mobile, 22px sopra il testo (il gap
@@ -177,7 +179,7 @@ export function VociLaterali({ voci }: { voci: Voce[] }) {
           </ul>
         )}
 
-        <div className="xl:ml-auto xl:w-full">
+        <div className="xl:w-full">
           <div className="relative">
             <div
               ref={testoRef}
