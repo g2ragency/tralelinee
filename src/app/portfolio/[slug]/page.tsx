@@ -149,7 +149,8 @@ export default async function CaseStudyPage({
       {/*
         Uscita anche in cima, non solo in fondo: chi apre un progetto e capisce
         subito che non e' quello che cercava non deve scorrere tutta la pagina
-        per tornare indietro. Stesso testo e stesso stile del link di coda.
+        per tornare indietro. Stesso stile del link di coda; il testo dice
+        «portfolio» su richiesta del 19/11 (quello di coda resta «indice»).
       */}
       <Link
         href="/portfolio"
@@ -159,7 +160,7 @@ export default async function CaseStudyPage({
            resta largo quanto il testo. */
         className="block w-fit text-[14px] leading-[1.2] tracking-[-0.04em] text-[#C4C4C4] xl:text-[24px]"
       >
-        &larr; Torna all&rsquo;indice
+        &larr; Torna al portfolio
       </Link>
 
       {/* Intestazione: titolo e anno vengono dai dati del progetto, non da un
