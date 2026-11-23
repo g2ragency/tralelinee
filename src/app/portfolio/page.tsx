@@ -95,19 +95,29 @@ export default async function PortfolioPage({
     );
   }
 
-  // Solo valori dell'elenco: uno inventato nell'indirizzo vale come «tutti».
-  const { categoria } = await searchParams;
-  const attiva = CATEGORIE.some((c) => c.chiave === categoria)
-    ? (categoria as string)
-    : "";
-
   const supabase = await createClient();
-  // Le RLS filtrano già: gli approvati vedono solo i pubblicati, l'admin tutto.
+  /*
+    Solo i pubblicati, anche per il super admin: le RLS gli lascerebbero
+    vedere le bozze, e nell'elenco si confondevano coi progetti veri (due
+    «Ex Machina», uno con la copertina vuota — 23/11). Le bozze si guardano
+    dall'admin, col bottone Anteprima.
+  */
   const { data } = await supabase
     .from("projects")
     .select("id, slug, title, client, cover_path, category")
+    .eq("published", true)
     .order("position");
   const progetti = (data as Progetto[] | null) ?? [];
+
+  // Un filtro senza progetti non si mostra (oggi nessun case study pubblicato).
+  const categorie = CATEGORIE.filter(
+    (c) => !c.chiave || progetti.some((p) => p.category === c.chiave),
+  );
+  // Solo valori dell'elenco: uno inventato nell'indirizzo vale come «tutti».
+  const { categoria } = await searchParams;
+  const attiva = categorie.some((c) => c.chiave === categoria)
+    ? (categoria as string)
+    : "";
   const covers = await immaginiFirmate(progetti.map((p) => p.cover_path));
   /*
     Le schede arrivano tutte al client, che filtra da solo: il portfolio è un
@@ -121,7 +131,7 @@ export default async function PortfolioPage({
     <main className="min-h-svh px-[10px] pb-32 pt-[108px] xl:px-10 xl:pt-[160px]">
       <ElencoProgetti
         schede={schede}
-        categorie={CATEGORIE}
+        categorie={categorie}
         iniziale={attiva}
       />
     </main>
