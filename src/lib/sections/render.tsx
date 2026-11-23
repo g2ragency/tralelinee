@@ -306,7 +306,9 @@ function IntroRender({
 
       {/* Senza stacco i paragrafi si leggevano come uno solo: il ritorno a
           capo da solo non basta a farli vedere separati. */}
-      <div className="[&_p]:mt-[1.2em] [&_p:first-child]:mt-0">
+      {/* Sempre nella colonna di destra: senza dati del progetto la scheda
+          a sinistra non c'è, e la griglia portava il paragrafo a sinistra. */}
+      <div className="xl:col-start-2 [&_p]:mt-[1.2em] [&_p:first-child]:mt-0">
         {paragrafi.map((p, i) => (
           <p
             key={i}
