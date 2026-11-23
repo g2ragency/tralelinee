@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { LineaHover } from "@/components/LineaHover";
+import { VideoInVista } from "@/components/sections/VideoInVista";
 import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { immaginiFirmate, MISURE } from "@/lib/media";
@@ -57,7 +58,7 @@ export default async function CaseStudyPage({
   const { data: progetto } = await supabase
     .from("projects")
     .select(
-      "id, slug, title, client, year, industry, services, summary, category, cover_path",
+      "id, slug, title, client, year, industry, services, summary, category, hero_path",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -79,12 +80,12 @@ export default async function CaseStudyPage({
     getRenderer(s.kind),
   );
 
-  const [copertina] = await immaginiFirmate([progetto.cover_path]);
+  const [apertura] = await immaginiFirmate([progetto.hero_path]);
 
   /*
     Da mobile la scheda dati sale sotto il titolo, sopra la prima immagine: il
     paragrafo dell'Intro resta dov'e', sotto. Vale per qualunque progetto,
-    che l'immagine venga dalla copertina o da un blocco.
+    che l'immagine venga dall'apertura o da un blocco.
   */
   const haIntro = sezioni.some((s) => s.kind === "intro");
   /* Da mobile: 50px sopra il paragrafo dell'Intro, 45 fra tutti gli altri
@@ -195,25 +196,34 @@ export default async function CaseStudyPage({
       )}
 
       {/*
-        La copertina apre la pagina, oltre a essere la card dell'elenco: chi
-        compila la carica una volta e la ritrova in tutti e due i posti. Prima
-        stava solo nell'elenco, e per avere l'immagine in cima al progetto
-        bisognava ricaricare lo stesso file dentro un blocco Media.
+        Apertura: immagine o video in cima alla pagina, separata dalla
+        copertina (che è solo la card dell'elenco). Prima erano la stessa
+        immagine, e chi entrava nel progetto rivedeva la card appena cliccata;
+        Veronika le vuole diverse (23/11). Facoltativa: vuota, la pagina parte
+        dal titolo e poi dai blocchi.
         Stesse misure del blocco Media: 16:9, angoli 30px.
       */}
-      {copertina && (
+      {apertura && (
         <figure className="mt-[46px] aspect-video w-full overflow-hidden rounded-[15px] bg-box xl:mt-[60px] xl:rounded-[30px]">
-          {/* eslint-disable-next-line @next/next/no-img-element --
-              URL firmato a scadenza: next/image lo terrebbe in cache oltre la
-              validità. */}
-          <img
-            src={copertina.src}
-            srcSet={copertina.srcSet}
-            sizes={MISURE.piena}
-            alt=""
-            fetchPriority="high"
-            className="h-full w-full object-cover"
-          />
+          {apertura.video ? (
+            <VideoInVista
+              src={apertura.src}
+              poster={apertura.poster}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            /* eslint-disable-next-line @next/next/no-img-element --
+               URL firmato a scadenza: next/image lo terrebbe in cache oltre la
+               validità. */
+            <img
+              src={apertura.src}
+              srcSet={apertura.srcSet}
+              sizes={MISURE.piena}
+              alt=""
+              fetchPriority="high"
+              className="h-full w-full object-cover"
+            />
+          )}
         </figure>
       )}
 
@@ -222,11 +232,11 @@ export default async function CaseStudyPage({
           Questo case study non ha ancora contenuti.
         </p>
       ) : (
-        /* 60px dall'intestazione, o dalla copertina se c'è: fra un'immagine
+        /* 60px dall'intestazione, o dall'apertura se c'è: fra un'immagine
            e il blocco che la segue vale lo stesso stacco delle sezioni. */
         <div
           className={
-            copertina ? stacco(sezioni[0]?.kind) : "mt-[46px] xl:mt-[60px]"
+            apertura ? stacco(sezioni[0]?.kind) : "mt-[46px] xl:mt-[60px]"
           }
         >
           {sezioni.map((s, i) => {

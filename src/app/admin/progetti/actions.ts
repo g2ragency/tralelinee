@@ -104,6 +104,7 @@ export async function updateProject(_: Esito, formData: FormData): Promise<Esito
       slug,
       category,
       cover_path: testo(formData, "cover_path") || null,
+      hero_path: testo(formData, "hero_path") || null,
       client: testo(formData, "client") || null,
       year: testo(formData, "year") || null,
       industry: testo(formData, "industry") || null,

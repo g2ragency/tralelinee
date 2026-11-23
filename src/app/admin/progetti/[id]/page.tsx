@@ -187,14 +187,24 @@ export default async function BuilderPage({
               <option value="portfolio">Portfolio</option>
             </select>
           </label>
-          {/* La copertina non è una sezione della pagina, quindi sta qui coi
-              dati: serve in due posti e si carica una volta sola. */}
+          {/* Copertina e apertura non sono blocchi della pagina, quindi stanno
+              qui coi dati. Sono due campi perché devono poter essere diverse
+              (Veronika, 23/11): entrando nel progetto non si rivede la card
+              appena cliccata. */}
           <FileUpload
             name="cover_path"
             projectId={progetto.id}
             defaultPath={progetto.cover_path ?? ""}
             label="Copertina"
-            hint="Apre la pagina del progetto ed è l'immagine della scheda nell'elenco. Formato 16:9, almeno 2720×1530."
+            hint="L'immagine della scheda nell'elenco del portfolio. Formato 4:3, almeno 1340×1005."
+          />
+          <FileUpload
+            name="hero_path"
+            projectId={progetto.id}
+            defaultPath={progetto.hero_path ?? ""}
+            accept="image/*,video/mp4,video/webm"
+            label="Apertura della pagina (facoltativa)"
+            hint="Immagine o video in cima alla pagina del progetto, sotto il titolo. Diversa dalla copertina. Formato 16:9, almeno 2720×1530; i video partono da soli, senza audio. Vuota, la pagina parte dal titolo e poi dai blocchi."
           />
           <label className="flex flex-col gap-2">
             <span className="text-[16px] text-grey">Cliente</span>
@@ -259,8 +269,8 @@ export default async function BuilderPage({
           <span className="text-grey">({sezioni.length})</span>
         </h2>
         <p className="mt-2 max-w-[720px] text-[16px] text-grey">
-          Compaiono nella pagina in quest&rsquo;ordine, sotto titolo e
-          copertina. Ogni blocco si salva col suo bottone.
+          Compaiono nella pagina in quest&rsquo;ordine, sotto il titolo e
+          l&rsquo;apertura. Ogni blocco si salva col suo bottone.
         </p>
 
         {sezioni.length > 0 && (
