@@ -296,10 +296,12 @@ function IntroRender({
        730 come nel Figma. Prima era largo al massimo 693px e appoggiato a
        destra, e su schermi larghi finiva lontano dagli altri testi. */
     <section className="grid xl:grid-cols-2 xl:gap-x-[20px]">
+      {/* Figma: colonna dati larga 440, i servizi vanno a capo. Con la
+          colonna a metà pagina (670) stavano su una riga sola lunghissima. */}
       <SchedaDati
         industry={project.industry}
         services={project.services}
-        className="hidden xl:block"
+        className="hidden xl:block xl:max-w-[440px]"
       />
 
       {/* Senza stacco i paragrafi si leggevano come uno solo: il ritorno a
