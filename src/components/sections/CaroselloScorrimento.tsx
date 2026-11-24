@@ -8,9 +8,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 export type Foto = { src: string; srcSet?: string };
 
-/* Spostamento massimo di una fila mentre il blocco attraversa lo schermo,
-   in frazione della larghezza della finestra: più alto = più veloce. */
-const CORSA = 0.25;
+/* Velocità delle file rispetto allo scroll: 0.5 = mezzo pixel per ogni pixel
+   di pagina scorso, uguale su ogni schermo. Prima era un quarto della
+   larghezza della finestra: da computer si vedevano 3 foto per fila, da
+   telefono 2 (24/11, con le 18 foto di Ex Machina). A 0.5 se ne vedono 4 da
+   computer e 3 da telefono. Più alto = più veloce, più foto passano. */
+const VELOCITA = 0.5;
 
 /*
   Doppio carosello che scorre con la pagina (Veronika, 24/11).
@@ -49,13 +52,14 @@ export function CaroselloScorrimento({
       root.querySelectorAll<HTMLElement>("[data-fila]").forEach((fila, i) => {
         /*
           Quanto si sposta: quello che la fila sporge oltre la finestra, ma al
-          massimo CORSA della larghezza della finestra. Con tante foto la
+          massimo VELOCITA per lo scroll che serve ad attraversare il blocco
+          (altezza della finestra più altezza del blocco). Con tante foto la
           sporgenza è grande e la fila correva quasi quanto lo scroll; il
           movimento deve essere lento («piano piano», Veronika).
         */
         const sporgenza = () =>
           Math.min(
-            window.innerWidth * CORSA,
+            (window.innerHeight + root.offsetHeight) * VELOCITA,
             Math.max(0, fila.scrollWidth - (fila.parentElement?.clientWidth ?? 0)),
           );
         const versoSinistra = i % 2 === 0;
