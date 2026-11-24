@@ -52,6 +52,8 @@ function riassunto(s: Sezione): string {
     }
     case "carosello":
       return conta(c.immagini, "immagine", "immagini");
+    case "carosello-scorrimento":
+      return `${conta(c.riga1, "foto", "foto")} + ${conta(c.riga2, "foto", "foto")} · ${c.formato === "16-9" ? "16:9" : "3:2"}`;
     case "loghi":
       return `${conta(c.riga1, "logo", "loghi")} + ${conta(c.riga2, "logo", "loghi")}`;
     case "voci":

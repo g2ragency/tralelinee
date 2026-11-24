@@ -19,20 +19,41 @@ const VELOCITA = 40;
 function Riga({ urls, verso }: { urls: string[]; verso: "sinistra" | "destra" }) {
   const pista = useRef<HTMLDivElement>(null);
   const [durata, setDurata] = useState(0);
+  /*
+    Quante volte il gruppo di loghi sta in ciascuna metà della pista. Se una
+    metà è più corta dello schermo, mentre scorre resta un buco prima che
+    ricominci (Veronika, 24/11): si ripete il gruppo finché la metà non è
+    almeno larga quanto la riga.
+  */
+  const [ripeti, setRipeti] = useState(1);
 
   useEffect(() => {
     const el = pista.current;
-    if (!el) return;
+    const riga = el?.parentElement;
+    if (!el || !riga) return;
     // Le immagini arrivano dopo: si rimisura quando la pista cambia larghezza.
-    const misura = () => setDurata(el.scrollWidth / 2 / VELOCITA);
+    const misura = () => {
+      const meta = el.scrollWidth / 2;
+      setDurata(meta / VELOCITA);
+      const gruppo = meta / ripeti;
+      if (gruppo > 0) {
+        const servono = Math.max(1, Math.ceil(riga.clientWidth / gruppo));
+        if (servono !== ripeti) setRipeti(servono);
+      }
+    };
     misura();
     const ro = new ResizeObserver(misura);
     ro.observe(el);
+    ro.observe(riga);
     return () => ro.disconnect();
-  }, [urls]);
+  }, [urls, ripeti]);
+
+  const gruppo = Array.from({ length: ripeti }, () => urls).flat();
 
   return (
-    <div className="overflow-hidden">
+    /* Da bordo a bordo dello schermo, oltre i margini della pagina, come il
+       carosello: prima le file si fermavano ai margini (Veronika, 24/11). */
+    <div className="-mx-[10px] overflow-hidden xl:-mx-10">
       <div
         ref={pista}
         style={durata ? { animationDuration: `${durata}s` } : undefined}
@@ -47,7 +68,7 @@ function Riga({ urls, verso }: { urls: string[]; verso: "sinistra" | "destra" })
             aria-hidden={copia === 1}
             className="flex shrink-0 items-center gap-10 xl:gap-[60px]"
           >
-            {urls.map((url, i) => (
+            {gruppo.map((url, i) => (
               /* eslint-disable-next-line @next/next/no-img-element --
                  URL firmato a scadenza: next/image lo cacherebbe oltre la
                  validità. */

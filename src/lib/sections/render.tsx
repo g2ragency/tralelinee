@@ -11,6 +11,7 @@ import { Carosello } from "@/components/sections/Carosello";
 import { FilaBox } from "@/components/sections/GrigliaNumeri";
 import { Loghi } from "@/components/sections/Loghi";
 import { VideoInVista } from "@/components/sections/VideoInVista";
+import { CaroselloScorrimento } from "@/components/sections/CaroselloScorrimento";
 import { raggruppa } from "./griglia";
 import type { SectionContent } from "./schema";
 
@@ -343,6 +344,35 @@ async function CaroselloRender({ content }: { content: SectionContent }) {
   return <Carosello urls={urls} />;
 }
 
+/*
+  Doppio carosello che si muove con lo scorrimento. Le foto si firmano qui
+  (server), il movimento è client. Senza foto restano tre riquadri vuoti per
+  fila: si vede il blocco mentre si monta la pagina.
+*/
+const ASPETTO_CAROSELLO: Record<string, string> = {
+  "3-2": "aspect-[3/2]",
+  "16-9": "aspect-video",
+};
+
+async function CaroselloScorrimentoRender({ content }: { content: SectionContent }) {
+  const percorsi = (v: unknown) =>
+    Array.isArray(v) ? v.filter((p): p is string => typeof p === "string") : [];
+  const righe = await Promise.all(
+    [content.riga1, content.riga2].map(async (v) => {
+      const firmate = (await immaginiFirmate(percorsi(v))).filter(
+        (f): f is Firmata => !!f,
+      );
+      return firmate.length ? firmate : [null, null, null];
+    }),
+  );
+  return (
+    <CaroselloScorrimento
+      righe={righe}
+      aspetto={ASPETTO_CAROSELLO[s(content.formato)] ?? ASPETTO_CAROSELLO["3-2"]}
+    />
+  );
+}
+
 /* Griglia numeri — riquadri con i numeri e testo di raccordo sotto. */
 function GrigliaRender({ content }: { content: SectionContent }) {
   const sopra = raggruppa(content.sopra);
@@ -429,6 +459,7 @@ export const RENDERERS: Record<string, SectionRenderer> = {
   intro: IntroRender,
   voci: VociRender,
   carosello: CaroselloRender,
+  "carosello-scorrimento": CaroselloScorrimentoRender,
   immagini: ImmaginiRender,
   griglia: GrigliaRender,
   social: SocialRender,

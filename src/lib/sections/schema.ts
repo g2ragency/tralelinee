@@ -138,6 +138,35 @@ export const SCHEMAS: Record<string, SectionSchema> = {
     ],
   },
 
+  /* Veronika, 24/11: al posto del carosello verticale nel case study. */
+  "carosello-scorrimento": {
+    label: "Doppio carosello (si muove con lo scorrimento)",
+    hint: "Due file di foto orizzontali, una sotto l'altra, che si spostano in versi opposti mentre si scorre la pagina e tornano indietro risalendo. Almeno 4 foto per fila: con meno la fila non ha spazio per muoversi.",
+    fields: [
+      {
+        name: "formato",
+        label: "Formato delle foto",
+        type: "select",
+        options: [
+          { value: "3-2", label: "3:2" },
+          { value: "16-9", label: "16:9" },
+        ],
+      },
+      {
+        name: "riga1",
+        label: "Foto della prima fila",
+        type: "images",
+        hint: "Scendendo si sposta verso sinistra.",
+      },
+      {
+        name: "riga2",
+        label: "Foto della seconda fila",
+        type: "images",
+        hint: "Scendendo si sposta verso destra.",
+      },
+    ],
+  },
+
   griglia: {
     label: "Numeri in evidenza",
     hint: "Riquadri con un numero grande e la sua didascalia (visitatori, ospiti…), più un testo sotto.",
