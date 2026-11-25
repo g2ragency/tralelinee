@@ -154,7 +154,8 @@ export function ElencoProgetti({
                   {/*
                     Copertina e, se c'è, la seconda immagine sopra, trasparente:
                     al passaggio del mouse (o col fuoco da tastiera) si dissolve
-                    dentro in 300ms, gli stessi della sottolineatura dei link.
+                    dentro in 500ms con partenza e arrivo dolci (Gabriele, 25/11: un po'
+                    più morbida dei 300ms della sottolineatura dei link).
                     group-hover di Tailwind 4 vale solo dove il mouse esiste: dal
                     telefono resta la copertina. La seconda immagine si carica
                     insieme alla prima, così al passaggio è già pronta.
@@ -181,7 +182,7 @@ export function ElencoProgetti({
                         sizes={MISURA_SCHEDA}
                         alt=""
                         aria-hidden
-                        className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+                        className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
                       />
                     )}
                   </div>
