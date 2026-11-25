@@ -116,10 +116,24 @@ export function Header() {
         pagina che scorre sotto non entra in collisione col menu. Parte dal
         colore di sfondo e non dal nero, altrimenti sul tema chiaro comparirebbe
         una fascia scura in cima.
+
+        Veronika, 25/11: parte all'80% invece che pieno, ed è più corta (130%
+        dell'header, prima 180%). Con una sfumatura lineare, dove finiva su un
+        contenuto chiaro si vedeva una riga più bianca: è l'occhio che marca il
+        punto in cui la sfumatura smette di cambiare di colpo. Le tappe seguono
+        una curva morbida (smoothstep), che all'inizio e alla fine cambia piano,
+        e la riga sparisce.
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[180%] bg-gradient-to-b from-background to-transparent"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[130%]"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, ${[
+            [80, 0], [75, 15], [63, 30], [46, 45], [28, 60], [13, 75], [2, 90], [0, 100],
+          ]
+            .map(([a, p]) => `color-mix(in srgb, var(--color-background) ${a}%, transparent) ${p}%`)
+            .join(", ")})`,
+        }}
       />
 
       <Logo />
