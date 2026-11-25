@@ -158,37 +158,55 @@ export function ElencoProgetti({
               <li key={p.id}>
                 <Link href={`/portfolio/${p.slug}`} className="group block">
                   {/*
-                    Copertina e, se c'è, la seconda immagine sopra, trasparente:
-                    al passaggio del mouse (o col fuoco da tastiera) si dissolve
-                    dentro in 500ms con partenza e arrivo dolci (Gabriele, 25/11: un po'
-                    più morbida dei 300ms della sottolineatura dei link).
+                    Copertina e, se c'è, la seconda immagine. Al passaggio del
+                    mouse (o col fuoco da tastiera) la COPERTINA si dissolve via
+                    in 500ms con partenza e arrivo dolci (Gabriele, 25/11) e
+                    scopre la seconda, che sta sotto.
+
+                    Perché la seconda sta sotto, opaca, e non sopra trasparente:
+                    un'immagine a opacità 0 il browser non la disegna, quindi la
+                    decodificava solo al passaggio del mouse e per un attimo ne
+                    mostrava una versione sgranata (Veronika, 25/11; misurato:
+                    33ms di decodifica su schermo Retina proprio al passaggio).
+                    Sotto la copertina è disegnata da subito: al passaggio è già
+                    pronta. In più la copertina sta da subito su un livello suo
+                    (will-change): altrimenti al passaggio il browser la
+                    spostava su un livello nuovo e ridisegnava, con un'altra
+                    decodifica su schermo Retina. Con tutte e due le cose, nella
+                    traccia del passaggio del mouse non si decodifica più niente,
+                    né a densità 1 né 2. Solo dove c'è il mouse: sul telefono
+                    il livello in più sarebbe memoria sprecata.
+
                     group-hover di Tailwind 4 vale solo dove il mouse esiste: dal
-                    telefono resta la copertina. La seconda immagine si carica
-                    insieme alla prima, così al passaggio è già pronta.
+                    telefono resta la copertina.
                   */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-box">
-                    {p.cover && (
+                    {p.hover && (
                       /* eslint-disable-next-line @next/next/no-img-element --
                          URL firmato a scadenza: next/image lo rifirmerebbe e
                          scadrebbe in cache. */
-                      <img
-                        src={p.cover}
-                        srcSet={p.coverSet ?? undefined}
-                        sizes={MISURA_SCHEDA}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    )}
-                    {p.hover && (
-                      /* eslint-disable-next-line @next/next/no-img-element --
-                         come sopra */
                       <img
                         src={p.hover}
                         srcSet={p.hoverSet ?? undefined}
                         sizes={MISURA_SCHEDA}
                         alt=""
                         aria-hidden
-                        className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    )}
+                    {p.cover && (
+                      /* eslint-disable-next-line @next/next/no-img-element --
+                         come sopra */
+                      <img
+                        src={p.cover}
+                        srcSet={p.coverSet ?? undefined}
+                        sizes={MISURA_SCHEDA}
+                        alt=""
+                        className={`relative h-full w-full object-cover${
+                          p.hover
+                            ? " transition-opacity duration-500 ease-in-out group-hover:opacity-0 group-focus-visible:opacity-0 motion-reduce:transition-none [@media(hover:hover)]:will-change-[opacity]"
+                            : ""
+                        }`}
                       />
                     )}
                   </div>
