@@ -26,6 +26,12 @@ type Categoria = { chiave: string; label: string };
 
 const USCITA = 180;
 
+/* Etichetta grigia sopra il titolo della scheda. */
+const ETICHETTE: Record<string, string> = {
+  case_study: "Case Study",
+  portfolio: "Portfolio",
+};
+
 const MISURA_SCHEDA = "(min-width: 1280px) calc(50vw - 50px), calc(100vw - 20px)";
 
 const indirizzo = (chiave: string) =>
@@ -186,11 +192,11 @@ export function ElencoProgetti({
                       />
                     )}
                   </div>
-                  {/* 8px fra copertina e cliente, poi il titolo attaccato.
-                      Senza cliente resta una riga vuota, così i titoli di due
-                      schede affiancate restano sulla stessa linea. */}
+                  {/* 8px fra copertina ed etichetta grigia, poi il titolo
+                      attaccato. L'etichetta è il TIPO del progetto (Veronika,
+                      25/11): prima c'era il cliente, che nessun progetto ha. */}
                   <p className="mt-2 text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
-                    {p.client ?? " "}
+                    {ETICHETTE[p.category ?? ""] ?? " "}
                   </p>
                   {/* Regular, lh 120%, ls -4%: 26px su mobile, 30px da desktop */}
                   <h2 className="text-[26px] leading-[1.2] tracking-[-0.04em] xl:text-[30px]">
