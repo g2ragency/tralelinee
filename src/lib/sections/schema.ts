@@ -294,7 +294,7 @@ export const SCHEMAS: Record<string, SectionSchema> = {
         name: "video",
         label: "File video",
         type: "video",
-        hint: "Lo vedono solo gli utenti approvati. Meglio restare sotto i 50 MB (MP4).",
+        hint: "Meglio restare sotto i 50 MB (MP4): pesa su chi apre la pagina.",
         showIf: { field: "tipo", equals: "video_file" },
       },
       {

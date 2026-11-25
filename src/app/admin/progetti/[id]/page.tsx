@@ -79,7 +79,7 @@ export default async function BuilderPage({
   const { id } = await params;
 
   const user = await getUser();
-  if (!user) redirect(`/login?next=/admin/progetti/${id}`);
+  if (!user) redirect("/admin/accesso");
   const me = await getProfile();
   if (!me) redirect("/portfolio");
   if (me.role !== "super_admin") redirect("/portfolio");
@@ -199,6 +199,13 @@ export default async function BuilderPage({
             defaultPath={progetto.cover_path ?? ""}
             label="Copertina"
             hint="L'immagine della scheda nell'elenco del portfolio. Formato 4:3, almeno 1340×1005."
+          />
+          <FileUpload
+            name="hover_path"
+            projectId={progetto.id}
+            defaultPath={progetto.hover_path ?? ""}
+            label="Copertina al passaggio del mouse (facoltativa)"
+            hint="Prende il posto della copertina quando ci si passa sopra col mouse, nell'elenco del portfolio. Stesso formato della copertina. Dal telefono non si vede: lì il mouse non c'è."
           />
           <FileUpload
             name="hero_path"

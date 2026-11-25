@@ -61,72 +61,25 @@ export async function login(
     return { error: "Email o password non corretti." };
   }
 
-  revalidatePath("/", "layout");
-  redirect("/portfolio");
-}
-
-/*
-  Perché la registrazione può fallire, detto per davvero.
-
-  Prima rispondeva sempre «Registrazione non riuscita. Riprova.»: chi la
-  leggeva non poteva farci niente e chi doveva ripararla non sapeva da dove
-  partire. I motivi veri sono pochi e nessuno è un segreto — l'unica cosa che
-  non va rivelata è se un indirizzo è già registrato, e a quella pensa già
-  Supabase, che in quel caso risponde come se fosse andata bene.
-
-  Il motivo finisce anche nei log del server: a schermo ci sta una frase, nei
-  log ci sta il codice, e sono due pubblici diversi.
-*/
-function perche(error: { message?: string; code?: string; status?: number }) {
-  const codice = error.code ?? "";
-  const testo = (error.message ?? "").toLowerCase();
-
-  if (codice === "over_email_send_rate_limit" || error.status === 429)
-    return "Troppi tentativi in poco tempo. Riprova fra un'ora.";
-  if (codice === "weak_password" || testo.includes("password"))
-    return "Password troppo debole: usa almeno 8 caratteri, meglio se lunga.";
-  if (codice === "email_address_invalid" || testo.includes("invalid email"))
-    return "Questo indirizzo email non sembra valido.";
-  if (testo.includes("signups not allowed") || testo.includes("disabled"))
-    return "Le registrazioni sono chiuse al momento.";
-  if (testo.includes("database error"))
-    return "Non siamo riusciti a creare l'account. Segnalacelo: è un problema nostro, non tuo.";
-  return "Registrazione non riuscita: " + (error.message ?? "motivo sconosciuto");
-}
-
-export async function signup(
-  _prev: AuthState,
-  formData: FormData,
-): Promise<AuthState> {
-  const email = String(formData.get("email") ?? "").trim();
-  const password = String(formData.get("password") ?? "");
-
-  if (!email || !password) return { error: "Inserisci email e password." };
-  if (password.length < 8)
-    return { error: "La password deve avere almeno 8 caratteri." };
-
-  const origin = (await headers()).get("origin") ?? "";
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: { emailRedirectTo: `${origin}/auth/confirm` },
-  });
-
-  if (error) {
-    console.error("[signup] fallita", {
-      code: error.code,
-      status: error.status,
-      message: error.message,
-    });
-    return { error: perche(error) };
+  /*
+    Dal 25/11/2026 l'unico accesso è quello dell'amministrazione: il portfolio
+    è aperto e i visitatori non hanno più un account. Chi si era registrato
+    prima ha ancora le credenziali, ma qui non entra: la sessione appena
+    aperta si chiude subito, così non resta loggato a metà.
+  */
+  const { data: utente } = await supabase.auth.getUser();
+  const { data: profilo } = utente.user
+    ? await supabase.from("profiles").select("role").eq("id", utente.user.id).maybeSingle()
+    : { data: null };
+  if (profilo?.role !== "super_admin") {
+    await supabase.auth.signOut();
+    return { error: "Questo accesso è riservato all'amministrazione del sito." };
   }
 
-  return {
-    message:
-      "Ti abbiamo inviato una email di conferma. Dopo averla confermata, la richiesta passa in approvazione.",
-  };
+  revalidatePath("/", "layout");
+  redirect("/admin");
 }
+
 /*
   Recupero password, primo tempo: si chiede l'email e Supabase manda un link.
 
@@ -175,7 +128,7 @@ export async function impostaPassword(
     };
 
   revalidatePath("/", "layout");
-  redirect("/portfolio");
+  redirect("/admin");
 }
 
 export async function logout() {

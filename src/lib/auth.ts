@@ -38,11 +38,6 @@ export const getProfile = cache(async (): Promise<Profile | null> => {
   return (data as Profile) ?? null;
 });
 
-export async function isApproved() {
-  const profile = await getProfile();
-  return profile?.approved === true;
-}
-
 export async function isSuperAdmin() {
   const profile = await getProfile();
   return profile?.role === "super_admin";

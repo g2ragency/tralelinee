@@ -1,5 +1,5 @@
 /*
-  Contatti — testo invito + CTA "Richiedi portfolio" (Figma 1230:2281/2286)
+  Contatti — testo invito + CTA "Vedi il portfolio" (Figma 1230:2281/2286)
   e blocco indirizzo allineato a destra (1230:2283).
   ponytail: la CTA è un placeholder — il flusso account/portfolio arriva
   nella fase 5 (Auth + Portfolio).
@@ -28,13 +28,13 @@ export function Contatti() {
         rivela
       />
       <a
-        href="/registrati"
+        href="/portfolio"
         /* self-start: nella sezione ora flex, senza si stirerebbe a tutta larghezza */
         className="mt-10 inline-flex items-center justify-center self-start rounded-[10px] border border-foreground px-5 py-3 text-[18px] font-light leading-[1.1] tracking-[-0.04em] xl:mt-16 xl:py-3.5 xl:text-[24px] xl:font-normal xl:leading-[0.933]"
       >
-        {/* Stessa voce ovunque: il Figma mobile diceva «Contattaci», ma due
-            nomi per lo stesso comando confondono e basta. */}
-        Richiedi portfolio
+        {/* Era «Richiedi portfolio» e portava alla registrazione: dal 25/11/2026
+            il portfolio è aperto a tutti, quindi ci porta direttamente. */}
+        Vedi il portfolio
       </a>
       {/* Light 18px lh 100% ls -4% su mobile, 24px da desktop */}
       <address className="mt-20 flex text-[18px] font-light not-italic leading-none tracking-[-0.04em] xl:mt-[319px] xl:justify-end xl:text-right xl:text-[24px] xl:font-normal">

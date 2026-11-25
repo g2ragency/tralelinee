@@ -12,8 +12,7 @@ import type { ReactNode } from "react";
   restano Server Component, questo componente riceve solo il risultato.
 */
 const SENZA_CORNICE = [
-  "/login",
-  "/registrati",
+  "/admin/accesso",
   "/recupera-password",
   "/nuova-password",
 ];

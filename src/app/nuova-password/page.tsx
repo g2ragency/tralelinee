@@ -2,7 +2,10 @@ import { impostaPassword } from "@/app/auth/actions";
 import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthShell } from "@/components/auth/AuthShell";
 
-export const metadata = { title: "Nuova password — Tra le linee" };
+export const metadata = {
+  title: "Nuova password — Tra le linee",
+  robots: { index: false, follow: false },
+};
 
 /*
   Si arriva qui solo dal link di recupero: è `/auth/confirm` ad aprire la
@@ -19,7 +22,7 @@ export default function NuovaPasswordPage() {
         campi="password"
         nuovaPassword
         altroTesto="Hai cambiato idea?"
-        altroLink="/login"
+        altroLink="/admin/accesso"
         altroLabel="Torna all'accesso"
       />
     </AuthShell>

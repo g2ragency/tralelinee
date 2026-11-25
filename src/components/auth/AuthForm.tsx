@@ -43,9 +43,9 @@ export function AuthForm({
      password propone di salvarla invece di riempirla con quella vecchia. */
   nuovaPassword?: boolean;
   conRecupero?: boolean;
-  altroTesto: string;
-  altroLink: string;
-  altroLabel: string;
+  altroTesto?: string;
+  altroLink?: string;
+  altroLabel?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   const conEmail = campi !== "password";
@@ -121,13 +121,16 @@ export function AuthForm({
       </form>
 
       {/* Non è nel Figma della schermata, ma senza questo non resta nessuna
-          strada per chiedere l'accesso o tornare al login. */}
-      <p className="mx-auto mt-6 max-w-[352px] text-center xl:max-w-[554px] text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
-        {altroTesto}{" "}
-        <Link href={altroLink} className="text-foreground underline">
-          {altroLabel}
-        </Link>
-      </p>
+          strada per tornare all'accesso. L'accesso stesso non lo mostra: dal
+          25/11 non c'è più una registrazione a cui rimandare. */}
+      {altroLink && (
+        <p className="mx-auto mt-6 max-w-[352px] text-center xl:max-w-[554px] text-[18px] leading-[1.2] tracking-[-0.04em] text-grey">
+          {altroTesto}{" "}
+          <Link href={altroLink} className="text-foreground underline">
+            {altroLabel}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

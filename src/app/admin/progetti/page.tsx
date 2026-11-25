@@ -20,7 +20,7 @@ type Progetto = {
 
 export default async function ProgettiPage() {
   const user = await getUser();
-  if (!user) redirect("/login?next=/admin/progetti");
+  if (!user) redirect("/admin/accesso");
   const me = await getProfile();
   if (!me) redirect("/portfolio");
   if (me.role !== "super_admin") redirect("/portfolio");

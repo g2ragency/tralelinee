@@ -17,11 +17,16 @@ export type Scheda = {
   category: string | null;
   cover: string | null;
   coverSet?: string | null;
+  /* Immagine al passaggio del mouse (Fabio, 25/11/2026). Facoltativa. */
+  hover?: string | null;
+  hoverSet?: string | null;
 };
 
 type Categoria = { chiave: string; label: string };
 
 const USCITA = 180;
+
+const MISURA_SCHEDA = "(min-width: 1280px) calc(50vw - 50px), calc(100vw - 20px)";
 
 const indirizzo = (chiave: string) =>
   chiave ? `/portfolio?categoria=${chiave}` : "/portfolio";
@@ -47,8 +52,8 @@ export function ElencoProgetti({
   schede: Scheda[];
   categorie: Categoria[];
   iniziale: string;
-  /* Comandi di servizio: oggi vivono in /account, quindi qui di solito
-     non arriva nulla. Resta il posto per un comando legato all'ELENCO. */
+  /* Di solito non arriva nulla. Resta il posto per un comando legato
+     all'ELENCO. */
   azioni?: ReactNode;
 }) {
   const [attiva, setAttiva] = useState(iniziale);
@@ -145,21 +150,41 @@ export function ElencoProgetti({
           <ul className="mt-[65px] grid gap-x-[20px] gap-y-[30px] xl:mt-[60px] xl:grid-cols-2 xl:gap-y-[44px]">
             {visibili.map((p) => (
               <li key={p.id}>
-                <Link href={`/portfolio/${p.slug}`} className="block">
-                  {p.cover ? (
-                    /* eslint-disable-next-line @next/next/no-img-element --
-                       URL firmato a scadenza: next/image lo rifirmerebbe e
-                       scadrebbe in cache. */
-                    <img
-                      src={p.cover}
-                      srcSet={p.coverSet ?? undefined}
-                      sizes="(min-width: 1280px) calc(50vw - 50px), calc(100vw - 20px)"
-                      alt=""
-                      className="aspect-[4/3] w-full rounded-[20px] object-cover"
-                    />
-                  ) : (
-                    <div className="aspect-[4/3] w-full rounded-[20px] bg-box" />
-                  )}
+                <Link href={`/portfolio/${p.slug}`} className="group block">
+                  {/*
+                    Copertina e, se c'è, la seconda immagine sopra, trasparente:
+                    al passaggio del mouse (o col fuoco da tastiera) si dissolve
+                    dentro in 300ms, gli stessi della sottolineatura dei link.
+                    group-hover di Tailwind 4 vale solo dove il mouse esiste: dal
+                    telefono resta la copertina. La seconda immagine si carica
+                    insieme alla prima, così al passaggio è già pronta.
+                  */}
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[20px] bg-box">
+                    {p.cover && (
+                      /* eslint-disable-next-line @next/next/no-img-element --
+                         URL firmato a scadenza: next/image lo rifirmerebbe e
+                         scadrebbe in cache. */
+                      <img
+                        src={p.cover}
+                        srcSet={p.coverSet ?? undefined}
+                        sizes={MISURA_SCHEDA}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                    {p.hover && (
+                      /* eslint-disable-next-line @next/next/no-img-element --
+                         come sopra */
+                      <img
+                        src={p.hover}
+                        srcSet={p.hoverSet ?? undefined}
+                        sizes={MISURA_SCHEDA}
+                        alt=""
+                        aria-hidden
+                        className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+                      />
+                    )}
+                  </div>
                   {/* 8px fra copertina e cliente, poi il titolo attaccato.
                       Senza cliente resta una riga vuota, così i titoli di due
                       schede affiancate restano sulla stessa linea. */}

@@ -7,7 +7,9 @@ import { createClient } from "@/lib/supabase/server";
   Atterraggio dei link che Supabase manda per email. Arrivano token_hash +
   type: li scambiamo per una sessione e poi si smista.
 
-  Conferma dell'email: al portfolio, dove si vede lo stato della richiesta.
+  Dal 25/11/2026 le email che arrivano sono solo quelle di recupero password
+  degli amministratori (le registrazioni non ci sono più): qualunque altro
+  tipo finisce nell'area admin, che rimanda all'accesso se serve.
   Recupero password: alla pagina per sceglierne una nuova — la sessione appena
   aperta è proprio quella che le permette di salvarla.
 */
@@ -19,8 +21,8 @@ export async function GET(request: NextRequest) {
   if (token_hash && type) {
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type, token_hash });
-    if (!error) redirect(type === "recovery" ? "/nuova-password" : "/portfolio");
+    if (!error) redirect(type === "recovery" ? "/nuova-password" : "/admin");
   }
 
-  redirect("/login?errore=conferma");
+  redirect("/admin/accesso");
 }

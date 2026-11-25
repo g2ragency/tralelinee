@@ -10,27 +10,19 @@ export default async function AdminPage() {
   // Sessione assente => login. Profilo illeggibile => portfolio, che spiega
   // il problema: mai rimbalzare al login con una sessione valida.
   const user = await getUser();
-  if (!user) redirect("/login?next=/admin");
+  if (!user) redirect("/admin/accesso");
   const me = await getProfile();
   if (!me) redirect("/portfolio");
   if (me.role !== "super_admin") redirect("/portfolio");
 
   const supabase = await createClient();
-  const [{ count: daApprovare }, { count: progetti }] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("id", { count: "exact", head: true })
-      .eq("approved", false),
-    supabase.from("projects").select("id", { count: "exact", head: true }),
-  ]);
+  const { count: progetti } = await supabase
+    .from("projects")
+    .select("id", { count: "exact", head: true });
 
+  /* «Gestione accessi» non c'è più: dal 25/11/2026 il portfolio è aperto
+     e non ci sono richieste da approvare. */
   const voci = [
-    {
-      href: "/admin/accessi",
-      titolo: "Gestione accessi",
-      testo: "Approva le richieste, revoca accessi, gestisci le email pre-autorizzate.",
-      badge: daApprovare ? `${daApprovare} in attesa` : null,
-    },
     {
       href: "/admin/progetti",
       titolo: "Progetti",

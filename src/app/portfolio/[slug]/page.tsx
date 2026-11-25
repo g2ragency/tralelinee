@@ -1,8 +1,7 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { LineaHover } from "@/components/LineaHover";
 import { VideoInVista } from "@/components/sections/VideoInVista";
-import { getProfile, getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { immaginiFirmate, MISURE } from "@/lib/media";
 import { SchedaDati, getRenderer } from "@/lib/sections/render";
@@ -46,14 +45,9 @@ export default async function CaseStudyPage({
 }) {
   const { slug } = await params;
 
-  const user = await getUser();
-  if (!user) redirect(`/login?next=/portfolio/${slug}`);
-  const profile = await getProfile();
-  if (!profile) redirect("/portfolio");
-  if (!profile.approved) redirect("/portfolio");
-
   const supabase = await createClient();
-  // Le RLS fanno il lavoro: una bozza non è leggibile da un non-admin, quindi
+  // Pagina aperta a tutti dal 25/11/2026. Le RLS fanno il lavoro: una bozza
+  // non è leggibile da un non-admin, quindi
   // qui basta il notFound() quando la query non restituisce nulla.
   const { data: progetto } = await supabase
     .from("projects")

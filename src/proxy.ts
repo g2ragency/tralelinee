@@ -12,13 +12,14 @@ import { NextResponse, type NextRequest } from "next/server";
   richiesta, comprese quelle di prefetch, quindi niente query pesanti qui.
 */
 /*
-  L'ELENCO del portfolio non e' protetto: chi non e' entrato ci arriva dal
-  menu e trova l'invito ad accedere, che e' piu' utile di un rimbalzo al
-  login. Protette sono le PAGINE dei progetti — da qui la barra finale, che
-  esclude «/portfolio» e comprende «/portfolio/qualcosa» — l'area
-  amministrativa e la pagina dell'account.
+  Dal 25/11/2026 il portfolio è aperto a tutti (Veronika): protetta resta
+  solo l'area amministrativa, che ha il suo accesso in /admin/accesso. La
+  pagina d'accesso è dentro /admin ma ovviamente non va protetta, altrimenti
+  rimanderebbe a se stessa.
 */
-const PROTETTE = ["/portfolio/", "/admin", "/account"];
+const ACCESSO = "/admin/accesso";
+const protetta = (p: string) =>
+  (p === "/admin" || p.startsWith("/admin/")) && p !== ACCESSO;
 
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -27,7 +28,7 @@ export async function proxy(request: NextRequest) {
   // Finché Supabase non è configurato il sito pubblico deve restare in piedi:
   // il proxy gira su OGNI richiesta, quindi qui un throw = intero sito in 500.
   if (!url || !anonKey) {
-    if (PROTETTE.some((p) => request.nextUrl.pathname.startsWith(p))) {
+    if (protetta(request.nextUrl.pathname)) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next({ request });
@@ -66,10 +67,10 @@ export async function proxy(request: NextRequest) {
     con le RLS), e a sessione scaduta rispondono con un avviso leggibile.
   */
   const azione = request.method === "POST" && request.headers.has("next-action");
-  if (!user && !azione && PROTETTE.some((p) => pathname.startsWith(p))) {
+  if (!user && !azione && protetta(pathname)) {
     const login = request.nextUrl.clone();
-    login.pathname = "/login";
-    login.searchParams.set("next", pathname);
+    login.pathname = ACCESSO;
+    login.search = "";
     const redirectResponse = NextResponse.redirect(login);
     // I cookie messi da getUser() vanno riportati sulla nuova risposta:
     // il refresh token ruota, e perdere quello nuovo sloggherebbe l'utente

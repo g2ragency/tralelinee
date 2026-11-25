@@ -1,14 +1,14 @@
 import { unstable_cache } from "next/cache";
 import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
-import { isApproved } from "@/lib/auth";
 
 export const BUCKET = "portfolio-media";
 const SCADENZA = 60 * 60; // 1 ora
 
 /*
-  Il bucket è privato e deve restarlo: le immagini del portfolio riservato non
-  devono essere raggiungibili con un URL indovinato. Quindi ogni path va
+  Il bucket è privato e deve restarlo anche col portfolio aperto (25/11/2026):
+  le immagini delle bozze non devono essere raggiungibili con un URL
+  indovinato. Quindi ogni path va
   convertito in un URL firmato a scadenza breve, lato server, al momento del
   render.
 */
@@ -117,11 +117,10 @@ export const MISURE = {
   rinnova, cioè un indirizzo che potrebbe essere già scaduto.
 
   Riusare la firma fra utenti diversi richiede la chiave di servizio (dentro
-  la cache non ci sono i cookie di chi visita). Per questo il controllo
-  «utente approvato» sta qui sotto, prima della cache: il database non lo fa
-  più al momento della firma, ma nessun indirizzo esce per chi non è
-  approvato anche se una pagina se ne dimenticasse. I percorsi arrivano da
-  righe che l'utente ha potuto leggere, cioè già filtrate dalle RLS.
+  la cache non ci sono i cookie di chi visita). La chiave di servizio firma
+  qualunque percorso: la protezione sta nel fatto che i percorsi arrivano
+  solo da righe che chi visita ha potuto leggere, cioè già filtrate dalle RLS
+  (pubblicati e visibili, o tutto per il super admin).
 */
 const VALIDITÀ_FIRMA = 2 * 60 * 60;
 const UN_ORA = 60 * 60 * 1000;
@@ -151,7 +150,13 @@ export async function signedUrls(
 ): Promise<(string | null)[]> {
   const validi = [...new Set(paths.filter((p): p is string => !!p))].sort();
   if (validi.length === 0) return paths.map(() => null);
-  if (!(await isApproved())) return paths.map(() => null);
+  /*
+    Fino al 25/11/2026 qui si firmava solo per gli utenti approvati. Ora il
+    portfolio è aperto: si firma per chiunque, ma i percorsi arrivano SOLO da
+    righe che il database ha lasciato leggere — progetti pubblicati e blocchi
+    visibili, o tutto per il super admin. Le immagini delle bozze restano
+    irraggiungibili: nessuno ne conosce l'indirizzo firmato.
+  */
 
   let firme: (string | null)[];
   if (process.env.SUPABASE_SERVICE_ROLE_KEY) {

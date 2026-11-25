@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { VoceMenu } from "./VoceMenu";
 import { ThemeSwitch } from "@/components/ThemeToggle";
-import { createClient } from "@/lib/supabase/client";
 
 /*
   Header: logo espandibile + menu inline sopra il breakpoint xl,
@@ -24,27 +22,6 @@ const NAV_ITEMS = [
      sua evidenziazione guarda l'indirizzo invece dello scorrimento. */
   { label: "Portfolio", mobileLabel: "Portfolio", href: "/portfolio" },
 ];
-
-/*
-  Stato di sessione letto lato client: così il layout resta statico e la
-  homepage non diventa dinamica solo per mostrare un link.
-  `null` = ancora sconosciuto, per non far lampeggiare la voce sbagliata.
-*/
-function useLoggato() {
-  const [loggato, setLoggato] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const supabase = createClient();
-    if (!supabase) return; // Supabase non configurato: nessun link di accesso
-    supabase.auth.getUser().then(({ data }) => setLoggato(!!data.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
-      setLoggato(!!session?.user),
-    );
-    return () => sub.subscription.unsubscribe();
-  }, []);
-
-  return loggato;
-}
 
 /*
   Voce attiva = la sezione che sta attraversando la metà dello schermo.
@@ -85,11 +62,9 @@ function useSezioneAttiva(attivo: boolean) {
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const loggato = useLoggato();
   const pathname = usePathname();
   const inHome = pathname === "/";
   const sezione = useSezioneAttiva(inHome);
-  const areaAttiva = !inHome && /^\/(account|admin)/.test(pathname);
 
   /*
     Le voci del menu puntano a sezioni della home. Da un'altra pagina un
@@ -156,21 +131,6 @@ export function Header() {
               </VoceMenu>
             </li>
           ))}
-          {/*
-            Solo a chi e' entrato, e solo a stato noto per non far lampeggiare
-            la voce sbagliata. A chi non e' entrato non si mostra nulla: l'invito
-            ad accedere sta nella pagina del portfolio, dove serve davvero.
-            Separatore bianco e piu' alto della riga di testo (il grigio al 40%
-            non si vedeva): il padding lo allunga, il margine negativo lo
-            riassorbe cosi' la riga del menu non cresce.
-          */}
-          {loggato && (
-            <li className="-my-[5px] border-l border-white py-[5px] pl-[30px]">
-              <VoceMenu href="/account" attiva={areaAttiva}>
-                Account
-              </VoceMenu>
-            </li>
-          )}
         </ul>
       </nav>
 
@@ -226,17 +186,6 @@ export function Header() {
                 </a>
               </li>
             ))}
-            {loggato && (
-              <li className="border-t border-grey/40 last:border-b">
-                <Link
-                  href="/account"
-                  onClick={() => setMenuOpen(false)}
-                  className="block py-[10px] text-[36px] font-light leading-[1.2] tracking-[-1.44px]"
-                >
-                  Account
-                </Link>
-              </li>
-            )}
           </ul>
 
           <div className="mt-auto px-[10px] pb-8">
