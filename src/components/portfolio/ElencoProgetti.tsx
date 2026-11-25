@@ -177,6 +177,18 @@ export function ElencoProgetti({
                     né a densità 1 né 2. Solo dove c'è il mouse: sul telefono
                     il livello in più sarebbe memoria sprecata.
 
+                    image-rendering: optimizeQuality — per Safari. Quando una foto
+                    rimpicciolita viene ridisegnata (qui: inizio e fine della
+                    dissolvenza) Safari la disegna prima a bassa qualità e la
+                    rifà bene circa mezzo secondo dopo; con questo valore la
+                    disegna subito bene. Solo in Safari: la condizione
+                    (font: -apple-system-body) la riconosce solo il suo motore.
+                    In Firefox lo stesso valore rende le foto un po' più morbide
+                    (misurato: nitidezza da 4,48 a 4,29), quindi lì non va. Veronika (Mac, 25/11) vedeva ancora la seconda foto
+                    sgranata per un attimo, anche in incognito; qui su Windows
+                    non si riproduce con nessun motore, quindi è la misura per
+                    il caso del Mac, da confermare con lei.
+
                     group-hover di Tailwind 4 vale solo dove il mouse esiste: dal
                     telefono resta la copertina.
                   */}
@@ -191,7 +203,7 @@ export function ElencoProgetti({
                         sizes={MISURA_SCHEDA}
                         alt=""
                         aria-hidden
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className="absolute inset-0 h-full w-full object-cover [@supports(font:-apple-system-body)]:[image-rendering:optimizeQuality]"
                       />
                     )}
                     {p.cover && (
@@ -202,7 +214,7 @@ export function ElencoProgetti({
                         srcSet={p.coverSet ?? undefined}
                         sizes={MISURA_SCHEDA}
                         alt=""
-                        className={`relative h-full w-full object-cover${
+                        className={`relative h-full w-full object-cover [@supports(font:-apple-system-body)]:[image-rendering:optimizeQuality]${
                           p.hover
                             ? " transition-opacity duration-500 ease-in-out group-hover:opacity-0 group-focus-visible:opacity-0 motion-reduce:transition-none [@media(hover:hover)]:will-change-[opacity]"
                             : ""
