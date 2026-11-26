@@ -84,32 +84,19 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    /* Figma mobile: padding 18px 10px */
-    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[10px] py-[18px] xl:px-10 xl:py-5">
-      {/*
-        Velo sfumato: scende oltre l'header e si dissolve, così il testo della
-        pagina che scorre sotto non entra in collisione col menu. Parte dal
-        colore di sfondo e non dal nero, altrimenti sul tema chiaro comparirebbe
-        una fascia scura in cima.
+    <>
+    {/*
+      Figma mobile: padding 18px 10px.
 
-        Veronika, 25/11: parte all'80% invece che pieno, ed è più corta (130%
-        dell'header, prima 180%). Con una sfumatura lineare, dove finiva su un
-        contenuto chiaro si vedeva una riga più bianca: è l'occhio che marca il
-        punto in cui la sfumatura smette di cambiare di colpo. Le tappe seguono
-        una curva morbida (smoothstep), che all'inizio e alla fine cambia piano,
-        e la riga sparisce.
-      */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[130%]"
-        style={{
-          backgroundImage: `linear-gradient(to bottom, ${[
-            [80, 0], [75, 15], [63, 30], [46, 45], [28, 60], [13, 75], [2, 90], [0, 100],
-          ]
-            .map(([a, p]) => `color-mix(in srgb, var(--color-background) ${a}%, transparent) ${p}%`)
-            .join(", ")})`,
-        }}
-      />
+      Niente velo sfumato dietro la barra (Veronika, 26/11): logo e voci si
+      fondono con la pagina in «difference», come la frase della home. Il
+      colore è bianco fisso in tutti e due i temi: in difference il bianco
+      diventa nero sul chiaro e resta bianco sullo scuro, quindi si legge anche
+      sul tema chiaro («anche sul bianco»). Il menu del telefono sta FUORI da
+      questo elemento: dentro sarebbe fuso anche lui e il suo sfondo pieno
+      sparirebbe.
+    */}
+    <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[10px] py-[18px] text-white mix-blend-difference xl:px-10 xl:py-5">
 
       <Logo />
 
@@ -149,6 +136,8 @@ export function Header() {
         <span className="h-[2px] w-full bg-current" />
         <span className="h-[2px] w-full bg-current" />
       </button>
+
+    </header>
 
       {/* Overlay mobile: sempre montato, scorre da destra */}
       <nav
@@ -192,6 +181,6 @@ export function Header() {
             <ThemeSwitch />
           </div>
       </nav>
-    </header>
+    </>
   );
 }

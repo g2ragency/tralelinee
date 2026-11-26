@@ -27,10 +27,10 @@ export default function Home() {
         */}
         <VideoInVista
           sorgenti={[
-            { src: "/video/showreel-home.w1280.mp4", media: "(max-width: 767px)" },
-            { src: "/video/showreel-home.w1920.mp4" },
+            { src: "/video/showreel-home-2.w1280.mp4", media: "(max-width: 767px)" },
+            { src: "/video/showreel-home-2.w1920.mp4" },
           ]}
-          poster="/video/showreel-home.poster.webp"
+          poster="/video/showreel-home-2.poster.webp"
           preload="auto"
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
@@ -45,7 +45,9 @@ export default function Home() {
           fusione difference»). La frase si fonde col video in «difference»:
           dove sotto è chiaro diventa scura, dove è scuro resta chiara, così
           resta in contrasto col video senza scurirlo (sui grigi medi meno). La fusione resta
-          dentro la hero perché la sezione è `isolate`.
+          dentro la hero perché la sezione è `isolate`. Colori fissi, quelli del
+          tema scuro, anche col tema chiaro: in difference il testo scuro del
+          tema chiaro si confonderebbe col video.
         */}
         <div className="relative w-full">
           {/* Figma: lh 100%, ls -4%. Enfasi col colore: grigio #696969 /
@@ -53,8 +55,8 @@ export default function Home() {
               all'apertura della pagina. */}
           <RivelaRighe className="text-[36px] leading-none tracking-[-0.04em] text-grey mix-blend-difference xl:text-[56px]">
             <span className="xl:block">
-              Il concetto di <span className="text-foreground">progresso </span>
-              è un <span className="text-foreground">meccanismo protettivo</span>
+              Il concetto di <span className="text-[#DFDFDF]">progresso </span>
+              è un <span className="text-[#DFDFDF]">meccanismo protettivo</span>
             </span>{" "}
             <span className="xl:block">che ci difende dai terrori del futuro</span>
           </RivelaRighe>
