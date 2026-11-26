@@ -15,11 +15,18 @@ import { useEffect, useRef } from "react";
 */
 export function VideoInVista({
   src,
+  sorgenti,
   poster,
+  preload = "none",
   className,
 }: {
-  src: string;
+  src?: string;
+  /* Più misure dello stesso video: il browser prende la prima il cui
+     `media` corrisponde (es. una più leggera per i telefoni). */
+  sorgenti?: { src: string; media?: string }[];
   poster?: string;
+  /* "auto" quando il video è la prima cosa della pagina (la hero). */
+  preload?: "none" | "metadata" | "auto";
   className?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -44,14 +51,18 @@ export function VideoInVista({
   return (
     <video
       ref={ref}
-      src={src}
+      src={sorgenti ? undefined : src}
       poster={poster}
       muted
       loop
       playsInline
-      preload="none"
+      preload={preload}
       aria-hidden
       className={className}
-    />
+    >
+      {sorgenti?.map((s) => (
+        <source key={s.src} src={s.src} media={s.media} type="video/mp4" />
+      ))}
+    </video>
   );
 }
